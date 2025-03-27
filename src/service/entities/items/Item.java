@@ -10,7 +10,7 @@ public interface Item {
 	public Integer getDamage();
 	public String getName();
 	public String getDescription();
-	public void use();
+	public Boolean use();
 	public void setDamage(Integer damage);
 	public void setName(String name);
 	public void setDescription(String description);
@@ -26,5 +26,11 @@ public interface Item {
 
 	public ItemType getItemType();
 	public void setItemType(ItemType itemType);
+
+	public Integer getRemainingUses();
+	public void setRemainingUses(Integer remainingUses);
+
+	public Integer getMaxUses();
+	public void setMaxUses(Integer maxUses);
 	
 } 

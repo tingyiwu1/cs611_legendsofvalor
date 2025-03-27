@@ -9,6 +9,7 @@ public enum TextColor {
     CYAN("\u001B[36m"),
     WHITE("\u001B[37m"),
 	BLACK("\u001B[30m"),
+	ORANGE("\u001B[38;5;214m"),
     RESET("\u001B[0m");
 	
 

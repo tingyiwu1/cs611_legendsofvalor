@@ -35,4 +35,8 @@ public class PrintColor {
     public static void printWithColor(String message, TextColor color) {
 		System.out.println(color.code() + message + TextColor.RESET.code());
 	}
+
+	public static String textWithColor(String message, TextColor color){
+		return color.code() + message + TextColor.RESET.code();
+	}
 }

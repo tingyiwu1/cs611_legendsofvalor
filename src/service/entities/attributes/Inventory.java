@@ -18,6 +18,6 @@ public interface Inventory {
 	public void unequipItem(int equipment_slot);
 	public void unequipAllItems();
 	
-	public Item getEquippedItem();
+	public Item getEquippedItem(int i);
 	
 } 

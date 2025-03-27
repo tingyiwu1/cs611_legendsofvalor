@@ -1,6 +1,9 @@
 package src.service.game.board;
 import src.util.PieceType;
 import src.service.game.PlayerControl;
+
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 
@@ -26,8 +29,8 @@ public class GameBoard implements PlayerControl{
 				this.currentBoard[i][j] = new MapPiece();
 			}
 		}
-		this.charX = 3;
-		this.charY = 3;
+		this.charX = 0;
+		this.charY = 0;
 
 		//randomly add walls and markets
 		int totalSpaces = size * size;
@@ -55,11 +58,68 @@ public class GameBoard implements PlayerControl{
 				this.currentBoard[x][y] = new MapPiece(PieceType.MARKET);
 			}
 		}
-
+		while(getPieceAt(this.charX, this.charY).getPieceType() != PieceType.EMPTY){
+			this.charX += 1;
+			if(this.charX == size){
+				this.charX = 0;
+				this.charY += 1;
+			}
+		}
+		this.setNewBoss();
 	}
 
-	public int[] getCharacterLocation(){
+	public void setNewBoss() {
+		boolean[][] visited = new boolean[size][size];
+		Queue<int[]> queue = new LinkedList<>();
+		LinkedList<int[]> movableNodes = new LinkedList<>();
+		queue.add(new int[] { this.charX, this.charY });
+		visited[this.charX][this.charY] = true;
+
+		while (!queue.isEmpty()) {
+			int[] current = queue.poll();
+			int x = current[0];
+			int y = current[1];
+			movableNodes.add(current);
+
+			int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+			for (int[] dir : directions) {
+				int newX = x + dir[0];
+				int newY = y + dir[1];
+				if (newX >= 0 && newX < size && newY >= 0 && newY < size 
+						&& !visited[newX][newY] 
+						&& this.currentBoard[newX][newY].getPieceType() != PieceType.WALL) {
+					visited[newX][newY] = true;
+					queue.add(new int[] { newX, newY });
+				}
+			}
+		}
+
+		// Randomly choose one of the movable nodes to become the boss
+		if (!movableNodes.isEmpty()) {
+			Random rand = new Random();
+			int[] bossLocation;
+			do {
+				bossLocation = movableNodes.get(rand.nextInt(movableNodes.size()));
+			} while (bossLocation[0] == this.charX && bossLocation[1] == this.charY);
+
+			this.currentBoard[bossLocation[0]][bossLocation[1]].setPieceType(PieceType.BOSS);
+		}
+	}
+
+	public void setPieceAt(int x, int y, PieceType newType){
+		currentBoard[x][y].setPieceType(newType);
+	}
+
+	public int[] getCharacterLocation() {
 		return new int[] {this.charX, this.charY};
+	}
+
+	public boolean characterAtMarket(){
+		return getPieceAt(this.charX, this.charY).getPieceType() == PieceType.MARKET;
+	}
+
+	public int getCurrentMarketIndex(){
+		return charX * size + charY;
 	}
 
 	public Integer getSize(){
@@ -70,8 +130,16 @@ public class GameBoard implements PlayerControl{
 		return this.currentBoard[x][y];
 	}
 
+	public MapPiece getCurrentPiece(){
+		return this.currentBoard[charX][charY];
+	}
+
 	public Character getLastInput(){
 		return this.lastInput;
+	}
+
+	public boolean isAtBoss() {
+		return this.getPieceAt(this.charX, this.charY).getPieceType() == PieceType.BOSS;
 	}
 
 	@Override
@@ -113,7 +181,7 @@ public class GameBoard implements PlayerControl{
 			return true;
 		}
 		// do the move
-
+	
 		if(inputtedMove == 'w'){
 			this.charX--;
 		} else if(inputtedMove == 's'){
@@ -123,6 +191,8 @@ public class GameBoard implements PlayerControl{
 		} else if(inputtedMove == 'd'){
 			this.charY++;
 		}
+
+	
 		return null;
 	}
 

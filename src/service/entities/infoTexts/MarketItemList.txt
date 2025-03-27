@@ -1,0 +1,26 @@
+# Header: name, cost, description, damage, level requirement, item type, bonus str, bonus def, bonus mp, bonus dodge, maxUses
+Basic Sword,120,A simple sword,12,1,WEAPON,3,0,0,1,0
+Basic Spell,140,A basic spell,18,1,SPELL,0,0,1,0,4
+Basic Helmet,60,A basic helmet,0,1,HELMET,0,3,0,2,0
+Basic Chestplate,110,A basic chestplate,0,1,CHEST,0,4,0,1,0
+Basic Boots,55,A pair of basic boots,0,1,BOOTS,0,2,0,3,0
+Basic Sword,115,A simple sword,11,1,WEAPON,2,0,0,0,0
+Basic Spell,160,A basic spell,14,1,SPELL,0,0,0,1,3
+Basic Helmet,45,A basic helmet,0,1,HELMET,0,1,0,1,0
+Basic Chestplate,105,A basic chestplate,0,1,CHEST,0,3,0,2,0
+Basic Boots,65,A pair of basic boots,0,1,BOOTS,0,1,0,2,0
+Basic Sword,130,A simple sword,13,1,WEAPON,4,0,0,0,0
+Basic Spell,155,A basic spell,17,1,SPELL,0,0,0,0,5
+Basic Helmet,70,A basic helmet,0,1,HELMET,0,2,0,3,0
+Basic Chestplate,120,A basic chestplate,0,1,CHEST,0,5,0,1,0
+Basic Boots,60,A pair of basic boots,0,1,BOOTS,0,2,0,4,0
+Advanced Sword,520,A finely crafted sword,28,5,WEAPON,6,0,0,1,0
+Advanced Spell,780,A powerful spell,38,5,SPELL,0,0,1,0,6
+Advanced Helmet,260,A sturdy helmet,0,5,HELMET,0,6,0,3,0
+Advanced Chestplate,490,A reinforced chestplate,0,5,CHEST,0,8,0,2,0
+Advanced Boots,270,A pair of advanced boots,0,5,BOOTS,0,4,0,5,0
+Flaming Sword,1050,A sword engulfed in flames,55,10,WEAPON,12,0,0,0,0
+Ice Spell,1250,A spell that freezes enemies,65,10,SPELL,0,0,0,1,8
+Dragon Helmet,850,A helmet made from dragon scales,0,10,HELMET,0,12,0,6,0
+Titan Chestplate,1450,A chestplate forged by titans,0,10,CHEST,0,16,0,4,0
+Windrunner Boots,920,Light boots that enhance speed,0,10,BOOTS,0,6,0,11,0

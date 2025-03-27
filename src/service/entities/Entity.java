@@ -8,6 +8,7 @@ public abstract class Entity {
 	protected String name;
 	protected Integer strength;
 	protected Integer magicStrength;
+	protected Integer defense;
 	protected Integer dodge;
 
 	public Entity(){
@@ -18,15 +19,17 @@ public abstract class Entity {
 		this.strength = 10;
 		this.magicStrength = 10;
 		this.dodge = 10;
+		this.defense = 10;
 	}
 
-	public Entity(Integer maxHealth, Integer level, String name, Integer strength, Integer magicStrength, Integer dodge){
+	public Entity(Integer maxHealth, Integer level, String name, Integer strength, Integer magicStrength, Integer defense, Integer dodge){
 		this.currentHealth = maxHealth;
 		this.maxHealth = maxHealth;
 		this.level = level;
 		this.name = name;
 		this.strength = strength;
 		this.magicStrength = magicStrength;
+		this.defense = defense;
 		this.dodge = dodge;
 	}
 
@@ -82,6 +85,11 @@ public abstract class Entity {
 		this.dodge = dodge;
 	}
 
-
+	public Integer getDefense(){
+		return this.defense;
+	}
+	public void setDefense(Integer defense){
+		this.defense = defense;
+	}
 	
 } 

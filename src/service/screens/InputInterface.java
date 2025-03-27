@@ -8,5 +8,9 @@ public interface InputInterface {
 	static void DisplayInputOption(String questionText, String charInput, TextColor colorCode) {
 		PrintColor.printWithColor(questionText + ": " + charInput, colorCode);
 	}
+
+	static void DisplayInputOption(String questionText, String charInput, String divisor, TextColor colorCode) {
+		PrintColor.printWithColor(questionText + divisor + " " + charInput, colorCode);
+	}
 }
 

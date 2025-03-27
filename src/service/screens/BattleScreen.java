@@ -9,6 +9,7 @@ import src.service.entities.items.Item;
 import src.service.entities.monsters.Monster;
 import src.service.game.battle.Battle;
 import src.util.PrintingUtil;
+import src.util.ItemType;
 import src.util.PrintColor;
 import src.util.TextColor;
 
@@ -29,7 +30,9 @@ public class BattleScreen implements Screen, InputInterface {
 	public void displayAndProgress() {
 		PrintingUtil.clearScreen();
 		System.out.println("This is the Battle Screen!");
-		System.out.println("-----------------------------");
+		System.out.println("----------------------------------------------------------");
+		System.out.println(Hero.getShortHeroDisplay(this.currBattle.getHero()));
+		System.out.println("----------------------------------------------------------");
 		this.displayBattle();
 		System.out.println("-----------------------------");
 
@@ -46,16 +49,27 @@ public class BattleScreen implements Screen, InputInterface {
 		// correlate that to the correct choice of attack
 
 		ArrayList<AttackOption> options = this.currBattle.hero.getAttacksList();
-		System.out.println(options.size());
 		for(int i = 0; i < options.size(); i++){
 			AttackOption currOption = options.get(i);
 			Item currItem = currOption.getSourceItem();
 
-			InputInterface.DisplayInputOption("Attack with " + currItem.getName(), Integer.toString(i + 1), TextColor.BLUE);
+			String displayOption = PrintingUtil.printWithPadding("Attack with " + currItem.getName()) 
+					+ PrintingUtil.printWithPadding("Damage: " + currOption.getDamage(), 12);
+			if(currItem.getItemType() == ItemType.CONSUMABLE || currItem.getItemType() == ItemType.SPELL){
+				displayOption += PrintingUtil.printWithPadding("Uses: " + currItem.getRemainingUses() + " / " + currItem.getMaxUses(), 13);
+			} else {
+				displayOption += PrintingUtil.printWithPadding("", 13);
+			}
+
+			InputInterface.DisplayInputOption(displayOption, "(" +  Integer.toString(i + 1) + ")", "| ", TextColor.BLUE);
+
 		}
+
+		InputInterface.DisplayInputOption("Access Inventory", "I", src.util.TextColor.CYAN);
+
 		this.displayQuit();
 		Character input = this.scanny.next().charAt(0);
-		this.lastInput = input;
+		this.lastInput = Character.toLowerCase(input);
 		return input;
 	}
 
@@ -104,9 +118,13 @@ public class BattleScreen implements Screen, InputInterface {
 	public void displayPauseAndProgress(String message) {
 		// TODO Auto-generated method stub
 		PrintingUtil.clearScreen();
-		System.out.println("-----------------------------");
+		System.out.println("----------------------------------------------------------");
+		System.out.println(Hero.getShortHeroDisplay(this.currBattle.getHero()));
+		System.out.println("----------------------------------------------------------");
+		System.out.println("");
 		this.displayStatuses(this.currBattle.getStatusList(), this.currBattle.getStatusColors());
 		this.displayBattle();
+		System.out.println("");
 		System.out.println("-----------------------------");
 		PrintColor.yellow(message);
 		System.out.println();
@@ -119,9 +137,6 @@ public class BattleScreen implements Screen, InputInterface {
 		if(input != 'q'){
 			this.lastInput = ' ';
 		}
-		// this.lastInput = ' ';
-
 	}
-	
 	
 }

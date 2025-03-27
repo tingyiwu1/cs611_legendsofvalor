@@ -52,6 +52,8 @@ public class MapScreen implements Screen, InputInterface {
 						System.out.print(" XXXXX ");
 					} else if(heroLocation[0] == r && heroLocation[1] == c && inner == 0){
 						PrintColor.red(" H     ");
+					} else if(currentPieceType == PieceType.BOSS && inner == 1){
+						PrintColor.red(" BOSS! ");
 					} else if(currentPieceType == PieceType.MARKET && inner == 2){
 						PrintColor.yellow("     M ");
 					} else {
@@ -71,6 +73,9 @@ public class MapScreen implements Screen, InputInterface {
 	public Character DisplayInputs(){
 		System.out.println("these are the inputs!");
 
+		System.out.println("WHAT IS THIS PIECE???");
+		System.out.println(this.currGameBoard.getCurrentPiece());
+
 		
 
 		InputInterface.DisplayInputOption("Move Hero North", "W", src.util.TextColor.BLUE);
@@ -78,6 +83,11 @@ public class MapScreen implements Screen, InputInterface {
 		InputInterface.DisplayInputOption("Move Hero West", "A", src.util.TextColor.BLUE);
 		InputInterface.DisplayInputOption("Move Hero South", "S", src.util.TextColor.BLUE);
 		InputInterface.DisplayInputOption("Access Inventory", "I", src.util.TextColor.CYAN);
+
+		if(this.currGameBoard.characterAtMarket()){
+			InputInterface.DisplayInputOption("Access Market", "M", src.util.TextColor.CYAN);
+		}
+
 		this.displayQuit();
 
 		Character input = this.scanny.next().charAt(0);

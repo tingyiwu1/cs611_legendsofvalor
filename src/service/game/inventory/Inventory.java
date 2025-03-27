@@ -26,7 +26,7 @@ public class Inventory implements InventoryControl, StatusDisplay {
 		if(itemSlot < 0 || itemSlot > 5){
 			this.addStatus("Invalid Item Slot, Please Try Again", TextColor.RED);
 			return false;
-		} else if(itemIndex < 0 || itemIndex > activeHero.getItemsList().size()){
+		} else if(itemIndex < -1 || itemIndex > activeHero.getItemsList().size()){
 			this.addStatus("Invalid Item Index, Please Try Again", TextColor.RED);
 			return false;
 		} else {
@@ -47,6 +47,10 @@ public class Inventory implements InventoryControl, StatusDisplay {
 	public Boolean processMove(Integer itemSlot, Integer itemIndex) {
 		Boolean result = activeHero.equipItem(itemSlot, itemIndex);
 		if(result){
+			if(itemIndex == -1){
+				this.addStatus("Unequipped item slot " + itemSlot, TextColor.CYAN);
+				return result;
+			}
 			this.addStatus("Updated item slot to " + this.activeHero.getItemsList().get(itemIndex).getName(), TextColor.CYAN);
 		} else {
 			this.addStatus("Failed to update item slot", TextColor.RED);

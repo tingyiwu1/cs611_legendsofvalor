@@ -8,8 +8,6 @@ public interface Attacks {
 	// getSpellsList();
 	// getAttacksList();
 
-	public Integer basicDebugAttack();
-
 	public Item[] getSpellsList();
 
 	public AttackOption mainHandAttack();
