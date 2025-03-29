@@ -110,11 +110,13 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		/*
 			* Printing the input options
 			*/
+		System.out.println("Main Hand attack determined by equipment in Main hand");
 		PrintColor.blue("Select an equipment slot on the top: (0-5)");
 		System.out.println("");
 		PrintColor.blue("Select an item from the inventory on the right: (1-" + (this.getInventoryList().length-1) + ")");
 		System.out.println("");
 		InputInterface.DisplayInputOption("Unequip Item", "0", TextColor.BLUE);
+		InputInterface.DisplayInputOption("Consume Item", "6", TextColor.BLUE);
 		InputInterface.DisplayInputOption("Return to Hero Select", "B", TextColor.BLUE);
 		this.displayQuit();
 		int[] chosenSwap = this.InventoryInput();
@@ -130,7 +132,7 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		ArrayList<Item> items = this.activeHero.getItemsList();
 		String[] slots = {"Main Hand", "Off Hand", "Helmet", "Chest", "Legs", "Boots"};
 		String[] slotStrings = new String[6];
-		for(int i = 0; i < equipment.length; i++){
+		for(int i = 0; i < equipment.length + 1; i++){
 			if(equipment[i] != -1){
 				slotStrings[i] = "(" + i + ")" + slots[i] + ": " + items.get(equipment[i]).getName();
 			} else {
@@ -169,7 +171,7 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 	public int[] InventoryInput(){
 		System.out.println();
 
-		System.out.print("Item Slot: ");
+		System.out.print("Item Slot(Or 6 to consume Potion): ");
 		String slotInput = this.scanny.next();
 
 		if (slotInput.equalsIgnoreCase("b")) {

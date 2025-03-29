@@ -13,7 +13,7 @@ public class ItemFactory {
 		Random rng = new Random();
 
 		// Read all items from the MarketItemList.txt file
-		ArrayList<MarketItem> allItems = InfoTextReader.readTextFile(FILEPATH);
+		ArrayList<MarketItem> allItems = InfoTextReader.readItemTextFile(FILEPATH);
 
 		// Randomly select numItems from the list
 		for (int i = 0; i < numItems && !allItems.isEmpty(); i++) {

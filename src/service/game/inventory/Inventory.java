@@ -1,12 +1,14 @@
 package src.service.game.inventory;
 
 import src.service.game.StatusDisplay;
+import src.util.StatsTracker;
 import src.util.TextColor;
 
 import java.util.ArrayList;
 
 import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
+import src.service.entities.items.Potion;
 
 public class Inventory implements InventoryControl, StatusDisplay {
 
@@ -23,7 +25,7 @@ public class Inventory implements InventoryControl, StatusDisplay {
 	
 	@Override
 	public Boolean isMoveValid(Integer itemSlot, Integer itemIndex) {
-		if(itemSlot < 0 || itemSlot > 5){
+		if(itemSlot < 0 || itemSlot > 6){
 			this.addStatus("Invalid Item Slot, Please Try Again", TextColor.RED);
 			return false;
 		} else if(itemIndex < -1 || itemIndex > activeHero.getItemsList().size()){
@@ -45,12 +47,28 @@ public class Inventory implements InventoryControl, StatusDisplay {
 
 	@Override
 	public Boolean processMove(Integer itemSlot, Integer itemIndex) {
+		if(itemSlot == 6){
+			try{
+				Potion p = (Potion) activeHero.getItemsList().get(itemIndex);
+				if(p.use(this.activeHero)){
+					this.addStatus("consumed potion!", TextColor.YELLOW);
+					return true;
+				} 
+				this.addStatus("No more uses of potion remaining! Can you take this?", TextColor.BLUE);
+				return false;
+			} catch(Exception e){
+				throw new IllegalArgumentException("erm no");
+			}
+		}
+
+
 		Boolean result = activeHero.equipItem(itemSlot, itemIndex);
 		if(result){
 			if(itemIndex == -1){
 				this.addStatus("Unequipped item slot " + itemSlot, TextColor.CYAN);
 				return result;
 			}
+			StatsTracker.addToStats("Number of items equipped", 1);
 			this.addStatus("Updated item slot to " + this.activeHero.getItemsList().get(itemIndex).getName(), TextColor.CYAN);
 		} else {
 			this.addStatus("Failed to update item slot", TextColor.RED);

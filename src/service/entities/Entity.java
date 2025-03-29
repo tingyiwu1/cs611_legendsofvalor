@@ -1,5 +1,7 @@
 package src.service.entities;
 
+import src.util.StatsTracker;
+
 public abstract class Entity {
 
 	protected Integer currentHealth;
@@ -44,13 +46,20 @@ public abstract class Entity {
 	}
 
 	public void takeDamage(Integer damage){
-		this.currentHealth -= damage;
+		if(damage >= 0){
+			this.currentHealth -= damage;
+		}
 	}
 	public void healDamage(Integer heal){
+		StatsTracker.addToStats("Health Healed", 1);
 		this.currentHealth += heal;
+		if(currentHealth > maxHealth){
+			currentHealth = maxHealth;
+		}
 	}
 
 	public Integer getLevel(){	
+		StatsTracker.addToStats("Times Levelled Up", 1);
 		return this.level;
 	}
 	public void levelUp(){

@@ -6,7 +6,6 @@ public class Main{
 
 		
 		MainGame currentGame = new MainGame();
-
 		currentGame.playGame();
 
 

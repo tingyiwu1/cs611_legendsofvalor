@@ -1,18 +1,20 @@
 package src.service.entities.heroes;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import src.service.entities.Entity;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Attacks;
 import src.service.entities.attributes.Inventory;
-import src.service.entities.items.Armor;
 import src.service.entities.items.Equippable;
 import src.service.entities.items.Item;
+import src.service.entities.items.Potion;
 import src.service.entities.items.Spell;
 import src.service.entities.items.Weapon;
 import src.util.ItemType;
 import src.util.PrintingUtil;
+import src.util.StatsTracker;
 
 public class Hero extends Entity implements Attacks, Inventory, Shopper {
 
@@ -22,26 +24,45 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 
 	private Integer experience = 0;
 	private final int breakpoint = 150;
-	private int levelBoon;
+	private static int levelBoon = 5;
+	private static Random rng = new Random();
 
 	public Hero(){
-		super(500, 1, "DEBUGGING HERO", 50, 50, 50, 50);
+		super(100, 1, "DEBUGGING HERO", 40, 40, 30, 10);
 
 		this.items = new ArrayList<Item>();
 
 		// add some default items
-		this.items.add(new Weapon(10, "Debugging Dagger", "A simple metal dagger for debugging purposes"));		
-		this.items.add(new Weapon(10, "Magical Debug Dagger", "A simple metal dagger for debugging purposes", 5, 5, 5, 5));		
+		// this.items.add(new Weapon(1000, "DEBUGGING DEATH", "", 50, 50, 50, 50));
+		this.items.add(new Weapon(5, "Basic Dagger", "A simple dagger, coincidentally next to you when you woke up"));	
+		this.items.add(new Spell(30, "Basic Ice Dart", "Conjure a simple shard of Ice, and launch it at the enemy", 0, 5));	
+		this.items.add(new Potion(50, "Potent Healing Potion", "A brewed healing potion, capable of healing basic injuries", 0, ItemType.POTION, 0, 3));
+		// this.items.add(new Potion(50, "Potent Strengthening Potion", "A brewed healing potion, giving u super strength!!", 0, ItemType.POTION, 1, 1));
 
 
-		this.items.add(new Spell(2, "Debugging Dirt Ball!", "A simple debugging dirt attack", 0, 5));
-		this.items.add(new Spell(20, "Debugging Fireball!", "A simple debugging fire attack", 0, 5));
-
-		this.items.add(new Armor("Debugging Helmet!", "a basic debugging helm", ItemType.HELMET));
-
-		this.equipment = new int[] {-1, -1, -1, -1, -1, -1}; //main hand, offhand, helmet, chest, legs, boots
-		this.levelBoon = 5; //increase all stats per level
+		this.equipment = new int[] {0, -1, -1, -1, -1, -1}; //main hand, offhand, helmet, chest, legs, boots
+		// this.levelBoon = 5; //increase all stats per level
 		this.gold = 1;
+	}
+	public Hero(int hp, int lvl, String name, int str, int mstr, int def, int dodge){
+		super(hp, lvl, name, str, mstr, def, dodge);
+
+		this.items = new ArrayList<Item>();
+
+		// this.items.add(new Weapon(1000, "DEBUGGING DEATH", "", 50, 50, 50, 50));
+		this.items.add(new Weapon(5, "Basic Dagger", "A simple dagger, coincidentally next to you when you woke up"));	
+		this.items.add(new Spell(30, "Basic Ice Dart", "Conjure a simple shard of Ice, and launch it at the enemy", 0, 5));	
+		this.items.add(new Potion(50, "Potent Healing Potion", "A brewed healing potion, capable of healing basic injuries", 0, ItemType.POTION, 0, 3));
+		// this.items.add(new Potion(50, "Potent Strengthening Potion", "A brewed healing potion, giving u super strength!!", 0, ItemType.POTION, 1, 1));
+
+
+		this.equipment = new int[] {0, -1, -1, -1, -1, -1}; //main hand, offhand, helmet, chest, legs, boots
+		// this.levelBoon = 5; //increase all stats per level
+		this.gold = 1;
+	}
+
+	public static void setLevelBoon(int i){
+		levelBoon = 5;
 	}
 
 	public static String getShortHeroDisplay(Hero hero){
@@ -115,12 +136,14 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	public void gainExperience(Integer newXp) {
 		this.experience += newXp; 
     	while (this.experience >= breakpoint) { 
+			StatsTracker.addToStats("times Levelled up", 1);
 			this.levelUp();
 			this.experience -= breakpoint; 
 			this.levelUpDefense();
 			this.levelUpDodge();
 			this.levelUpMagicStrength();
 			this.levelUpStrength();
+			this.healDamage(50);
 			// recharge spells
 			for(int i = 0; i < this.items.size(); i++){
 				if(this.items.get(i).getItemType() == ItemType.SPELL){
@@ -144,6 +167,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	}
 	@Override
 	public void earnGold(int amount){
+		StatsTracker.addToStats("Gold earned", amount);
 		this.gold += amount;
 	}
 	@Override
@@ -202,6 +226,18 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	}
 	public int getBaseDodge() {
 		return super.getDodge();
+	}
+	public void buffStrength(int buff){
+		this.setStrength(this.strength + buff);
+	}
+	public void buffDefense(int buff){
+		this.setDefense(this.defense + buff);
+	}
+	public void buffMagicStrength(int buff){
+		this.setMagicStrength(this.magicStrength + buff);
+	}
+	public void buffDodge(int buff){
+		this.setDodge(this.dodge + buff);
 	}
 
 	@Override
@@ -306,12 +342,21 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		attacks.add(this.mainHandAttack());
 		// iterate over inventory, add any possible attacks based on spells
 
-		for(Item item : this.getSpellsList()){
-			Spell spell = (Spell) item;
-			if(spell.getLevelRequirement() <= this.getLevel()){
-				int damage = (this.getMagicStrength() + item.getDamage()) * (1 + this.getLevel() / 10);
-				attacks.add(new AttackOption("Spell Attack", "You cast " + spell.getName(), spell, damage));
+		for(Item item : this.getItemsList()){
+			if(item.getItemType() == ItemType.SPELL){
+				Spell spell = (Spell) item;
+				if(spell.getLevelRequirement() <= this.getLevel()){
+					int damage = (this.getMagicStrength() + item.getDamage()) * (1 + this.getLevel() / 10);
+					attacks.add(new AttackOption("Spell Attack", "You cast " + spell.getName(), spell, damage));
+				}
+			} else if(item.getItemType() == ItemType.POTION){
+				Potion potion = (Potion) item;
+				if(potion.getLevelRequirement() <= this.getLevel()){
+					attacks.add(new AttackOption("Potion Use", "You drink " + potion.getName(), potion, potion.getDamage()));
+				}
 			}
+
+
 		}
 
 		return attacks;
@@ -319,16 +364,49 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	}
 
 	public void levelUpStrength(){
-		this.strength += this.levelBoon;
+		this.strength += levelBoon + rng.nextInt(2);
 	}
 	public void levelUpDefense(){
-		this.defense += this.levelBoon;
+		this.defense += levelBoon + rng.nextInt(2);
 	}
 	public void levelUpMagicStrength(){
-		this.magicStrength += this.levelBoon;
+		this.magicStrength += levelBoon + rng.nextInt(2);
 	}
 	public void levelUpDodge(){
-		this.dodge += this.levelBoon;
+		this.dodge += (levelBoon)/2 + rng.nextInt(2);
 	}
+
+	public void updateInventory() {
+		ArrayList<Item> newItems = new ArrayList<>();
+		int[] newEquipment = new int[this.equipment.length];
+	
+		int[] indexMapping = new int[this.items.size()];
+		int newIndex = 0;
+	
+		for (int i = 0; i < this.items.size(); i++) {
+			Item item = this.items.get(i);
+			if (!(item.getItemType() == ItemType.POTION && item.getRemainingUses() == 0)) {
+				newItems.add(item);
+				indexMapping[i] = newIndex++;
+			} else {
+				indexMapping[i] = -1;
+			}
+		}
+	
+		for (int i = 0; i < this.equipment.length; i++) {
+			int oldIdx = this.equipment[i];
+			if (oldIdx == -1) {
+				newEquipment[i] = -1;
+			} else if (oldIdx >= 0 && oldIdx < indexMapping.length && indexMapping[oldIdx] != -1) {
+				newEquipment[i] = indexMapping[oldIdx];
+			} else {
+				newEquipment[i] = -1;
+			}
+		}
+	
+		this.items = newItems;
+		this.equipment = newEquipment;
+	}
+	
 	
 } 

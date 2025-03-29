@@ -22,6 +22,7 @@ public class MapScreen implements Screen, InputInterface {
 		this.scanny = scanny;
 		this.currGameBoard = gameBoard;
 		this.gameSize = gameBoard.getSize();
+		this.lastInput = ' ';
 		
 	}
 
@@ -71,12 +72,7 @@ public class MapScreen implements Screen, InputInterface {
 
 	@Override
 	public Character DisplayInputs(){
-		System.out.println("these are the inputs!");
-
-		System.out.println("WHAT IS THIS PIECE???");
-		System.out.println(this.currGameBoard.getCurrentPiece());
-
-		
+		System.out.println("These are the inputs!");
 
 		InputInterface.DisplayInputOption("Move Hero North", "W", src.util.TextColor.BLUE);
 		InputInterface.DisplayInputOption("Move Hero East", "D", src.util.TextColor.BLUE);

@@ -1,0 +1,22 @@
+# Name,MaxHealth,Level,Strength,MagicStrength,Defense,Dodge,XP,Gold,Description,MonsterItemDamage,MonsterItemName,MonsterItemDescription
+
+# Dragons
+Fire Drake,110,1,50,50,10,10,80,80,"A fierce dragon with a fiery breath.",35,"Flame Jet","A burst of flame, from the dragon's stomach."
+Ice Drake,120,1,45,45,20,25,80,80,"An icy dragon with a freezing breath",25,"Frost Fang","A fang that radiates icy energy."
+Thunder Drake,115,1,45,45,20,15,85,85,"A dragon that crackles with electric energy.",30,"Thunder Claw","A claw that sparks with electricity."
+Earth Drake,130,1,50,50,10,8,90,90,"A dragon with a hide as tough as stone.",40,"Earth Shard","A shard of rock imbued with the dragon's power."
+Wind Drake,105,1,45,45,20,20,75,75,"A swift dragon that rides the winds.",28,"Wind Slash","A sharp gust of wind from its wings."
+
+# Exoskeletons
+Iron Shell,200,1,25,25,40,10,110,100,"A reanimated paladin defended by unholy armor.",25,"Unholy Steel","A rusted weapon, long forgotten"
+Stone Titan,220,1,25,20,45,10,120,90,"A massive titan made of stone",25,"Rock Hammer","A rock pulled from its very body."
+Bone Golem,230,1,20,20,50,10,115,95,"A towering golem made of bones.",27,"Bone Club","A heavy club made of bone."
+Steel Guardian,210,1,30,30,40,10,125,105,"A mechanical exoskeleton with unmatched defense.",28,"Steel Blade","A blade forged from steel."
+Obsidian Colossus,240,1,25,25,50,10,130,110,"A giant exoskeleton made of obsidian.",25,"Obsidian Axe","A sharp axe carved from obsidian."
+
+# Spirits
+Forgotten Ghost,110,1,35,35,30,45,80,40,"A ghostly spirit that moves with incredible speed.",24,"Ethereal Blade","A blade that phases through armor."
+Shadow Spirit,130,1,30,30,40,55,80,50,"A near invisible shadow flying soaring in the darkness",28,"Shadow Dagger","A dagger that strikes from the shadows."
+Wailing Banshee,100,1,35,35,30,50,85,45,"A banshee whose wail chills the soul.",26,"Spectral Cry","A haunting cry that pierces the air."
+Phantom Wraith,120,1,35,35,30,50,90,48,"A wraith that drifts silently through the night.",27,"Wraith Touch","A chilling touch that drains life."
+Ethereal Specter,115,1,40,40,20,45,88,42,"A specter that flickers in and out of existence.",25,"Spectral Slash","A slash that cuts through dimensions."

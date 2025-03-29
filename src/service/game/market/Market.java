@@ -6,6 +6,7 @@ import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
 import src.service.game.PlayerControl;
 import src.service.game.StatusDisplay;
+import src.util.StatsTracker;
 import src.util.TextColor;
 
 public class Market implements PlayerControl, StatusDisplay{
@@ -88,7 +89,9 @@ public class Market implements PlayerControl, StatusDisplay{
 		MarketItem buyingItem = this.marketOfferings.get(inputInt);
 
 		this.activeHero.spendGold(buyingItem.getPrice());
+		StatsTracker.addToStats("Gold Spent", buyingItem.getPrice());
 		this.activeHero.addItem(buyingItem.getItem());
+		StatsTracker.addToStats("Items purchased", 1);
 
 		this.marketOfferings.remove(inputInt);
 		return null;

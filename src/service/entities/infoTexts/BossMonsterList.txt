@@ -1,0 +1,22 @@
+# Name,MaxHealth,Level,Strength,MagicStrength,Defense,Dodge,XP,Gold,Description,MonsterItemDamage,MonsterItemName,MonsterItemDescription
+
+# Boss Dragons
+Fire Drake King,155,2,60,55,25,17,135,135,"The king of fiery dragons with devastating breath.",45,"Inferno Blast","A powerful burst of fire from the dragon's core."
+Ice Drake King,165,2,50,40,30,35,135,135,"The king of icy dragons with a freezing aura.",35,"Glacial Fang","A fang that freezes everything it touches."
+Thunder Drake King,160,2,55,50,27,23,140,140,"The king of thunder dragons crackling with energy.",40,"Lightning Claw","A claw that strikes with thunderous force."
+Earth Drake King,185,2,65,45,35,15,145,145,"The king of earth dragons with unbreakable hide.",50,"Seismic Shard","A shard that causes tremors upon impact."
+Wind Drake King,150,2,53,52,23,30,130,130,"The king of wind dragons swift and deadly.",38,"Hurricane Slash","A devastating gust of wind from its wings."
+
+# Boss Exoskeletons
+Iron Shell Overlord,95,2,38,30,60,12,165,155,"A reanimated overlord defended by unholy armor.",25,"Cursed Steel","A cursed weapon imbued with dark energy."
+Stone Titan Prime,305,2,25,15,60,7,175,145,"The prime titan made of unyielding stone.",30,"Titan Hammer","A massive hammer forged from its body."
+Bone Golem Lord,255,2,28,20,55,10,170,150,"The lord of bone golems towering and relentless.",28,"Bone Crusher","A crushing weapon made of reinforced bone."
+Steel Guardian Elite,205,2,43,30,60,11,180,160,"An elite mechanical exoskeleton with unmatched defense.",32,"Steel Saber","A saber forged from the finest steel."
+Obsidian Colossus Emperor,285,2,27,17,65,9,190,170,"The emperor of obsidian exoskeletons massive and deadly.",35,"Obsidian Cleaver","A cleaver carved from the hardest obsidian."
+
+# Boss Spirits
+Forgotten Wraith,145,2,35,35,20,125,135,68,"A wraith that moves faster than the eye can see.",34,"Ethereal Scythe","A scythe that phases through armor with ease."
+Shadow Lord,165,2,35,35,25,125,135,78,"A shadowy figure that commands the darkness.",38,"Shadow Blade","A blade that strikes from the deepest shadows."
+Banshee Queen,135,2,40,40,23,120,140,73,"The queen of banshees whose wail freezes the soul.",36,"Spectral Scream","A scream that pierces through dimensions."
+Phantom King,155,2,38,38,27,123,148,75,"The king of phantoms silent and deadly.",37,"Phantom Grasp","A chilling grasp that drains life force."
+Ethereal Overlord,150,2,36,36,25,127,145,70,"The overlord of specters flickering in and out of existence.",35,"Dimensional Slash","A slash that cuts through space and time."

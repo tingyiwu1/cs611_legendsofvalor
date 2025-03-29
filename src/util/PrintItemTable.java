@@ -30,7 +30,7 @@ public class PrintItemTable {
 			row[3] = Integer.toString(item.getDamage());
 			row[4] = item.getItemType().toString();
 			String remainingUsesString = Integer.toString(item.getRemainingUses()) + " / " + Integer.toString(item.getMaxUses());
-			row[5] = (item.getItemType() == ItemType.CONSUMABLE || item.getItemType() == ItemType.SPELL) ? remainingUsesString : "";
+			row[5] = (item.getItemType() == ItemType.CONSUMABLE || item.getItemType() == ItemType.SPELL ||  item.getItemType() == ItemType.POTION) ? remainingUsesString : "";
 			cols.add(row);
 		}
 		constructDynamicTable(cols, colTitles);
@@ -73,17 +73,19 @@ public class PrintItemTable {
 		colTitles.add("Name");
 		colTitles.add("Description");
 		colTitles.add("Damage");
+		colTitles.add("Type");
 		colTitles.add("Price");
 
 		// Populate rows with market item data
 		for (int i = 0; i < marketItems.size(); i++) {
 			Item item = marketItems.get(i).getItem();
-			String[] row = new String[5];
+			String[] row = new String[6];
 			row[0] = Integer.toString(i);
 			row[1] = item.getName();
 			row[2] = item.getDescription();
 			row[3] = Integer.toString(item.getDamage());
-			row[4] = marketItems.get(i).getPrice().toString();
+			row[4] = item.getItemType().toString();
+			row[5] = marketItems.get(i).getPrice().toString();
 			cols.add(row);
 		}
 
