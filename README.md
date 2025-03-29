@@ -7,77 +7,115 @@
 
 ---
 
-## Package
+## Notable Files
 
-- 
+- ``` Main.java ``` : Initializes and begins the Game.
+- ``` src.service.screens ``` : All UI screen logic and interfaces.
+- ``` src.service.ScreenInterfaces ``` : Interfaces of relevant attributes of game screens.
+- ``` src.service.ScreenContext.java ``` : Strategy context for screens, used in Main Game logic.
+- ``` src.service.entities ``` : All relevant entity logic.
+- ``` src.service.entities.items ``` : Logic for interactable items that the player can manipulate.
+- ``` src.service.entities.monsters ``` : Logic for monsters in combat.
+- ``` src.service.entities.heroes ```: Logic for player-controllable heroes in the player's party.
+- ``` src.service.entities.attribtues ``` : Logic for attributes of entities, including Attacking, Inventory, etc.
+- ``` src.service.entities.Player.java ``` : Logic for player controlled entities, as well as player-chosen game settings such as difficulty.
+- ``` src.service.game ``` : All Battle, Map Board, Inventory, Market models, as well as player input logic.
+- ``` src.service.game.MainGame.java ``` : Primary logic controller of entities, screens, and models.
+- ``` src.utils ``` : Helper functions utilized to track game statistics, print tables, print in color, and more. 
 
 
 ---
 
 ## Notes
 
-Explain any cool features, optimizations, or creative aspects of your program. Also, document any important design decisions.
+Implemented a complete skill-based role-playing game with object-oriented principles and design in mind. Heroes will aim to beat successive levels of bosses, while gaining experience and gold to spent at various Markets. Difficulty scales as game-time increases, but space for certain strategies are theoretically infinitely scalable. A complex battle system allows creativity in Hero inventory builds and utilization. 
 
-- Implemented an efficient sorting algorithm that runs in O(n log n).
-- Used recursion to simplify the solution.
-- Applied object-oriented principles such as inheritance and polymorphism.
+The game has been playtested with the goal of providing a nuanced strategy to continue to survive in the world of heroes and monsters. 
+
+#### Design highlights, covered more in design.md:
+
+- Modular architecture for future content expansion
+- Screen Management via the a Screen Context strategy pattern.
+- Random initialization and reinitialization of gamestate as players progress
 
 
 ---
 
 ## How to Compile and Run
 
-Provide clear, step-by-step instructions for compiling and running the program.
+From the source directory: 
 
-- Compile the code using: javac Main.java
+- Compile the code using: javac $(find . -name "*.java")  
 - Run the program: java Main
-
-
-If external libraries are needed, include installation instructions.
 
 ---
 
 ## Input/Output Example
 
 Provide a sample execution showcasing expected inputs and outputs.
+```
+This is the Map Screen!
++-------+-------+-------+-------+-------+-------+-------+-------+
+| H     |       |       |       |       |       | XXXXX | XXXXX |
+|       | BOSS! |       |       |       |       | XXXXX | XXXXX |
+|       |       |     M |       |       |       | XXXXX | XXXXX |
++-------+-------+-------+-------+-------+-------+-------+-------+
+| XXXXX |       |       |       |       |       |       |       |
+| XXXXX |       |       |       |       |       |       |       |
+| XXXXX |       |     M |     M |       |       |     M |       |
++-------+-------+-------+-------+-------+-------+-------+-------+
+|       |       |       | XXXXX |       | XXXXX |       | XXXXX |
+|       |       |       | XXXXX |       | XXXXX |       | XXXXX |
+|       |     M |       | XXXXX |       | XXXXX |       | XXXXX |
++-------+-------+-------+-------+-------+-------+-------+-------+
+|       |       |       | XXXXX | XXXXX | XXXXX | XXXXX |       |
+|       |       |       | XXXXX | XXXXX | XXXXX | XXXXX |       |
+|       |       |       | XXXXX | XXXXX | XXXXX | XXXXX |       |
++-------+-------+-------+-------+-------+-------+-------+-------+
+| XXXXX |       |       |       |       | XXXXX |       |       |
+| XXXXX |       |       |       |       | XXXXX |       |       |
+| XXXXX |       |       |     M |     M | XXXXX |       |       |
++-------+-------+-------+-------+-------+-------+-------+-------+
+|       | XXXXX |       |       |       | XXXXX |       |       |
+|       | XXXXX |       |       |       | XXXXX |       |       |
+|       | XXXXX |     M |       |       | XXXXX |     M |       |
++-------+-------+-------+-------+-------+-------+-------+-------+
+|       |       | XXXXX |       |       |       | XXXXX |       |
+|       |       | XXXXX |       |       |       | XXXXX |       |
+|     M |     M | XXXXX |       |       |       | XXXXX |       |
++-------+-------+-------+-------+-------+-------+-------+-------+
+|       | XXXXX | XXXXX |       | XXXXX |       |       |       |
+|       | XXXXX | XXXXX |       | XXXXX |       |       |       |
+|       | XXXXX | XXXXX |       | XXXXX |       |       |       |
++-------+-------+-------+-------+-------+-------+-------+-------+
+These are the inputs!
+Move Hero North: W
+Move Hero East: D
+Move Hero West: A
+Move Hero South: S
+Access Inventory: I
 
+Quit: Q
+```
 
 ---
 
 ## Dependencies and Requirements
 
-List any required software, libraries, or configurations.
-
-- Apache Commons Math library (included in /libs)
-- Tested on Ubuntu 22.04 and macOS Ventura
-
-
----
-
-## Known Issues or Bugs
-
-Document any known bugs, limitations, or unfinished features.
-
-- The program crashes when input is empty.
-- Edge case handling for negative numbers is incomplete.
-- Needs optimization for large datasets.
-
+- Tested on Java 1.8.432 and macOS Sonoma 14.5
 
 ---
 
 ## Testing Strategy
 
-Explain how you tested your code.
-
-- Tested with small and large input sizes.
-- Checked behavior with negative numbers and zero.
-- Compared output against known correct solutions.
+- Playtested code with various inputs to all screens
+- Aimed to provide seamless gameplay experience, even with malinformed inputs for a given gamestate
 
 
 ---
 
 ## References and Attribution
 
-List any external sources, books, tutorials, or online resources you used.
-
 - Used Stack Overflow for troubleshooting file I/O issues.
+- Used ChatGPT for debugging assistance.
+- Used GitHub Copilot for boilerplate generation and autocomplete while coding.
