@@ -50,7 +50,7 @@ To understand the architecture, we can start from a top-down overview, and conti
 
 Of the Middle level modules, there are 2 types; there are the many Screens and the corresponding classes for game logic. Screens wrap the game logic controllers, and provide the UI.
 
-### Screens
+#### Screens
 
 - Screens are built off of `src.services.screens.ScreenInterfaces.Screen.java`. This interface exposes:
 
@@ -67,6 +67,8 @@ Of the Middle level modules, there are 2 types; there are the many Screens and t
 - `InnerInput.java` provides additional methods for screens that need nested input handling, such as switching between submenus or managing complex interactions.
 
 #### Key Screens
+
+Each of these Screens wraps another piece of inner game logic and renders the state of the game based off of that object. 
 
 1. **IntroScreen**
 
@@ -106,5 +108,9 @@ Of the Middle level modules, there are 2 types; there are the many Screens and t
      - Displays hero and monster stats, including health bars and attributes.
      - Allows the player to select attacks or use items during their turn.
      - Tracks the battle's progress and determines victory or defeat.
+
+#### Game controller modules
+
+
 
 ---
