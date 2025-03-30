@@ -157,6 +157,8 @@ Each screen wraps a corresponding game controller module that encapsulates the c
 
 Each module implements specific interfaces, such as `PlayerControl` for handling player actions and `StatusDisplay` for managing and displaying statuses. They are designed to encapsulate their respective logic, ensuring modularity and separation of concerns. The modules maintain internal state, such as the current hero, inventory, or board layout, and provide methods to validate and process player actions. They also interact with utility classes like `StatsTracker` to record gameplay statistics and `TextColor` for status display formatting.
 
+Each Screen provides the game module the players input. In turn, the modules implement `PlayerControl` to handle the inputs, and provide `StatusDisplay` to pass information about the game state back to the Screen for the Screen to display. 
+
 1. **Market**
 
 - `src.service.game.market.Market.java`
