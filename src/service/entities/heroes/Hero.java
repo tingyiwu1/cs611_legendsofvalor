@@ -143,6 +143,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 			this.levelUpDodge();
 			this.levelUpMagicStrength();
 			this.levelUpStrength();
+			this.levelUpHealth();
 			this.healDamage(50);
 			// recharge spells
 			for(int i = 0; i < this.items.size(); i++){
@@ -361,6 +362,11 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 
 		return attacks;
 		
+	}
+
+	public void levelUpHealth(){
+		this.maxHealth += levelBoon * 2 + rng.nextInt(3);
+		this.healDamage(levelBoon * 2);
 	}
 
 	public void levelUpStrength(){

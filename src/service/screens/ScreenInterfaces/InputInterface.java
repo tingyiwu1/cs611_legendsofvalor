@@ -1,4 +1,4 @@
-package src.service.screens;
+package src.service.screens.ScreenInterfaces;
 import src.util.PrintColor;
 import src.util.TextColor;
 

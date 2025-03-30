@@ -2,6 +2,7 @@ package src.service.game;
 import src.service.game.board.GameBoard;
 import src.service.game.market.MarketItem;
 import src.service.screens.ScreenContext;
+import src.service.screens.ScreenInterfaces.Screen;
 import src.service.entities.Player;
 
 import java.util.Random;
@@ -12,7 +13,6 @@ import java.util.HashMap;
 import src.service.game.MainGame;
 import src.service.screens.MapScreen;
 import src.service.screens.MarketScreen;
-import src.service.screens.Screen;
 import src.service.game.battle.Battle;
 import src.service.game.battle.BattleMonsterFactory;
 import src.service.game.battle.BattleMonsterFactory.monsterType;

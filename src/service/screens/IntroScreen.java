@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 import src.service.entities.Player;
 import src.service.entities.Player.Difficulty;
+import src.service.screens.ScreenInterfaces.InputInterface;
+import src.service.screens.ScreenInterfaces.Screen;
 import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.TextColor;

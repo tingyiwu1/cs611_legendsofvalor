@@ -1,4 +1,4 @@
-package src.service.screens;
+package src.service.screens.ScreenInterfaces;
 
 public interface InnerInput {
 	void displayInnerQuery();

@@ -8,6 +8,8 @@ import src.service.entities.heroes.Hero;
 import src.service.entities.items.Item;
 import src.service.entities.monsters.Monster;
 import src.service.game.battle.Battle;
+import src.service.screens.ScreenInterfaces.InputInterface;
+import src.service.screens.ScreenInterfaces.Screen;
 import src.util.PrintingUtil;
 import src.util.ItemType;
 import src.util.PrintColor;

@@ -1,5 +1,7 @@
 package src.service.screens;
 
+import src.service.screens.ScreenInterfaces.Screen;
+
 public class ScreenContext {
 
 	private Screen currScreen;

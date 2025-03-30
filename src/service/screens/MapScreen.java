@@ -3,6 +3,8 @@ package src.service.screens;
 import java.util.Scanner;
 
 import src.service.game.board.GameBoard;
+import src.service.screens.ScreenInterfaces.InputInterface;
+import src.service.screens.ScreenInterfaces.Screen;
 import src.util.PieceType;
 import src.util.PrintColor;
 import src.util.TextColor;
