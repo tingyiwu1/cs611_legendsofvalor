@@ -29,6 +29,26 @@ This project is a turn-based role-playing game (RPG) built with object-oriented 
 - Polymorphism: Screens are initialized and continuously rendered through the polymorphic Screen Strategy interfaces
 - Abstraction: The Screens abstract away the core Game module logic, providing simply the interface to interact with the game
 
+### Seperation of Concerns
+- A primary motivation behind the design of the assignment was seperation of concerns. Namely, that the Main Game state controller was seperate from the game models in the core, which was seperate from the view controllers. Hence, we have: Top level controller(MainGame), communicating with view models(Screens), interacting with logic models(Game controller modules), interacting with lower-level data modules(Items, Heroes, Monsters).
+  - This makes each component more independent, and easier to test.
+  - Also, further additions of components would be more straightforward, as a new screen would simply require creating a new screen view itself, and then writing the logic for when this screen should be shown.
+  - Factories for Monsters and Items are implemented to read in from a CSV file, making game balance and creation more straightforward. 
+
+
+### Testing Consideration
+- Playtested all input scenarios for every screen: battle, inventory, market, and map.
+- Tested edge cases including out-of-bound inputs, invalid item usage, and attempting unequips from empty slots.
+- Used visual inspection of printed status logs and debugging tools to verify dodge chance calculations, leveling formulas, and equipment effects.
+
+
+### Future Expansions
+- Gameplay-related expansion: the framework to build more additional damage types, more complex battle calculations, and more are there, and if there was more time for this assignment that is what I would do
+- Adding more ASCII Art and prettifying some of the UI pieces that currently simply dump a lot of infomration on the player.
+- Making Map Generation using a better algorithm rather than randomly generated(currently there exists a chance of bad maps)
+
+
+
 ---
 
 ## Detailed Architecture Overview
