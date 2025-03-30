@@ -40,7 +40,27 @@ To understand the architecture, we can start from a top-down overview, and conti
 - ``` Main.java ``` is the entry point to the program. It simply calls and instantiates the Main Game
 - ``` src.service.game.MainGame.java ``` is the primary State Machine for the game screens. 
   -  In the constructor, it initializes an 8 by 8 game board, and then a Screen strategy context.
-  -  It provides the core logic for when the strategy should switch screens. 
+  -  It provides the core logic for when the strategy should switch screens.
+- ``` src.service.screens.ScreenContext.java ``` This is the Screen strategy context that ```MainGame.java``` utilizes to display each screen. It primarily implements the following methods:
+  - ```setScreen()``` will set the screen to a new screen
+  - ```displayScreen()``` will call the current screens ```displayAndProgress()``` method, abstracting the displayed screen from the main state machine logic.
+  - ```getLastInput()``` will return the current screens last seen input, which is how the Main state machine logic progresses.
+
+
+### Mid Level Modules
+
+Of the Middle level modules, there are 2 types; there are the many Screens and the corresponding classes for game logic. Screens wrap the game logic controllers, and provide the UI. 
+
+### Screens
+
+- Screens are built off of ``` src.services.screens.ScreenInterfaces.Screen.java ```. This interface exposes:
+  - ```displayAndProgress()``` for displaying the game logic controllers status / a UI for the current game state.
+  - ```displayStatuses()``` for printing out the current statuses that the game logic produces.
+  - ```displayPauseAndProgress() ``` for when an intermediary screen may be needed, such as to confirm a choice or to inform the player of an event.
+  - ```getLastInput()``` provides the screens last seen input, and allows both the parent strategy to access it for state based decisions or to push the latest event down to the game logic to make a change to the game state
+ 
+- Screens that have a need for an input can extend ```InputInterface.java```, which provides an overloaded static method ```DisplayInputOption``` to print to screen different colored Input Options, as well as ```DisplayInputs()``` method so screens can display all possible inputs and recieve the players input in turn.
+- ```InnerInput.java``` finally provides methods for 
 
 
 
