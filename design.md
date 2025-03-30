@@ -42,6 +42,14 @@ This project is a turn-based role-playing game (RPG) built with object-oriented 
 - Used visual inspection of printed status logs and debugging tools to verify dodge chance calculations, leveling formulas, and equipment effects.
 
 
+
+### Gameplay Decisions
+- There are 3 strategies to bring to scale to victory. One is maximizing strenght, second is maximizing defense, and 3rd is maximizing dodge.
+- Heroes are set and are in a set order within the party to support these strategies. Because the first Warrior has high defense, he is effective at taking a hit and then swapping. The mage has high strength, and when well equipped can one-shot enemies. The Assassin has high dodge, and can dodge-tank through the enemies attacks.
+  - Through finding stat-boosting potions of the specific stat, one can maximize a heroes stats to always win.
+- I created a Boss. Otherwise, the player simply walks around in circles looking for enemies. With a boss, the player has an intermediary goal.  
+
+
 ### Future Expansions
 - Gameplay-related expansion: the framework to build more additional damage types, more complex battle calculations, and more are there, and if there was more time for this assignment that is what I would do
 - Adding more ASCII Art and prettifying some of the UI pieces that currently simply dump a lot of infomration on the player.
