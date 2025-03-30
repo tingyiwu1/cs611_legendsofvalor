@@ -1,3 +1,10 @@
+/**
+ * The InventoryScreen class represents a screen in the game where the player can
+ * manage the inventory of their heroes. It allows the player to view and interact
+ * with the inventory of a selected hero, including equipping, unequipping, and
+ * consuming items. The class implements the Screen, InputInterface, and InnerInput
+ * interfaces to handle display and user input functionality.
+ */
 package src.service.screens;
 
 import java.util.ArrayList;

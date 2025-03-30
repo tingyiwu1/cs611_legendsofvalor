@@ -1,3 +1,10 @@
+
+
+/**
+ * The BattleScreen class represents the user interface for a battle in the game.
+ * It implements the Screen and InputInterface interfaces to handle displaying
+ * battle information and processing user input during the battle.
+ */
 package src.service.screens;
 
 import java.util.ArrayList;

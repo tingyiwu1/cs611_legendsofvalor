@@ -1,6 +1,12 @@
+/**
+ * The Weapon class represents a weapon item in the game. It implements the Item and Equippable
+ * interfaces, providing functionality for weapons that can be equipped and used by characters.
+ */
 package src.service.entities.items;
 
 import src.util.ItemType;
+
+
 
 public class Weapon implements Item, Equippable {
 	

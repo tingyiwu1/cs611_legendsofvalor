@@ -1,3 +1,8 @@
+/**
+ * The IntroScreen class represents the introductory screen of a turn-based RPG game.
+ * It implements the Screen interface and provides functionality for displaying the
+ * game's introduction, initializing the player, and handling user input for game setup.
+ */
 package src.service.screens;
 
 import java.util.Scanner;

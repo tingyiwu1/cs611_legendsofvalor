@@ -1,3 +1,9 @@
+
+
+/**
+ * The Screen interface defines the structure for screen components in the application.
+ * It provides methods for displaying content, handling user input, and managing screen transitions.
+ */
 package src.service.screens.ScreenInterfaces;
 
 import src.util.PrintColor;

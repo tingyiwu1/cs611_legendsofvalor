@@ -1,3 +1,9 @@
+/**
+ * The MarketScreen class represents the user interface for interacting with the in-game market.
+ * It allows players to select a hero, view available items for purchase, and make transactions.
+ * The class implements the Screen, InputInterface, and InnerInput interfaces to handle user input
+ * and display the appropriate screens.
+ */
 package src.service.screens;
 
 import java.util.ArrayList;

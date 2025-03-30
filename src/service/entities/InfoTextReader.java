@@ -1,4 +1,12 @@
+/**
+ * The InfoTextReader class provides utility methods for reading and parsing text files
+ * to create lists of game entities such as Monsters and MarketItems. These methods
+ * are designed to process specific file formats and convert the data into objects
+ * used within the game.
+
+ */
 package src.service.entities;
+
 
 import java.io.BufferedReader;
 import java.io.FileReader;

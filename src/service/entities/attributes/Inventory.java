@@ -1,8 +1,14 @@
+/**
+ * The Inventory interface represents a collection of items that can be managed
+ * by adding, removing, equipping, and unequipping items. It provides methods
+ * to interact with the inventory and manage equipped items.
+ */
 package src.service.entities.attributes;
 
 import java.util.ArrayList;
 
 import src.service.entities.items.Item;
+
 
 public interface Inventory {
 

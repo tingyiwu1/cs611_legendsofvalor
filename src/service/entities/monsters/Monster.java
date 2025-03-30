@@ -1,3 +1,8 @@
+/**
+ * The Monster class represents a monster entity in the game, extending the Entity class
+ * and implementing the Attacks interface. It encapsulates the attributes and behaviors
+ * of a monster, including its rewards, weapon, and combat capabilities.
+ */
 package src.service.entities.monsters;
 
 import java.util.ArrayList;
@@ -8,6 +13,8 @@ import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Attacks;
 import src.service.entities.items.Item;
 import src.service.entities.items.Weapon;
+
+
 
 public class Monster extends Entity implements Attacks {
 

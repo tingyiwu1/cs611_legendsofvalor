@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import src.service.game.market.MarketItem;
 import src.util.PieceType;
 
+/**
+ * Map Piece for the game board, providing different types of tiles that 
+ * change how the game can be interacted with
+ */
+
 public class MapPiece {
 	PieceType type;
 	ArrayList<MarketItem> marketOfferingsAtSquare;

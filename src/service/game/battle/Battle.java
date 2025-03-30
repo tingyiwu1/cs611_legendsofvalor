@@ -1,6 +1,42 @@
+/**
+ * The Battle class represents a battle sequence between a hero and a monster in a game.
+ * It manages the turn-based combat mechanics, including attacks, dodges, critical hits, 
+ * and the outcomes of the battle. The class also handles hero and monster status updates, 
+ * rewards for winning, and switching between heroes in the player's party.
+ * 
+ * Key Features:
+ * - Tracks the current hero, monster, and their respective attacks.
+ * - Implements turn-based combat mechanics with dodge and critical hit calculations.
+ * - Processes hero and monster attacks, including the use of items like potions.
+ * - Handles battle outcomes, such as hero victory, monster victory, and leveling up.
+ * - Supports switching between heroes in the player's party when one is defeated.
+ * - Displays battle statuses with color-coded messages for better readability.
+ * - Tracks battle statistics using the StatsTracker utility.
+ * 
+ * Implements:
+ * - PlayerControl: Provides methods to validate and process player moves.
+ * - StatusDisplay: Manages the display of battle statuses and their associated colors.
+ * 
+ * Constructor:
+ * - Battle(Player player, Monster monster): Initializes the battle with the given player and monster.
+ * 
+ * Public Methods:
+ * - Boolean battleCycle(): Progresses the battle cycle and updates statuses.
+ * - Boolean isBattleOver(): Checks if the battle is over.
+ * - boolean isBossBattle(): Checks if the current battle is a boss battle.
+ * - Boolean isGameOver(): Checks if the game is over (all heroes defeated).
+ * - Boolean getDidLevelUp(): Checks if any hero leveled up during the battle.
+ * - Boolean isMoveValid(Character inputtedMove): Validates the player's inputted move.
+ * - Boolean makeMove(Character inputtedMove): Processes the player's move and updates the battle state.
+ * - Hero getHero(): Returns the current hero in the battle.
+ * - ArrayList<AttackOption> getHeroAttacks(): Returns the list of attack options for the current hero.
+
+ */
 package src.service.game.battle;
 
 import java.util.ArrayList;
+
+
 
 import src.service.entities.Player;
 import src.service.entities.attributes.AttackOption;

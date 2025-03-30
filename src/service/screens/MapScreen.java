@@ -1,3 +1,8 @@
+/**
+ * The MapScreen class represents a screen in the game that displays the game board
+ * and allows the player to interact with it by providing inputs. It implements the
+ * Screen and InputInterface interfaces to handle screen display and user input.
+ */
 package src.service.screens;
 
 import java.util.Scanner;

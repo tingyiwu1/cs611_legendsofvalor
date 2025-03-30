@@ -1,3 +1,11 @@
+
+
+/**
+ * The Market class represents a marketplace where a player can purchase items for their hero.
+ * It implements the PlayerControl and StatusDisplay interfaces to handle player interactions
+ * and display status messages during the market operations.
+ *
+ */
 package src.service.game.market;
 
 import java.util.ArrayList;
@@ -24,20 +32,6 @@ public class Market implements PlayerControl, StatusDisplay{
 		this.statusColors = new ArrayList<TextColor>();
 		this.lastInput = ' ';
 		this.marketOfferings = ItemFactory.generateRandomMarketItems(this.activeHero.getLevel() + 2);
-	// int damage, String name, String description, Integer levelRequirement, Integer maxUses
-		// this.marketOfferings.add(new MarketItem(new Spell
-		// 	(4, "Debug Dart", "A short darting dart for debugging", 0, 10),
-		// 	 30));
-		// this.marketOfferings.add(new MarketItem(new Weapon
-		// 	(40, "Yapping Club", "A club with a head that screams on it"), 20));
-		// this.marketOfferings.add(new MarketItem(new Armor
-		// 	("Debugging Helm of Darkness", "A dark helmet", ItemType.HELMET), 10));
-		// this.marketOfferings.add(new MarketItem(new Armor
-		// 	("Debugging Chestplate of Darkness", "A dark Chestplate", ItemType.CHEST), 10));
-		// this.marketOfferings.add(new MarketItem(new Armor
-		// 	("Debugging Leggings of Darkness", "A dark helmet", ItemType.LEGS), 10));
-		// this.marketOfferings.add(new MarketItem(new Armor
-		// 	("Debugging Boots of Darkness", "A dark helmet", ItemType.BOOTS), 10));
 	}
 	public Market(Player player, int activeHero, ArrayList<MarketItem> marketOfferings){
 		this.activeHero = player.getParty()[activeHero];

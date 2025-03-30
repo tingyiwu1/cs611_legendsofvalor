@@ -1,3 +1,10 @@
+/**
+ * The MainGame class serves as the primary state machine for the game, managing
+ * the flow of gameplay, transitions between different screens, and interactions
+ * between the player and various game components. It handles the core game loop,
+ * player actions, and game state transitions.
+ *
+ */
 package src.service.game;
 import src.service.game.board.GameBoard;
 import src.service.game.market.MarketItem;
@@ -24,6 +31,10 @@ import src.util.PieceType;
 import src.util.PrintingUtil;
 import src.util.ScreenState;
 import src.util.StatsTracker;
+
+/**
+ * The primary state machine for how the game is played out
+ */
 
 public class MainGame {
 

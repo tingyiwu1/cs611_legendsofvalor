@@ -1,6 +1,16 @@
+/**
+ * The Entity class serves as an abstract base class for all entities in the game.
+ * It provides common attributes such as health, level, name, strength, magic strength,
+ * defense, and dodge, along with methods to manipulate and retrieve these attributes.
+
+ * 
+ * This class is intended to be extended by specific entity types.
+ */
 package src.service.entities;
 
 import src.util.StatsTracker;
+
+
 
 public abstract class Entity {
 

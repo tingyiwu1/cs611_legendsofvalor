@@ -1,3 +1,41 @@
+/**
+ * The Hero class represents a playable character in the game. It extends the Entity class
+ * and implements the Attacks, Inventory, and Shopper interfaces. Heroes have attributes 
+ * such as health, level, strength, magic strength, defense, dodge, experience, and gold. 
+ * They can equip items, gain experience, level up, and perform various actions like attacking 
+ * and managing their inventory.
+ * 
+ * Features:
+ * - Manage inventory and equipped items.
+ * - Gain experience and level up, improving stats and abilities.
+ * - Perform attacks using weapons, spells, or potions.
+ * - Display hero stats and information in a formatted manner.
+ * - Update inventory by removing depleted potions.
+ * 
+ * Attributes:
+ * - items: A list of items in the hero's inventory.
+ * - equipment: An array representing equipped items (main hand, offhand, helmet, chest, legs, boots).
+ * - gold: The amount of gold the hero possesses.
+ * - experience: The current experience points of the hero.
+ * - breakpoint: The experience threshold required to level up.
+ * - levelBoon: The stat increase per level up.
+ * - rng: A Random object for generating random values during level-ups.
+ * 
+ * Methods:
+ * - Constructors: Initialize hero attributes with default or custom values.
+ * - setLevelBoon: Set the level boon value.
+ * - getShortHeroDisplay: Get a short summary of the hero's stats.
+ * - getHeroDisplay: Get a detailed display of the hero's stats.
+ * - gainExperience: Add experience points and handle leveling up.
+ * - getBreakpoint: Get the experience threshold for leveling up.
+ * - Gold management: Methods to earn, spend, and check affordability of gold.
+ * - Stat calculations: Methods to calculate final stats considering equipped items.
+ * - Buff methods: increase hero stats.
+ * - Inventory management: Add, remove, equip, unequip, and update items in the inventory.
+ * - Attack methods: Perform main hand attacks and retrieve a list of available attacks.
+ * - Level-up methods: Increase stats and health when leveling up.
+ * - updateInventory: Remove depleted potions and update equipment indices.
+ */
 package src.service.entities.heroes;
 
 import java.util.ArrayList;
@@ -15,6 +53,8 @@ import src.service.entities.items.Weapon;
 import src.util.ItemType;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
+
+
 
 public class Hero extends Entity implements Attacks, Inventory, Shopper {
 

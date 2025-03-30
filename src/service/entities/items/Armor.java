@@ -1,6 +1,33 @@
+/**
+ * The Armor class represents an equippable armor item in the game.
+ * It provides various bonuses to the character's attributes such as strength,
+ * magic strength, defense, and dodge. Armor does not deal damage and has
+ * unlimited uses.
+ * 
+ * This class implements the Item and Equippable interfaces.
+ * 
+ * Attributes:
+ * - bonusStrength: The bonus strength provided by the armor.
+ * - bonusMagicStrength: The bonus magic strength provided by the armor.
+ * - bonusDefense: The bonus defense provided by the armor.
+ * - bonusDodge: The bonus dodge provided by the armor.
+ * - name: The name of the armor.
+ * - description: A description of the armor.
+ * - levelRequirement: The level requirement to equip the armor.
+ * - itemType: The type of the item (fixed to ARMOR).
+ * 
+ * Constructors:
+ * - Armor(String name, String description, ItemType type): Creates an armor
+ *   with default bonuses and level requirement.
+ * - Armor(String name, String description, ItemType type, Integer bonusStrength,
+ *   Integer bonusMagicStrength, Integer bonusDefense, Integer bonusDodge): 
+ *   Creates an armor with specified bonuses and default level requirement.
+ * 
+ */
 package src.service.entities.items;
 
 import src.util.ItemType;
+
 
 public class Armor implements Item, Equippable {
 

@@ -1,3 +1,8 @@
+/**
+ * The ScreenContext class manages the current screen in the application and provides
+ * methods to interact with it. It acts as a context for the screen, allowing the 
+ * application to switch between different screens and handle their behavior.
+ */
 package src.service.screens;
 
 import src.service.screens.ScreenInterfaces.Screen;

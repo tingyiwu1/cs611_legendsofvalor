@@ -1,7 +1,16 @@
+/**
+ * The Consumable class represents an abstract item that can be consumed
+ * a limited number of times. It implements the Item interface and provides
+ * common functionality for consumable items such as tracking remaining uses,
+ * maximum uses, and other item properties.
+
+ */
 package src.service.entities.items;
 
 import src.util.ItemType;
 import src.service.entities.items.Item;
+
+
 
 public abstract class Consumable implements Item{
 	private Integer damage;

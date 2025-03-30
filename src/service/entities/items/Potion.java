@@ -1,8 +1,20 @@
+/**
+ * The Potion class represents a consumable item in the game that provides buffs
+ * or heals a hero when used. Potions have different types, each corresponding 
+ * to a specific stat or effect they modify. This class extends the Consumable 
+ * class and provides functionality for using potions and applying their effects 
+ * to a hero.
+ * 
+ */
 package src.service.entities.items;
 
 import src.service.entities.heroes.Hero;
 import src.util.ItemType;
 import src.util.StatsTracker;
+
+/*
+ * 
+ */
 
 public class Potion extends Consumable{
 	private int potionType;

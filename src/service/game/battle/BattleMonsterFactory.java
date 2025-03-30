@@ -1,3 +1,8 @@
+/**
+ * The BattleMonsterFactory class is responsible for generating random monsters
+ * for battles in the game. It supports generating both normal and boss monsters
+ * based on the specified type and level.
+ */
 package src.service.game.battle;
 
 import java.util.ArrayList;
@@ -5,6 +10,8 @@ import java.util.Random;
 
 import src.service.entities.InfoTextReader;
 import src.service.entities.monsters.Monster;
+
+
 
 public class BattleMonsterFactory {
 	public static final String FILEPATH = "src/service/entities/infoTexts/BasicMonsterList.txt";

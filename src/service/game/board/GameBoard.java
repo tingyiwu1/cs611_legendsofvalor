@@ -9,7 +9,6 @@ import java.util.Random;
 
 /*
  * Game Board for the entire game
- * But should this instead be extending a board class or implementing a board interface instead?
  */
 public class GameBoard implements PlayerControl{
 	private MapPiece[][] currentBoard;

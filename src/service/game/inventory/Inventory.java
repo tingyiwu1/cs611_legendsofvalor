@@ -1,3 +1,22 @@
+/**
+ * The Inventory class represents the inventory system for a hero in the game.
+ * It provides functionality to manage and interact with items, including equipping,
+ * unequipping, and using items such as potions. The class also implements status
+ * display functionality to provide feedback to the user about actions performed
+ * within the inventory.
+ * 
+ * 
+ * Key Methods:
+ * - isMoveValid(Integer itemSlot, Integer itemIndex): Validates the item slot and index.
+ * - makeMove(Integer itemSlot, Integer itemIndex): Validates and processes an inventory action.
+ * - processMove(Integer itemSlot, Integer itemIndex): Executes the inventory action, such as
+ *   equipping or using an item.
+ * - clearStatuses(): Clears all status messages and their colors.
+ * - addStatus(String status, TextColor color): Adds a status message with a specific color.
+ * - removeStatus(int index): Removes a status message and its color by index.
+ * - getStatusList(): Retrieves the list of status messages.
+ * - getStatusColors(): Retrieves the list of status message colors.
+ */
 package src.service.game.inventory;
 
 import src.service.game.StatusDisplay;
@@ -9,6 +28,8 @@ import java.util.ArrayList;
 import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
 import src.service.entities.items.Potion;
+
+
 
 public class Inventory implements InventoryControl, StatusDisplay {
 

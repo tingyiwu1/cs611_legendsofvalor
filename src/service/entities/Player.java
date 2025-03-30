@@ -1,3 +1,10 @@
+/**
+ * The Player class represents a player in the game, managing their party of heroes
+ * and handling interactions with game mechanics such as difficulty settings, experience
+ * gain, gold earnings, and monster level determination. It also implements the 
+ * BattleWinnerHandler interface to define behavior when a hero wins a battle.
+
+ */
 package src.service.entities;
 import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;

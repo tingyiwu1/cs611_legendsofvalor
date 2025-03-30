@@ -1,4 +1,13 @@
+/**
+ * The ItemFactory class is responsible for generating a list of random market items
+ * from a predefined list of items stored in a text file. It provides functionality
+ * to read the items from the file and randomly select a specified number of items
+ * to create a subset.
+ *
+ */
 package src.service.game.market;
+
+
 
 import src.service.entities.InfoTextReader;
 

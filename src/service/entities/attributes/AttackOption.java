@@ -2,6 +2,10 @@ package src.service.entities.attributes;
 
 import src.service.entities.items.Item;
 
+/**
+ * Represents an attack option in the game, which includes details such as
+ * the name, description, source item, and damage value of the attack.
+ */
 public class AttackOption {
 	private String name;
 	private String description;
@@ -14,16 +18,18 @@ public class AttackOption {
 		this.sourceItem = sourceItem;
 		this.damage = damage;
 	}
-
 	public String getName() {
 		return this.name;
 	}
+
 	public String getDescription() {
 		return this.description;
 	}
+
 	public Item getSourceItem() {
 		return this.sourceItem;
 	}
+
 	public Integer getDamage() {
 		return this.damage;
 	}

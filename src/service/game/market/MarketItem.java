@@ -1,3 +1,9 @@
+
+/**
+ * The MarketItem class represents an item available in the market along with its price.
+ * It encapsulates the details of an item and its associated cost, providing methods
+ * to retrieve the item and its price.
+ */
 package src.service.game.market;
 
 import src.service.entities.items.Item;
