@@ -29,34 +29,19 @@ public class GameBoard implements PlayerControl{
 			}
 		}
 		this.charX = 0;
-		this.charY = 0;
+		this.charY = 7;
 
 		//randomly add walls and markets
 		int totalSpaces = size * size;
-		int numWalls = (int)(totalSpaces * wallPercent);
 		int numMarkets = (int)(totalSpaces * marketPercent);
 
 		Random rand = new Random();
-		for(int i = 0; i < numWalls; i++){
-			int index = rand.nextInt(totalSpaces);
-			int x = index / size;
-			int y = index % size;
-			if(this.currentBoard[x][y].getPieceType() == PieceType.WALL){
-				i--;
-			} else {
-				this.currentBoard[x][y] = new MapPiece(PieceType.WALL);
-			}
+		for(int i = 0; i < this.size; i++){
+			this.currentBoard[i][2].setPieceType(PieceType.WALL);	
+			this.currentBoard[i][5].setPieceType(PieceType.WALL);	
+
 		}
-		for(int i = 0; i < numMarkets; i++){
-			int index = rand.nextInt(totalSpaces);
-			int x = index / size;
-			int y = index % size;
-			if(this.currentBoard[x][y].getPieceType() == PieceType.WALL){
-				i--;
-			} else {
-				this.currentBoard[x][y] = new MapPiece(PieceType.MARKET);
-			}
-		}
+
 		while(getPieceAt(this.charX, this.charY).getPieceType() != PieceType.EMPTY){
 			this.charX += 1;
 			if(this.charX == size){
