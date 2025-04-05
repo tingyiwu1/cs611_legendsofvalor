@@ -6,5 +6,9 @@ public enum PieceType {
 	MONSTER,
 	MARKET,
 	HERO,
-	BOSS
+	BOSS,
+	OBSTACLE,
+	MONSTER_NEXUS,
+	HERO_NEXUS,
+	BUFF // bush, cave, koulou 
 }

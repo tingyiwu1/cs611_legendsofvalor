@@ -12,7 +12,6 @@ import src.service.screens.ScreenInterfaces.InputInterface;
 import src.service.screens.ScreenInterfaces.Screen;
 import src.util.PieceType;
 import src.util.PrintColor;
-import src.util.TextColor;
 import src.util.PrintingUtil;
 
 
@@ -60,8 +59,10 @@ public class MapScreen implements Screen, InputInterface {
 						System.out.print(" XXXXX ");
 					} else if(heroLocation[0] == r && heroLocation[1] == c && inner == 0){
 						PrintColor.red(" H     ");
-					} else if(currentPieceType == PieceType.BOSS && inner == 1){
-						PrintColor.red(" BOSS! ");
+					} else if(currentPieceType == PieceType.HERO_NEXUS && inner == 1){
+						PrintColor.blue(" NEXUS ");
+					} else if(currentPieceType == PieceType.MONSTER_NEXUS && inner == 1){
+						PrintColor.red(" NEXUS ");
 					} else if(currentPieceType == PieceType.MARKET && inner == 2){
 						PrintColor.yellow("     M ");
 					} else {

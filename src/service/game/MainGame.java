@@ -64,20 +64,22 @@ public class MainGame {
 		Scanner scanny = new Scanner(System.in);
 
 		ScreenContext myScreen = new ScreenContext(null);
-		IntroScreen initScreen = new IntroScreen(scanny);
-		myScreen.setScreen(initScreen);
 
-		this.currentPlayer = initScreen.initializePlayer();
-		if(initScreen.getLastInput() == 'q'){
-			continueToGame = false;
-		}
+		// TODO DEBUGGING COMMENTED OUT
+		// IntroScreen initScreen = new IntroScreen(scanny);
+		// myScreen.setScreen(initScreen);
 
-		if(continueToGame){
-			myScreen.displayScreen();
-			if(myScreen.getLastInput() == 'q'){
-				continueToGame = false;
-			}
-		}
+		// this.currentPlayer = initScreen.initializePlayer();
+		// if(initScreen.getLastInput() == 'q'){
+		// 	continueToGame = false;
+		// }
+
+		// if(continueToGame){
+		// 	myScreen.displayScreen();
+		// 	if(myScreen.getLastInput() == 'q'){
+		// 		continueToGame = false;
+		// 	}
+		// }
 
 
 		
@@ -203,7 +205,7 @@ public class MainGame {
 						this.currBattle = new Battle(currentPlayer, BattleMonsterFactory.generateRandomMonster(monsterType.BOSS, this.currentPlayer.getMonsterLevel()));
 						myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
 					// otherwise, go to battle with a 50% chance. TODO
-					} else if(randomNum < 50){
+					} else if(randomNum < 0){
 						myScreen.getScreen().displayPauseAndProgress("You encountered an enemy!");
 						StatsTracker.addToStats("Encountered Enemies", 1);
 						lastInput = myScreen.getLastInput();

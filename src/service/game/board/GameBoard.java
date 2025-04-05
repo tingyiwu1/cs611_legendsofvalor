@@ -28,28 +28,34 @@ public class GameBoard implements PlayerControl{
 				this.currentBoard[i][j] = new MapPiece();
 			}
 		}
-		this.charX = 0;
-		this.charY = 7;
+		this.charX = 7;
+		this.charY = 0;
 
 		//randomly add walls and markets
-		int totalSpaces = size * size;
-		int numMarkets = (int)(totalSpaces * marketPercent);
+		// int totalSpaces = size * size;
+		// int numMarkets = (int)(totalSpaces * marketPercent);
 
-		Random rand = new Random();
+		// Random rand = new Random();
 		for(int i = 0; i < this.size; i++){
 			this.currentBoard[i][2].setPieceType(PieceType.WALL);	
 			this.currentBoard[i][5].setPieceType(PieceType.WALL);	
-
 		}
 
-		while(getPieceAt(this.charX, this.charY).getPieceType() != PieceType.EMPTY){
-			this.charX += 1;
-			if(this.charX == size){
-				this.charX = 0;
-				this.charY += 1;
+		for(int r = 0; r < this.size; r++){
+			if(r != 2 && r != 5){
+				this.currentBoard[0][r].setPieceType(PieceType.MONSTER_NEXUS);
+				this.currentBoard[7][r].setPieceType(PieceType.HERO_NEXUS);
 			}
 		}
-		this.setNewBoss();
+
+		// while(getPieceAt(this.charX, this.charY).getPieceType() != PieceType.EMPTY){
+		// 	this.charX += 1;
+		// 	if(this.charX == size){
+		// 		this.charX = 0;
+		// 		this.charY += 1;
+		// 	}
+		// }
+		// this.setNewBoss();
 	}
 
 	public void setNewBoss() {
