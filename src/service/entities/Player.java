@@ -8,6 +8,7 @@
 package src.service.entities;
 import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;
+import src.service.entities.attributes.Position;
 import src.service.entities.heroes.BattleWinnerHandler;
 
 
@@ -54,9 +55,9 @@ public class Player implements BattleWinnerHandler{
 
 		this.party = new Hero[numHeros];
 
-		Hero warrior = new Hero(150, 1, "The Warrior", 50, 30, 45, 10);
-		Hero mage = new Hero(90, 1, "The Mage", 30, 75, 35, 10);
-		Hero assassin = new Hero(120, 1, "The Assassin", 50, 50, 40, 50);
+		Hero warrior = new Hero(150, 1, "The Warrior", 50, 30, 45, 10, new Position(7, 0));
+		Hero mage = new Hero(90, 1, "The Mage", 30, 75, 35, 1,  new Position(7, 3));
+		Hero assassin = new Hero(120, 1, "The Assassin", 50, 50, 40, 507,  new Position(7, 6));
 
 		for (int i = 0; i < numHeros; i++) {
 			if (i == 0) {

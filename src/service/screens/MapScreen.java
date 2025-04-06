@@ -5,8 +5,12 @@
  */
 package src.service.screens;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import src.service.entities.Entity;
+import src.service.entities.Entity.EntityType;
+import src.service.entities.attributes.Position;
 import src.service.game.board.GameBoard;
 import src.service.screens.ScreenInterfaces.InputInterface;
 import src.service.screens.ScreenInterfaces.Screen;
@@ -43,27 +47,53 @@ public class MapScreen implements Screen, InputInterface {
 
 	// need to display the game board
 	public void displayMap() {
+
+		ArrayList<Entity> entityList = currGameBoard.getEntityList();
+		ArrayList<Position> entityPositions = new ArrayList<Position>();
+		for (Entity entity : entityList) {
+			entityPositions.add(entity.getPosition());
+		}
 		// rows
-		for(int r = 0; r < gameSize; r++){
-			for(int i = 0; i < gameSize; i++){
+		for (int r = 0; r < gameSize; r++) {
+			for (int i = 0; i < gameSize; i++) {
 				System.out.print("+-------");
 			}
 			System.out.println("+");
-	
+
 			for (int inner = 0; inner < 3; inner++) {
 				for (int c = 0; c < gameSize; c++) {
 					PieceType currentPieceType = currGameBoard.getPieceAt(r, c).getPieceType();
-					int[] heroLocation = currGameBoard.getCharacterLocation();
 					System.out.print("|");
-					if(currentPieceType == PieceType.WALL){
+					if (currentPieceType == PieceType.WALL) {
 						System.out.print(" XXXXX ");
-					} else if(heroLocation[0] == r && heroLocation[1] == c && inner == 0){
-						PrintColor.red(" H     ");
-					} else if(currentPieceType == PieceType.HERO_NEXUS && inner == 1){
+					} else if (inner == 0 && entityPositions.contains(new Position(r, c))) {
+						// Check if a hero is at this position and print " H " in the center row
+						boolean hasHero = false;
+						boolean hasMonster = false;
+						for (Entity entity : entityList) {
+							if (entity.getPosition().equals(new Position(r, c))) {
+								if (entity.getType() == EntityType.HERO) {
+									hasHero = true;
+								} else if (entity.getType() == EntityType.MONSTER) {
+									hasMonster = true;
+								}
+							}
+						}
+						if (hasHero && hasMonster) {
+							PrintColor.red(" H  ");
+							PrintColor.yellow(" M ");
+						} else if (hasHero) {
+							PrintColor.red(" H     ");
+						} else if (hasMonster) {
+							PrintColor.yellow("     M ");
+						} else {
+							System.out.print("       ");
+						}
+					} else if (currentPieceType == PieceType.HERO_NEXUS && inner == 1) {
 						PrintColor.blue(" NEXUS ");
-					} else if(currentPieceType == PieceType.MONSTER_NEXUS && inner == 1){
+					} else if (currentPieceType == PieceType.MONSTER_NEXUS && inner == 1) {
 						PrintColor.red(" NEXUS ");
-					} else if(currentPieceType == PieceType.MARKET && inner == 2){
+					} else if (currentPieceType == PieceType.MARKET && inner == 2) {
 						PrintColor.yellow("     M ");
 					} else {
 						System.out.print("       ");
@@ -88,9 +118,9 @@ public class MapScreen implements Screen, InputInterface {
 		InputInterface.DisplayInputOption("Move Hero South", "S", src.util.TextColor.BLUE);
 		InputInterface.DisplayInputOption("Access Inventory", "I", src.util.TextColor.CYAN);
 
-		if(this.currGameBoard.characterAtMarket()){
-			InputInterface.DisplayInputOption("Access Market", "M", src.util.TextColor.CYAN);
-		}
+		// if(this.currGameBoard.characterAtMarket()){
+		// 	InputInterface.DisplayInputOption("Access Nexus Market", "M", src.util.TextColor.CYAN);
+		// }
 
 		this.displayQuit();
 
@@ -127,7 +157,5 @@ public class MapScreen implements Screen, InputInterface {
 		if(input != 'q'){
 			this.lastInput = ' ';
 		}
-
-
 	}
 }

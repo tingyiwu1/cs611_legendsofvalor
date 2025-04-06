@@ -11,6 +11,8 @@ import src.service.game.market.MarketItem;
 import src.service.screens.ScreenContext;
 import src.service.screens.ScreenInterfaces.Screen;
 import src.service.entities.Player;
+import src.service.entities.Player.Difficulty;
+import src.service.entities.attributes.Position;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -27,6 +29,7 @@ import src.service.screens.BattleScreen;
 import src.service.screens.IntroScreen;
 import src.service.screens.InventoryScreen;
 import src.service.entities.monsters.Monster;
+import src.service.entities.monsters.MonsterTeam;
 import src.util.PieceType;
 import src.util.PrintingUtil;
 import src.util.ScreenState;
@@ -47,15 +50,24 @@ public class MainGame {
 	ScreenState previousScreen;
 	Boolean continueToGame;
 	HashMap<Integer, ArrayList<MarketItem>> marketHash;
+	MonsterTeam monsterTeam;
 
 	public MainGame(){
-		this.currentBoard = new GameBoard(8, 0.3, 0.2);
-		this.currentPlayer = new Player();
+		this.currentPlayer = new Player(Difficulty.EASY, 3);
+		this.monsterTeam = new MonsterTeam(3);
+
+		this.monsterTeam.addGenericMonster(new Position(0, 0));
+		this.monsterTeam.addGenericMonster(new Position(0, 3));
+		this.monsterTeam.addGenericMonster(new Position(0, 6));
+
+		this.currentBoard = new GameBoard(8, 0.3, 0.2, this.currentPlayer, this.monsterTeam);
 		this.currentScreen = ScreenState.MAP;
 		this.currBattle = null;
 		this.previousScreen = null;
 		this.marketHash = new HashMap<>();
 		this.continueToGame = true;
+
+
 	}
 
 	public void playGame(){
@@ -167,11 +179,11 @@ public class MainGame {
 				}
 				
 				if(this.currentBoard.getCurrentPiece().getPieceType() == PieceType.BOSS){
-					int[] charLocation = this.currentBoard.getCharacterLocation();
+					int[] charLocation = this.currentBoard.getCharacterLocation().getPositionXY();
 					System.out.println("Boss defeated at (" + charLocation[0] + "," + charLocation[1] + ") — clearing and spawning new boss.");
 					StatsTracker.addToStats("Defeated Bosses", 1);
 					this.currentBoard.setPieceAt(charLocation[0], charLocation[1], PieceType.EMPTY);
-					this.currentBoard.setNewBoss();
+					// this.currentBoard.setNewBoss();
 				}
 
 				lastInput = myScreen.getLastInput();
@@ -183,6 +195,13 @@ public class MainGame {
 				myScreen.setScreen(new MapScreen(this.currentBoard, scanny));
 				this.currBattle = null;
 			}
+
+
+			/*
+			 * TODO:
+			 * Change this to be a BattleFrame perhaps?
+			 * Change the battling system :(
+			 */
 
 			if(this.currentScreen == ScreenState.MAP && 
 			(this.currentBoard.isMoveValid(lastInput) || this.currentBoard.isAtBoss()) && 

@@ -11,6 +11,7 @@ import java.util.Random;
 import src.service.entities.Entity;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Attacks;
+import src.service.entities.attributes.Position;
 import src.service.entities.items.Item;
 import src.service.entities.items.Weapon;
 
@@ -54,7 +55,8 @@ public class Monster extends Entity implements Attacks {
 			strength + level*levelBoon + new Random().nextInt(5),
 			magicStrength + level*levelBoon + new Random().nextInt(5),
 			defense + level*levelBoon + new Random().nextInt(5),
-			dodge + (level*levelBoon)/2 + new Random().nextInt(3)
+			dodge + (level*levelBoon)/2 + new Random().nextInt(3),
+			new Position(0, 0)
 		);
 
 		this.description = description;
@@ -70,6 +72,11 @@ public class Monster extends Entity implements Attacks {
 	public Monster(int xp, int gold){
 		this.rewardGold = gold;
 		this.rewardXP = xp;
+	}
+
+	@Override
+	public EntityType getType(){
+		return EntityType.MONSTER;
 	}
 
 	public Integer basicDebugAttack(){

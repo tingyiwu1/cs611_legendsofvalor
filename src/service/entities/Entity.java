@@ -8,11 +8,13 @@
  */
 package src.service.entities;
 
+import src.service.entities.attributes.IsOnBoard;
 import src.util.StatsTracker;
+import src.service.entities.attributes.Position;
 
 
 
-public abstract class Entity {
+public abstract class Entity implements IsOnBoard {
 
 	protected Integer currentHealth;
 	protected Integer maxHealth;
@@ -22,6 +24,14 @@ public abstract class Entity {
 	protected Integer magicStrength;
 	protected Integer defense;
 	protected Integer dodge;
+
+	protected Position position;
+
+	public enum EntityType {
+		HERO,
+		MONSTER
+		// BOSS
+	}
 
 	public Entity(){
 		this.currentHealth = 100;
@@ -34,7 +44,7 @@ public abstract class Entity {
 		this.defense = 10;
 	}
 
-	public Entity(Integer maxHealth, Integer level, String name, Integer strength, Integer magicStrength, Integer defense, Integer dodge){
+	public Entity(Integer maxHealth, Integer level, String name, Integer strength, Integer magicStrength, Integer defense, Integer dodge, Position pos){
 		this.currentHealth = maxHealth;
 		this.maxHealth = maxHealth;
 		this.level = level;
@@ -43,6 +53,49 @@ public abstract class Entity {
 		this.magicStrength = magicStrength;
 		this.defense = defense;
 		this.dodge = dodge;
+		this.position = pos;
+	}
+
+	public abstract EntityType getType();
+
+	@Override
+	public int getCharX() {
+		return this.position.getX();
+	}
+
+	@Override
+	public int getCharY() {
+		return this.position.getY();
+	}
+
+	@Override
+	public void moveCharX(int x) {
+		this.position.moveX(x);
+	}
+
+	@Override
+	public void moveCharY(int y) {
+		this.position.moveY(y);
+	}
+
+	@Override
+	public void setCharX(int x) {
+		this.position.setX(x);
+	}
+
+	@Override
+	public void setCharY(int y) {
+		this.position.setY(y);
+	}
+
+	@Override
+	public Position getPosition() {
+		return this.position;
+	}
+
+	@Override
+	public void setPosition(Position pos) {
+		this.position = pos;
 	}
 
 

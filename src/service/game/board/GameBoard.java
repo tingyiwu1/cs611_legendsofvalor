@@ -1,7 +1,13 @@
 package src.service.game.board;
 import src.util.PieceType;
+import src.service.entities.Entity;
+import src.service.entities.Player;
+import src.service.entities.attributes.Position;
+import src.service.entities.monsters.Monster;
+import src.service.entities.monsters.MonsterTeam;
 import src.service.game.PlayerControl;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -14,22 +20,25 @@ public class GameBoard implements PlayerControl{
 	private MapPiece[][] currentBoard;
 	private Integer size;
 	private Character lastInput = null;
-	private int charX;
-	private int charY;
+	// private int charX;
+	// private int charY;
+	private Player player;
+	private ArrayList<Entity> entityList;
 	// later to have BossPosition, with a boss piece
 
 	// make a new gameboard
-	public GameBoard(int size, double wallPercent, double marketPercent){
+	public GameBoard(int size, double wallPercent, double marketPercent, Player player, MonsterTeam monsterTeam){
 		this.currentBoard = new MapPiece[size][size];
 		this.size = size;
+		this.player = player;
 
 		for(int i = 0; i < size; i++){
 			for(int j = 0; j < size; j++){
 				this.currentBoard[i][j] = new MapPiece();
 			}
 		}
-		this.charX = 7;
-		this.charY = 0;
+		// this.charX = 7;
+		// this.charY = 0;
 
 		//randomly add walls and markets
 		// int totalSpaces = size * size;
@@ -56,8 +65,19 @@ public class GameBoard implements PlayerControl{
 		// 	}
 		// }
 		// this.setNewBoss();
+
+		ArrayList<Entity> entityList = new ArrayList<>();
+		for(Entity e : player.getParty()){
+			entityList.add(e);
+		}
+		for(Entity e : monsterTeam.getMonsters()){
+			entityList.add(e);
+		}
+		
+		this.entityList = entityList;
 	}
 
+	/* 
 	public void setNewBoss() {
 		boolean[][] visited = new boolean[size][size];
 		Queue<int[]> queue = new LinkedList<>();
@@ -96,20 +116,29 @@ public class GameBoard implements PlayerControl{
 		}
 	}
 
+	*/
 	public void setPieceAt(int x, int y, PieceType newType){
 		currentBoard[x][y].setPieceType(newType);
 	}
 
-	public int[] getCharacterLocation() {
-		return new int[] {this.charX, this.charY};
+	public ArrayList<Entity> getEntityList(){
+		return this.entityList;
 	}
 
+	public Position getCharacterLocation() {
+		return entityList.get(0).getPosition();
+	}
+
+
+
 	public boolean characterAtMarket(){
-		return getPieceAt(this.charX, this.charY).getPieceType() == PieceType.MARKET;
+		return true;
+		// return getPieceAt(this.charX, this.charY).getPieceType() == PieceType.HERO_NEXUS;
 	}
 
 	public int getCurrentMarketIndex(){
-		return charX * size + charY;
+		return 0;
+		// return charX * size + charY;
 	}
 
 	public Integer getSize(){
@@ -121,6 +150,9 @@ public class GameBoard implements PlayerControl{
 	}
 
 	public MapPiece getCurrentPiece(){
+		Position pos = this.getCharacterLocation();
+		int charX = pos.getX();
+		int charY = pos.getY();
 		return this.currentBoard[charX][charY];
 	}
 
@@ -129,7 +161,8 @@ public class GameBoard implements PlayerControl{
 	}
 
 	public boolean isAtBoss() {
-		return this.getPieceAt(this.charX, this.charY).getPieceType() == PieceType.BOSS;
+		return false;
+		// return this.getPieceAt(this.charX, this.charY).getPieceType() == PieceType.BOSS;
 	}
 
 	@Override
@@ -147,8 +180,9 @@ public class GameBoard implements PlayerControl{
 
 	@Override
 	public Boolean isMoveValid(Character inputtedMove){
-		int newX = this.charX;
-		int newY = this.charY;
+		Position pos = this.getCharacterLocation();
+		int newX = pos.getX();
+		int newY = pos.getY();
 		if(inputtedMove == 'w'){
 			newX--;
 		} else if(inputtedMove == 's'){
@@ -173,16 +207,16 @@ public class GameBoard implements PlayerControl{
 		// do the move
 	
 		if(inputtedMove == 'w'){
-			this.charX--;
+			this.getCharacterLocation().moveX(-1);
 		} else if(inputtedMove == 's'){
-			this.charX++;
+			this.getCharacterLocation().moveX(1);
 		} else if(inputtedMove == 'a'){
-			this.charY--;
+			this.getCharacterLocation().moveY(-1);
 		} else if(inputtedMove == 'd'){
-			this.charY++;
+			this.getCharacterLocation().moveY(1);
 		}
 
-	
+
 		return null;
 	}
 

@@ -45,6 +45,7 @@ import src.service.entities.Entity;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Attacks;
 import src.service.entities.attributes.Inventory;
+import src.service.entities.attributes.Position;
 import src.service.entities.items.Equippable;
 import src.service.entities.items.Item;
 import src.service.entities.items.Potion;
@@ -68,7 +69,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	private static Random rng = new Random();
 
 	public Hero(){
-		super(100, 1, "DEBUGGING HERO", 40, 40, 30, 10);
+		super(100, 1, "DEBUGGING HERO", 40, 40, 30, 10, new Position(7, 0));
 
 		this.items = new ArrayList<Item>();
 
@@ -84,8 +85,8 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		// this.levelBoon = 5; //increase all stats per level
 		this.gold = 1;
 	}
-	public Hero(int hp, int lvl, String name, int str, int mstr, int def, int dodge){
-		super(hp, lvl, name, str, mstr, def, dodge);
+	public Hero(int hp, int lvl, String name, int str, int mstr, int def, int dodge, Position pos){
+		super(hp, lvl, name, str, mstr, def, dodge, pos);
 
 		this.items = new ArrayList<Item>();
 
@@ -195,6 +196,11 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	}
 	public int getBreakpoint(){
 		return this.breakpoint;
+	}
+
+	@Override
+	public EntityType getType(){
+		return EntityType.HERO;
 	}
 
 
