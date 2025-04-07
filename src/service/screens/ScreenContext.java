@@ -5,13 +5,15 @@
  */
 package src.service.screens;
 
+import src.service.game.TurnKeeper;
 import src.service.screens.ScreenInterfaces.Screen;
 
 public class ScreenContext {
 
 	private Screen currScreen;
+	private TurnKeeper turnKeeper;
 
-	public ScreenContext(Screen newScreen){
+	public ScreenContext(Screen newScreen, TurnKeeper turnKeeper) {
 		this.currScreen = newScreen;
 	}
 

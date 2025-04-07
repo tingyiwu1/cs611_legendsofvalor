@@ -6,6 +6,7 @@ import src.service.entities.attributes.Position;
 import src.service.entities.monsters.Monster;
 import src.service.entities.monsters.MonsterTeam;
 import src.service.game.PlayerControl;
+import src.service.game.TurnKeeper;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -24,10 +25,13 @@ public class GameBoard implements PlayerControl{
 	// private int charY;
 	private Player player;
 	private ArrayList<Entity> entityList;
+
+	private TurnKeeper turnKeeper;
 	// later to have BossPosition, with a boss piece
 
 	// make a new gameboard
-	public GameBoard(int size, double wallPercent, double marketPercent, Player player, MonsterTeam monsterTeam){
+	public GameBoard(int size, double wallPercent, double marketPercent, Player player, MonsterTeam monsterTeam, TurnKeeper turnKeeper){
+		this.turnKeeper = turnKeeper;
 		this.currentBoard = new MapPiece[size][size];
 		this.size = size;
 		this.player = player;
@@ -125,8 +129,11 @@ public class GameBoard implements PlayerControl{
 		return this.entityList;
 	}
 
-	public Position getCharacterLocation() {
-		return entityList.get(0).getPosition();
+	public Position getCurrHeroLocation() {
+		int turnIdx = this.turnKeeper.getPlayerTeamTurnCount();
+		Position currHeroLocation = this.player.getParty()[turnIdx].getPosition();
+		
+		return currHeroLocation;
 	}
 
 
@@ -150,7 +157,7 @@ public class GameBoard implements PlayerControl{
 	}
 
 	public MapPiece getCurrentPiece(){
-		Position pos = this.getCharacterLocation();
+		Position pos = this.getCurrHeroLocation();
 		int charX = pos.getX();
 		int charY = pos.getY();
 		return this.currentBoard[charX][charY];
@@ -174,13 +181,13 @@ public class GameBoard implements PlayerControl{
 			return false;
 		} 
 
-		processMove(inputtedMove);
+		processMove(inputtedMove, this.turnKeeper);
 		return null;
 	}
 
 	@Override
 	public Boolean isMoveValid(Character inputtedMove){
-		Position pos = this.getCharacterLocation();
+		Position pos = this.getCurrHeroLocation();
 		int newX = pos.getX();
 		int newY = pos.getY();
 		if(inputtedMove == 'w'){
@@ -200,21 +207,23 @@ public class GameBoard implements PlayerControl{
 	}
 
 	@Override
-	public Boolean processMove(Character inputtedMove){
+	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper){
 		if(inputtedMove == 'q'){
 			return true;
 		}
 		// do the move
 	
 		if(inputtedMove == 'w'){
-			this.getCharacterLocation().moveX(-1);
+			this.getCurrHeroLocation().moveX(-1);
 		} else if(inputtedMove == 's'){
-			this.getCharacterLocation().moveX(1);
+			this.getCurrHeroLocation().moveX(1);
 		} else if(inputtedMove == 'a'){
-			this.getCharacterLocation().moveY(-1);
+			this.getCurrHeroLocation().moveY(-1);
 		} else if(inputtedMove == 'd'){
-			this.getCharacterLocation().moveY(1);
+			this.getCurrHeroLocation().moveY(1);
 		}
+
+
 
 
 		return null;

@@ -46,6 +46,7 @@ import src.service.entities.items.Potion;
 import src.service.entities.monsters.Monster;
 import src.service.game.PlayerControl;
 import src.service.game.StatusDisplay;
+import src.service.game.TurnKeeper;
 import src.util.ItemType;
 import src.util.PrintColor;
 import src.util.StatsTracker;
@@ -72,6 +73,8 @@ public class Battle implements PlayerControl, StatusDisplay {
 	private Boolean gameOver;
 	private Boolean didLevelUp;
 	private Boolean isBossBattle;
+	
+	private TurnKeeper turnKeeper;
 
 	public Battle(Player player, Monster monster){
 		this.monster = monster;
@@ -322,7 +325,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 			return false;
 		} 
 
-		processMove(inputtedMove);
+		processMove(inputtedMove, this.turnKeeper);
 		return null;
 	}
 
@@ -338,7 +341,10 @@ public class Battle implements PlayerControl, StatusDisplay {
 	}
 
 	@Override
-	public Boolean processMove(Character inputtedMove) {
+	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
+		
+		//TODO: REFACTOR BATTLE SYSTEM
+
 		if(inputtedMove.equals('i') || inputtedMove.equals('b')){
 			return null;
 		}

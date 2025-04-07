@@ -14,6 +14,7 @@ import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
 import src.service.game.PlayerControl;
 import src.service.game.StatusDisplay;
+import src.service.game.TurnKeeper;
 import src.util.StatsTracker;
 import src.util.TextColor;
 
@@ -25,6 +26,8 @@ public class Market implements PlayerControl, StatusDisplay{
 	private Character lastInput;
 
 	private ArrayList<MarketItem> marketOfferings;
+
+	private TurnKeeper turnKeeper;
 
 	public Market(Player player, int activeHero){
 		this.activeHero = player.getParty()[activeHero];
@@ -72,16 +75,17 @@ public class Market implements PlayerControl, StatusDisplay{
 			return false;
 		} 
 
-		return processMove(inputtedMove);
+		return processMove(inputtedMove, this.turnKeeper);
 	}
 
 
 	@Override
-	public Boolean processMove(Character inputtedMove) {
+	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
 		int inputInt = Integer.parseInt(inputtedMove.toString());
 
 		MarketItem buyingItem = this.marketOfferings.get(inputInt);
 
+		// TODO: switch ACTIVE HERO to TURN KEEPER HERO
 		this.activeHero.spendGold(buyingItem.getPrice());
 		StatsTracker.addToStats("Gold Spent", buyingItem.getPrice());
 		this.activeHero.addItem(buyingItem.getItem());

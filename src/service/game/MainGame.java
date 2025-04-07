@@ -51,21 +51,26 @@ public class MainGame {
 	Boolean continueToGame;
 	HashMap<Integer, ArrayList<MarketItem>> marketHash;
 	MonsterTeam monsterTeam;
+	TurnKeeper turnKeeper;
 
 	public MainGame(){
 		this.currentPlayer = new Player(Difficulty.EASY, 3);
-		this.monsterTeam = new MonsterTeam(3);
+		this.monsterTeam = new MonsterTeam();
 
 		this.monsterTeam.addGenericMonster(new Position(0, 0));
 		this.monsterTeam.addGenericMonster(new Position(0, 3));
 		this.monsterTeam.addGenericMonster(new Position(0, 6));
 
-		this.currentBoard = new GameBoard(8, 0.3, 0.2, this.currentPlayer, this.monsterTeam);
-		this.currentScreen = ScreenState.MAP;
+		this.turnKeeper = new TurnKeeper(this.currentPlayer, this.monsterTeam);
+
+		this.currentBoard = new GameBoard(8, 0.3, 0.2, this.currentPlayer, this.monsterTeam, this.turnKeeper);
 		this.currBattle = null;
-		this.previousScreen = null;
+		
 		this.marketHash = new HashMap<>();
 		this.continueToGame = true;
+
+		this.currentScreen = ScreenState.MAP;
+		this.previousScreen = null;
 
 
 	}
@@ -75,7 +80,7 @@ public class MainGame {
 
 		Scanner scanny = new Scanner(System.in);
 
-		ScreenContext myScreen = new ScreenContext(null);
+		ScreenContext myScreen = new ScreenContext(null, this.turnKeeper);
 
 		// TODO DEBUGGING COMMENTED OUT
 		// IntroScreen initScreen = new IntroScreen(scanny);
@@ -95,7 +100,7 @@ public class MainGame {
 
 
 		
-		myScreen.setScreen(new MapScreen(currentBoard, scanny));
+		myScreen.setScreen(new MapScreen(currentBoard, scanny, turnKeeper));
 
 		while(continueToGame){
 			StatsTracker.addToStats("Screens Visited", 1);
@@ -138,7 +143,7 @@ public class MainGame {
 
 
 				this.currentScreen = this.previousScreen;
-				myScreen.setScreen(new MapScreen(this.currentBoard, scanny));
+				myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
 				this.previousScreen = null;
 			}
 
@@ -154,7 +159,7 @@ public class MainGame {
 			if(this.currentScreen == ScreenState.INVENTORY && lastInput == 'b'){
 				if(this.currBattle == null){
 					this.currentScreen = this.previousScreen;
-					myScreen.setScreen(new MapScreen(this.currentBoard, scanny));
+					myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
 					this.previousScreen = null;
 				} else {
 					this.currentScreen = this.previousScreen;
@@ -179,7 +184,7 @@ public class MainGame {
 				}
 				
 				if(this.currentBoard.getCurrentPiece().getPieceType() == PieceType.BOSS){
-					int[] charLocation = this.currentBoard.getCharacterLocation().getPositionXY();
+					int[] charLocation = this.currentBoard.getCurrHeroLocation().getPositionXY();
 					System.out.println("Boss defeated at (" + charLocation[0] + "," + charLocation[1] + ") — clearing and spawning new boss.");
 					StatsTracker.addToStats("Defeated Bosses", 1);
 					this.currentBoard.setPieceAt(charLocation[0], charLocation[1], PieceType.EMPTY);
@@ -192,7 +197,7 @@ public class MainGame {
 				}
 
 				this.currentScreen = ScreenState.MAP;
-				myScreen.setScreen(new MapScreen(this.currentBoard, scanny));
+				myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
 				this.currBattle = null;
 			}
 
@@ -243,6 +248,11 @@ public class MainGame {
 			lastInput = myScreen.getLastInput();
 			if(lastInput == 'q'){
 				break;
+			}
+
+			//DEBUG DON"T SWITCH TO MONSTER TURN;
+			if(this.turnKeeper.progressTurn()){
+				this.turnKeeper.resetTurn();
 			}
 		}
 

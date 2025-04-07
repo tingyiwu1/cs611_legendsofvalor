@@ -11,6 +11,7 @@ import java.util.Scanner;
 import src.service.entities.Entity;
 import src.service.entities.Entity.EntityType;
 import src.service.entities.attributes.Position;
+import src.service.game.TurnKeeper;
 import src.service.game.board.GameBoard;
 import src.service.screens.ScreenInterfaces.InputInterface;
 import src.service.screens.ScreenInterfaces.Screen;
@@ -26,13 +27,15 @@ public class MapScreen implements Screen, InputInterface {
 	private int gameSize;
 	private Scanner scanny;
 	private Character lastInput;
+	private TurnKeeper turnKeeper;
 
 
-	public MapScreen(GameBoard gameBoard, Scanner scanny){
+	public MapScreen(GameBoard gameBoard, Scanner scanny, TurnKeeper turnKeeper) {
 		this.scanny = scanny;
 		this.currGameBoard = gameBoard;
 		this.gameSize = gameBoard.getSize();
 		this.lastInput = ' ';
+		this.turnKeeper = turnKeeper;
 		
 	}
 
@@ -70,25 +73,45 @@ public class MapScreen implements Screen, InputInterface {
 						// Check if a hero is at this position and print " H " in the center row
 						boolean hasHero = false;
 						boolean hasMonster = false;
-						for (Entity entity : entityList) {
+						boolean isActiveHero = false;
+						for (int idx = 0; idx < entityList.size(); idx++) {
+							Entity entity = entityList.get(idx);
 							if (entity.getPosition().equals(new Position(r, c))) {
 								if (entity.getType() == EntityType.HERO) {
 									hasHero = true;
+									if (idx == turnKeeper.getPlayerTeamTurnCount()) {
+										isActiveHero = true;
+									}
 								} else if (entity.getType() == EntityType.MONSTER) {
 									hasMonster = true;
 								}
 							}
 						}
-						if (hasHero && hasMonster) {
-							PrintColor.red(" H  ");
-							PrintColor.yellow(" M ");
-						} else if (hasHero) {
-							PrintColor.red(" H     ");
-						} else if (hasMonster) {
-							PrintColor.yellow("     M ");
+						// TODO: IS THERE A BETTER WAY TO DISPLAY WHICH HERO IS ACTIVE?
+						if(isActiveHero){
+							if (hasHero && hasMonster) {
+								PrintColor.blue("AH  ");
+								PrintColor.yellow(" M ");
+							} else if (hasHero) {
+								PrintColor.blue("AH     ");
+							} else if (hasMonster) {
+								PrintColor.yellow("     M ");
+							} else {
+								System.out.print("       ");
+							}
 						} else {
-							System.out.print("       ");
+							if (hasHero && hasMonster) {
+								PrintColor.red(" H  ");
+								PrintColor.yellow(" M ");
+							} else if (hasHero) {
+								PrintColor.red(" H     ");
+							} else if (hasMonster) {
+								PrintColor.yellow("     M ");
+							} else {
+								System.out.print("       ");
+							}
 						}
+						
 					} else if (currentPieceType == PieceType.HERO_NEXUS && inner == 1) {
 						PrintColor.blue(" NEXUS ");
 					} else if (currentPieceType == PieceType.MONSTER_NEXUS && inner == 1) {
@@ -106,7 +129,10 @@ public class MapScreen implements Screen, InputInterface {
 			System.out.print("+-------");
 		}
 		System.out.println("+");
+		System.out.println("H = Hero, M = Monster, NEXUS = Nexus, X = Wall");
+		System.out.println("Current Hero: " + currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
 	}
+
 
 	@Override
 	public Character DisplayInputs(){
