@@ -44,8 +44,8 @@ The game has been playtested with the goal of providing a nuanced strategy to co
 
 From the source directory:
 
-- Compile the code using: javac $(find . -name "\*.java")
-- Run the program: java Main
+- Compile the code using: `javac -d out $(find . -name "*.java") `
+- Run the program: `java -cp out Main`
 - See file structure if gradescope messes it up:
   - https://github.com/charlesli50/cs611_heroesnmonsters/tree/main
 
