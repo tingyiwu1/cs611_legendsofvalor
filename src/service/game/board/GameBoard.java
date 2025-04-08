@@ -49,7 +49,7 @@ public class GameBoard implements PlayerControl{
 		// int totalSpaces = size * size;
 		// int numMarkets = (int)(totalSpaces * marketPercent);
 
-		// Random rand = new Random();
+		Random rand = new Random();
 		for(int i = 0; i < this.size; i++){
 			this.currentBoard[i][2].setPieceType(PieceType.WALL);	
 			this.currentBoard[i][5].setPieceType(PieceType.WALL);	
@@ -64,14 +64,27 @@ public class GameBoard implements PlayerControl{
 
 		this.monsterTeam = monsterTeam;
 
-		// while(getPieceAt(this.charX, this.charY).getPieceType() != PieceType.EMPTY){
-		// 	this.charX += 1;
-		// 	if(this.charX == size){
-		// 		this.charX = 0;
-		// 		this.charY += 1;
-		// 	}
-		// }
-		// this.setNewBoss();
+		for (int r = 1; r < this.size - 1; r++){
+			for(int c = 0; c < this.size; c++){
+				if(this.currentBoard[r][c].getPieceType() == PieceType.EMPTY){
+					double randNum = rand.nextDouble();
+					/**
+					 * Distribution: 50% Empty, 15% Obstacle, 12.5% Bush, 12.5% Cave, 10% Koulou
+					 */
+					if(randNum < 0.5){
+						//do nothing
+					} else if(randNum < 0.65){
+						this.currentBoard[r][c].setPieceType(PieceType.OBSTACLE);
+					} else if(randNum < 0.785){
+						this.currentBoard[r][c].setPieceType(PieceType.BUSH);
+					} else if(randNum < 0.9){
+						this.currentBoard[r][c].setPieceType(PieceType.CAVE);
+					} else {
+						this.currentBoard[r][c].setPieceType(PieceType.KOULOU);
+					}
+				}
+			}
+		}
 
 		ArrayList<Entity> entityList = new ArrayList<>();
 		for(Entity e : player.getParty()){

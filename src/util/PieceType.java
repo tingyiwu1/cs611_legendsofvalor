@@ -10,5 +10,7 @@ public enum PieceType {
 	OBSTACLE,
 	MONSTER_NEXUS,
 	HERO_NEXUS,
-	BUFF // bush, cave, koulou 
+	BUSH,
+	CAVE,
+	KOULOU
 }

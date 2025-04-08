@@ -119,7 +119,19 @@ public class MapScreen implements Screen, InputInterface {
 						PrintColor.blue(" NEXUS ");
 					} else if (currentPieceType == PieceType.MONSTER_NEXUS && inner == 1) {
 						PrintColor.red(" NEXUS ");
-					} else if (currentPieceType == PieceType.MARKET && inner == 2) {
+					} else if(currentPieceType == PieceType.BUSH && inner == 1){
+						System.out.print("  ~B~  ");
+					}else if(currentPieceType == PieceType.CAVE && inner == 1){
+						System.out.print("  [C]  ");
+						
+					}else if(currentPieceType == PieceType.KOULOU && inner == 1){
+						System.out.print("  _K_  ");
+						
+					}else if(currentPieceType == PieceType.OBSTACLE && inner == 1){
+						System.out.print("  xxx  ");
+						
+					}
+					else if (currentPieceType == PieceType.MARKET && inner == 2) {
 						PrintColor.yellow("     M ");
 					} else {
 						System.out.print("       ");
