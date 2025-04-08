@@ -27,6 +27,7 @@ public class GameBoard implements PlayerControl{
 	private ArrayList<Entity> entityList;
 
 	private TurnKeeper turnKeeper;
+	private MonsterTeam monsterTeam;	
 	// later to have BossPosition, with a boss piece
 
 	// make a new gameboard
@@ -60,6 +61,8 @@ public class GameBoard implements PlayerControl{
 				this.currentBoard[7][r].setPieceType(PieceType.HERO_NEXUS);
 			}
 		}
+
+		this.monsterTeam = monsterTeam;
 
 		// while(getPieceAt(this.charX, this.charY).getPieceType() != PieceType.EMPTY){
 		// 	this.charX += 1;
@@ -135,6 +138,7 @@ public class GameBoard implements PlayerControl{
 		
 		return currHeroLocation;
 	}
+	
 
 
 
@@ -165,6 +169,14 @@ public class GameBoard implements PlayerControl{
 
 	public Character getLastInput(){
 		return this.lastInput;
+	}
+
+	public MonsterTeam getMonsterTeam(){
+		return this.monsterTeam;
+	}
+
+	public Player getPlayer(){
+		return this.player;
 	}
 
 	public boolean isAtBoss() {
@@ -222,6 +234,8 @@ public class GameBoard implements PlayerControl{
 		} else if(inputtedMove == 'd'){
 			this.getCurrHeroLocation().moveY(1);
 		}
+
+		//TODO: ADD ENTER BATTLE PROCESS
 
 		if(this.turnKeeper.progressTurn()){
 			this.turnKeeper.resetTurn();

@@ -1,6 +1,9 @@
 package src.service.entities.attributes;
 
 import src.service.entities.items.Item;
+import src.service.entities.items.Spell;
+import src.service.entities.items.Weapon;
+import src.util.ItemType;
 
 /**
  * Represents an attack option in the game, which includes details such as
@@ -32,6 +35,19 @@ public class AttackOption {
 
 	public Integer getDamage() {
 		return this.damage;
+	}
+
+	public Integer getRange(){
+		// if(this.sourceItem.getItemType() == ItemType.WEAPON || this.sourceItem.getItemType() == ItemType.BIG_WEAPON){
+		if(this.sourceItem.getItemType() == ItemType.WEAPON){
+			Weapon item = (Weapon) this.sourceItem;
+			return item.getRange();
+		} else if(this.sourceItem.getItemType() == ItemType.SPELL){
+			Spell item = (Spell) this.sourceItem;
+			return item.getRange();
+		} 
+
+		return null;
 	}
 
 	@Override

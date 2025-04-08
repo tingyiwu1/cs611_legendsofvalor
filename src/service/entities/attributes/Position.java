@@ -24,7 +24,7 @@ public class Position {
 	}
 
 
-    @Override
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (!(obj instanceof Position)) return false;
@@ -32,9 +32,15 @@ public class Position {
 		return this.x == other.x && this.y == other.y;
 	}
 
-    @Override
-    public String toString() {
-        return "(" + x + ", " + y + ")";
-    }
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
+	}
+
+	public int distanceTo(Position targetPos){
+		int xDiff = Math.abs(this.x - targetPos.getX());
+		int yDiff = Math.abs(this.y - targetPos.getY());
+		return xDiff + yDiff; // Manhattan distance
+	}
 	
 }

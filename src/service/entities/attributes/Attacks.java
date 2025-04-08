@@ -21,6 +21,7 @@ public interface Attacks {
 	// public Integer useMagicAttack();
 
 	public ArrayList<AttackOption> getAttacksList();
+	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos);
 
 
 	

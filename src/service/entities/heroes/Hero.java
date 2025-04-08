@@ -410,6 +410,21 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		
 	}
 
+	@Override
+	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos) {
+		Position heroPos = this.getPosition();
+		int targetDist = heroPos.distanceTo(targetPos);
+		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
+		ArrayList<AttackOption> allAttacks = this.getAttacksList();
+		for(AttackOption attack : allAttacks){
+			if(attack.getRange() != null && attack.getRange() >= targetDist){
+				attacks.add(attack);
+			}
+		}
+
+		return attacks;
+	}
+
 	public void levelUpHealth(){
 		this.maxHealth += levelBoon * 2 + rng.nextInt(3);
 		this.healDamage(levelBoon * 2);

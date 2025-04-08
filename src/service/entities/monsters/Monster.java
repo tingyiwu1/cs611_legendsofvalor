@@ -117,6 +117,20 @@ public class Monster extends Entity implements Attacks {
 	public ArrayList<AttackOption> getAttacksList() {
 		throw new UnsupportedOperationException("Unimplemented method 'getAttacksList'");
 	}
+	@Override
+	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos) {
+		Position heroPos = this.getPosition();
+		int targetDist = heroPos.distanceTo(targetPos);
+		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
+		ArrayList<AttackOption> allAttacks = this.getAttacksList();
+		for(AttackOption attack : allAttacks){
+			if(attack.getRange() >= targetDist){
+				attacks.add(attack);
+			}
+		}
+
+		return attacks;
+	}
 
 	
 }
