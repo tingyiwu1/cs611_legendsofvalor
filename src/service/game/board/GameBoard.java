@@ -223,8 +223,9 @@ public class GameBoard implements PlayerControl{
 			this.getCurrHeroLocation().moveY(1);
 		}
 
-
-
+		if(this.turnKeeper.progressTurn()){
+			this.turnKeeper.resetTurn();
+		}
 
 		return null;
 	}

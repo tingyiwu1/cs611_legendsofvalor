@@ -76,7 +76,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		// add some default items
 		// this.items.add(new Weapon(1000, "DEBUGGING DEATH", "", 50, 50, 50, 50));
 		this.items.add(new Weapon(5, "Basic Dagger", "A simple dagger, coincidentally next to you when you woke up"));	
-		this.items.add(new Spell(30, "Basic Ice Dart", "Conjure a simple shard of Ice, and launch it at the enemy", 0, 5));	
+		this.items.add(new Spell(30, "Basic Ice Dart", "Conjure a simple shard of Ice, and launch it at the enemy", 0, 5, 2));	
 		this.items.add(new Potion(50, "Potent Healing Potion", "A brewed healing potion, capable of healing basic injuries", 0, ItemType.POTION, 0, 3));
 		// this.items.add(new Potion(50, "Potent Strengthening Potion", "A brewed healing potion, giving u super strength!!", 0, ItemType.POTION, 1, 1));
 
@@ -92,7 +92,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 
 		// this.items.add(new Weapon(1000, "DEBUGGING DEATH", "", 50, 50, 50, 50));
 		this.items.add(new Weapon(5, "Basic Dagger", "A simple dagger, coincidentally next to you when you woke up"));	
-		this.items.add(new Spell(30, "Basic Ice Dart", "Conjure a simple shard of Ice, and launch it at the enemy", 0, 5));	
+		this.items.add(new Spell(30, "Basic Ice Dart", "Conjure a simple shard of Ice, and launch it at the enemy", 0, 5, 2));	
 		this.items.add(new Potion(50, "Potent Healing Potion", "A brewed healing potion, capable of healing basic injuries", 0, ItemType.POTION, 0, 3));
 		// this.items.add(new Potion(50, "Potent Strengthening Potion", "A brewed healing potion, giving u super strength!!", 0, ItemType.POTION, 1, 1));
 

@@ -28,7 +28,6 @@ import src.service.game.battle.BattleMonsterFactory.monsterType;
 import src.service.screens.BattleScreen;
 import src.service.screens.IntroScreen;
 import src.service.screens.InventoryScreen;
-import src.service.entities.monsters.Monster;
 import src.service.entities.monsters.MonsterTeam;
 import src.util.PieceType;
 import src.util.PrintingUtil;
@@ -251,9 +250,7 @@ public class MainGame {
 			}
 
 			//DEBUG DON"T SWITCH TO MONSTER TURN;
-			if(this.turnKeeper.progressTurn()){
-				this.turnKeeper.resetTurn();
-			}
+
 		}
 
 

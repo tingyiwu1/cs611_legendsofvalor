@@ -101,6 +101,7 @@ public class InfoTextReader {
 				int bonusMp = parts.length > 8 ? Integer.parseInt(parts[8]) : 0;
 				int bonusDodge = parts.length > 9 ? Integer.parseInt(parts[9]) : 0;
 				int maxUses = parts.length > 10 ? Integer.parseInt(parts[10]) : 0;
+				int range = parts.length > 11 ? Integer.parseInt(parts[11]) : 0;
 				ItemType type;
 				try {
 					type = ItemType.valueOf(itemType.toUpperCase().replace(" ", "_"));
@@ -111,13 +112,13 @@ public class InfoTextReader {
 				Item item;
 				switch (type) {
 					case WEAPON:
-						item = new Weapon(damage, name, description, bonusStr, bonusMp, bonusDef, bonusDodge);
+						item = new Weapon(damage, name, description, bonusStr, bonusMp, bonusDef, bonusDodge, range);
 						break;
 					case SPELL:
-						item = new Spell(damage, name, description, levelRequirement, maxUses);
+						item = new Spell(damage, name, description, levelRequirement, maxUses, range);
 						break;
 					case BIG_WEAPON:
-						item = new Weapon(damage, name, description, bonusStr, bonusMp, bonusDef, bonusDodge);
+						item = new Weapon(damage, name, description, bonusStr, bonusMp, bonusDef, bonusDodge, range);
 						break;
 					case HELMET:
 					case CHEST:

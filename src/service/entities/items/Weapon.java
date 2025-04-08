@@ -20,6 +20,7 @@ public class Weapon implements Item, Equippable {
 	private Integer bonusMagicStrength;
 	private Integer bonusDefense;
 	private Integer bonusDodge;
+	private Integer range;
 
 	public Weapon(Integer damage, String name, String description){
 		this.damage = damage;
@@ -33,10 +34,12 @@ public class Weapon implements Item, Equippable {
 		this.bonusDefense = 0;
 		this.bonusDodge = 0;
 
+		this.range = 0;
+
 	}
 	
 	public Weapon(Integer damage, String name, String description, 
-			int bonusStrength, int bonusMagicPower, int bonusDefense, int bonusDodge){
+			int bonusStrength, int bonusMagicPower, int bonusDefense, int bonusDodge, int range){
 		this.damage = damage;
 		this.name = name;
 		this.description = description;
@@ -47,7 +50,15 @@ public class Weapon implements Item, Equippable {
 		this.bonusMagicStrength = bonusMagicPower;
 		this.bonusDefense = bonusDefense;
 		this.bonusDodge = bonusDodge;
+		this.range = range;
 
+	}
+
+	public Integer getRange() {
+		return this.range;
+	}
+	public void setRange(Integer range) {
+		this.range = range;
 	}
 	
 	public Integer getDamage(){
