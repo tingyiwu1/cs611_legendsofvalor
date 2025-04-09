@@ -297,8 +297,11 @@ public class GameBoard implements PlayerControl, NewBattleInitializer{
 		} else if(inputtedMove == 'd'){
 			this.getCurrHeroLocation().moveY(1);
 		}
+		if(inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd'){
+			this.turnKeeper.progressTurn();
+			return null;
+		}
 
-		//TODO: ADD ENTER BATTLE PROCESS
 		try{
 			Integer attackIdx = Integer.parseInt(inputtedMove.toString()) - 1;
 			AttackOption attackOption = this.currHeroAttackList().get(attackIdx);
@@ -315,11 +318,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer{
 		/*
 		 * DEBUG: DON'T ROTATE TURN
 		 */
-		if(inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd'){
-			if(this.turnKeeper.progressTurn()){
-				this.turnKeeper.resetTurn();
-			}
-		}
+		
 		
 
 		return null;
