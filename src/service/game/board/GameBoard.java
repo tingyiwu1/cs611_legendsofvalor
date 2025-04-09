@@ -247,6 +247,9 @@ public class GameBoard implements PlayerControl, NewBattleInitializer{
 
 	@Override
 	public Boolean isMoveValid(Character inputtedMove){
+		if(inputtedMove == 'p'){
+			return true;
+		}
 		// Check if the input is a movement command
 		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd') {
 			Position pos = this.getCurrHeroLocation();
@@ -302,7 +305,8 @@ public class GameBoard implements PlayerControl, NewBattleInitializer{
 		} else if(inputtedMove == 'd'){
 			this.getCurrHeroLocation().moveY(1);
 		}
-		if(inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd'){
+		if(inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd' 
+			|| inputtedMove == 'p'){
 			this.turnKeeper.progressTurn();
 			// if(this.turnKeeper.progressTurn()){
 			// 	this.turnKeeper.resetTurn();

@@ -130,9 +130,15 @@ public class Battle implements PlayerControl, StatusDisplay {
 	}
 	
 
+
+	/*
+	 * TODO:
+	 * Talked with TF: She said that the battle cycle should be a single attack from one party
+	 * But, game design wise it should probably be a full exchange on both sides :)
+	 */
 	public Boolean heroBattleCycle(){
 		StatsTracker.addToStats("Battle cycles progressed", 1);
-		this.addStatus("gaming is happening!", TextColor.YELLOW);
+		this.addStatus("Hero is Attacking!", TextColor.YELLOW);
 		
 		/*
 		 * First hero attack, and effects, then monster attack and effects
@@ -149,14 +155,33 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 		this.reportHP();
 
-		if(this.turnKeeper.progressTurn()){
-			this.turnKeeper.resetTurn();
-		}
+		this.turnKeeper.progressTurn();
 		
 
 		return null;
+	}
 
+	public Boolean monsterBattleCycle(){
+		StatsTracker.addToStats("Battle cycles progressed", 1);
+		this.addStatus("Monster is Attacking!", TextColor.YELLOW);
 		
+		/*
+		 * First MONSTER attack, and effects
+		 */
+
+		if(this.monsterAttack(this.hero.getPosition())){
+			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
+			return null;
+		}
+		// if(this.heroAttack(this.heroChosenAttack)){
+		// 	this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
+		// 	return null;
+		// }
+		this.reportHP();
+
+		this.turnKeeper.progressTurn();
+
+		return null;
 	}
 
 	public Boolean isBattleOver(){

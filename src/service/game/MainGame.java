@@ -26,6 +26,7 @@ import src.service.screens.MarketScreen;
 import src.service.game.battle.Battle;
 import src.service.screens.BattleScreen;
 import src.service.screens.InventoryScreen;
+import src.service.entities.monsters.Monster;
 import src.service.entities.monsters.MonsterTeam;
 import src.util.PieceType;
 import src.util.PrintingUtil;
@@ -134,20 +135,41 @@ public class MainGame {
 		 * Process the enemy turn
 		 * do the stuff here :):):):) ok 
 		 */
+		StatsTracker.addToStats("Screens Visited", 1);
+		Character lastInput = myScreen.getLastInput();
+		if(lastInput == 'q'){
+			return true;
+		}
+
 		Boolean monsterWins = false;
 		myScreen.getScreen().displayPauseAndProgress("Enemy Makes a move!");
 
-		if(EnemyController.makeCurrentEnemyMove(turnKeeper, currentBoard, monsterTeam)){
-			// did enter battle?
-			System.out.println("uh oh");
-		} else {
-			// did not enter battle
-			// don't need to show another pause screen
-			
-		}
-		
 
-		
+		// move returns either true for monster entered battle, or false for monster simply moving
+		if(EnemyController.makeCurrentEnemyMove(turnKeeper, currentBoard, monsterTeam)){
+			System.out.println("uh oh");
+
+			Monster currMonster = this.monsterTeam.getMonsters().get(turnKeeper.getMonsterTeamTurnCount());
+
+			this.currentScreen = ScreenState.BATTLE;
+			this.currBattle = new Battle(this.currentPlayer, currMonster, this.turnKeeper);
+			myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
+			myScreen.getScreen().displayPauseAndProgress("The monster begins its attack!");
+			
+			this.currBattle.monsterBattleCycle();
+
+			myScreen.getScreen().displayPauseAndProgress("The monster attacked you!");
+
+			this.currentScreen = ScreenState.MAP;
+			myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
+			this.currBattle = null;
+
+		} 
+
+		if(turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER){
+			// if the turn is back to the player, then we are done
+			myScreen.getScreen().displayPauseAndProgress("Your turn!");
+		}
 
 		return monsterWins;
 	}

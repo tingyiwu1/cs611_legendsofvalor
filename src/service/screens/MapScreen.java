@@ -169,6 +169,7 @@ public class MapScreen implements Screen, InputInterface {
 		InputInterface.DisplayInputOption("Move Hero West", "A", src.util.TextColor.BLUE);
 		InputInterface.DisplayInputOption("Move Hero South", "S", src.util.TextColor.BLUE);
 		InputInterface.DisplayInputOption("Access Inventory", "I", src.util.TextColor.CYAN);
+		InputInterface.DisplayInputOption("Pass the Turn", "P", src.util.TextColor.CYAN);
 
 		// if(this.currGameBoard.characterAtMarket()){
 		// 	InputInterface.DisplayInputOption("Access Nexus Market", "M", src.util.TextColor.CYAN);
