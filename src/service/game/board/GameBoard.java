@@ -181,6 +181,11 @@ public class GameBoard implements PlayerControl, NewBattleInitializer{
 	public MapPiece getPieceAt(int x, int y){
 		return this.currentBoard[x][y];
 	}
+	public MapPiece getPieceAt(Position pos){
+		int x = pos.getX();
+		int y = pos.getY();
+		return this.currentBoard[x][y];
+	}
 
 	public MapPiece getCurrentPiece(){
 		Position pos = this.getCurrHeroLocation();
@@ -299,6 +304,9 @@ public class GameBoard implements PlayerControl, NewBattleInitializer{
 		}
 		if(inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd'){
 			this.turnKeeper.progressTurn();
+			// if(this.turnKeeper.progressTurn()){
+			// 	this.turnKeeper.resetTurn();
+			// }
 			return null;
 		}
 

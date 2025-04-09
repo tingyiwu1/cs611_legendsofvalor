@@ -142,14 +142,17 @@ public class Battle implements PlayerControl, StatusDisplay {
 			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
 			return null;
 		}
-		if(monsterAttack(this.hero.getPosition())){
-			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
-			return null;
-		}
+		// if(monsterAttack(this.hero.getPosition())){
+		// 	this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
+		// 	return null;
+		// }
 
 		this.reportHP();
 
-		this.turnKeeper.progressTurn();
+		if(this.turnKeeper.progressTurn()){
+			this.turnKeeper.resetTurn();
+		}
+		
 
 		return null;
 

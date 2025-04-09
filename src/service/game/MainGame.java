@@ -7,6 +7,7 @@
  */
 package src.service.game;
 import src.service.game.board.GameBoard;
+import src.service.game.enemyControl.EnemyController;
 import src.service.game.market.MarketItem;
 import src.service.screens.ScreenContext;
 import src.service.screens.ScreenInterfaces.Screen;
@@ -133,8 +134,22 @@ public class MainGame {
 		 * Process the enemy turn
 		 * do the stuff here :):):):) ok 
 		 */
+		Boolean monsterWins = false;
+		myScreen.getScreen().displayPauseAndProgress("Enemy Makes a move!");
 
-		return true;
+		if(EnemyController.makeCurrentEnemyMove(turnKeeper, currentBoard, monsterTeam)){
+			// did enter battle?
+			System.out.println("uh oh");
+		} else {
+			// did not enter battle
+			// don't need to show another pause screen
+			
+		}
+		
+
+		
+
+		return monsterWins;
 	}
 	
 
