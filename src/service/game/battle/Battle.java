@@ -40,6 +40,7 @@ import java.util.ArrayList;
 
 import src.service.entities.Player;
 import src.service.entities.attributes.AttackOption;
+import src.service.entities.attributes.Position;
 import src.service.entities.heroes.Hero;
 import src.service.entities.items.Item;
 import src.service.entities.items.Potion;
@@ -141,12 +142,15 @@ public class Battle implements PlayerControl, StatusDisplay {
 			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
 			return null;
 		}
-		if(monsterAttack()){
+		if(monsterAttack(this.hero.getPosition())){
 			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
 			return null;
 		}
 
 		this.reportHP();
+
+		this.turnKeeper.progressTurn();
+
 		return null;
 
 		
@@ -218,6 +222,16 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 		
 		return false;
+	}
+
+	private Boolean monsterAttack(Position heroPos){
+		if(heroPos.distanceTo(this.monster.getPosition()) > 1){
+			this.addStatus("The monster is too far away to attack!", TextColor.YELLOW);
+			return false;
+		} else {
+			this.addStatus("The monster has enough range to attack!", TextColor.YELLOW);
+			return monsterAttack();
+		}
 	}
 
 	private Boolean monsterAttack() {

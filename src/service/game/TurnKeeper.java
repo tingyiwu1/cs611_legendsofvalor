@@ -5,7 +5,7 @@ import src.service.entities.monsters.MonsterTeam;
 
 public class TurnKeeper {
 
-	private enum CurrentTurn {
+	public enum CurrentTurn {
 		PLAYER,
 		MONSTER
 	}

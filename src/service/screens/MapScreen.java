@@ -80,8 +80,10 @@ public class MapScreen implements Screen, InputInterface {
 							if (entity.getPosition().equals(new Position(r, c))) {
 								if (entity.getType() == EntityType.HERO) {
 									hasHero = true;
-									if (idx == turnKeeper.getPlayerTeamTurnCount()) {
-										isActiveHero = true;
+									if(turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER){
+										if (idx == turnKeeper.getPlayerTeamTurnCount()) {
+											isActiveHero = true;
+										}
 									}
 								} else if (entity.getType() == EntityType.MONSTER) {
 									hasMonster = true;
@@ -121,7 +123,6 @@ public class MapScreen implements Screen, InputInterface {
 						System.out.print("  ~B~  ");
 					}else if(currentPieceType == PieceType.CAVE && inner == 1){
 						System.out.print("  [C]  ");
-						
 					}else if(currentPieceType == PieceType.KOULOU && inner == 1){
 						System.out.print("  _K_  ");
 						
@@ -143,7 +144,15 @@ public class MapScreen implements Screen, InputInterface {
 		}
 		System.out.println("+");
 		System.out.println("H = Hero, M = Monster, NEXUS = Nexus, X = Wall");
-		System.out.println("Current Hero: " + currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
+		if(turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER){
+			System.out.println("Current Hero: " + currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
+		} else {
+			/*
+			 * Handle enemy turn progression!
+			 */
+			System.out.println("TODO: Handle Enemy Turn");
+		}
+		
 	}
 
 	
@@ -154,7 +163,7 @@ public class MapScreen implements Screen, InputInterface {
 		System.out.println("These are the inputs!");
 
 
-		// TODO: make this list of options more pretty
+		// TODO: make this list of options more pretty ==> stack attacks on the right?
 		InputInterface.DisplayInputOption("Move Hero North", "W", src.util.TextColor.BLUE);
 		InputInterface.DisplayInputOption("Move Hero East", "D", src.util.TextColor.BLUE);
 		InputInterface.DisplayInputOption("Move Hero West", "A", src.util.TextColor.BLUE);

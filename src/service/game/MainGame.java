@@ -238,42 +238,7 @@ public class MainGame {
 				this.currentScreen = ScreenState.MAP;
 				myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
 				this.currBattle = null;
-				
-
-				/* 
-					// random chance to fight an enemy
-					
-					int randomNum = rand.nextInt(100);
-
-					// if this is a boss piece, immediately go to battle
-					if(this.currentBoard.getCurrentPiece().getPieceType() == PieceType.BOSS){
-						myScreen.getScreen().displayPauseAndProgress("You encountered BOSS enemy!");
-						StatsTracker.addToStats("Encountered Bosses", 1);
-						lastInput = myScreen.getLastInput();
-						if(lastInput == 'q'){
-							break;
-						}
-
-						System.out.println("Entering battle!");
-						this.currentScreen = ScreenState.BATTLE;
-						this.currBattle = new Battle(currentPlayer, BattleMonsterFactory.generateRandomMonster(monsterType.BOSS, this.currentPlayer.getMonsterLevel()));
-						myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
-					// otherwise, go to battle with a 50% chance. TODO
-					} else if(randomNum < 0){
-						myScreen.getScreen().displayPauseAndProgress("You encountered an enemy!");
-						StatsTracker.addToStats("Encountered Enemies", 1);
-						lastInput = myScreen.getLastInput();
-						if(lastInput == 'q'){
-							break;
-						}
-
-						System.out.println("Entering battle!");
-						this.currentScreen = ScreenState.BATTLE;
-						this.currBattle = new Battle(currentPlayer, BattleMonsterFactory.generateRandomMonster(monsterType.NORMAL, this.currentPlayer.getMonsterLevel()));
-						myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
-					}
-
-				*/
+			
 			}
 			myScreen.displayScreen();
 
@@ -281,8 +246,6 @@ public class MainGame {
 			if(lastInput == 'q'){
 				break;
 			}
-
-			//DEBUG DON"T SWITCH TO MONSTER TURN;
 
 		}
 

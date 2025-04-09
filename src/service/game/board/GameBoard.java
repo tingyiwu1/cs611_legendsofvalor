@@ -242,40 +242,43 @@ public class GameBoard implements PlayerControl, NewBattleInitializer{
 
 	@Override
 	public Boolean isMoveValid(Character inputtedMove){
-		/*
-		 * Validate attack battle frame initialization
-		 */
-		ArrayList<AttackOption> heroAttackList = this.currHeroAttackList();
-		Integer attackIdx = 0;
+		// Check if the input is a movement command
+		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd') {
+			Position pos = this.getCurrHeroLocation();
+			int newX = pos.getX();
+			int newY = pos.getY();
+			if (inputtedMove == 'w') {
+				newX--;
+			} else if (inputtedMove == 's') {
+				newX++;
+			} else if (inputtedMove == 'a') {
+				newY--;
+			} else if (inputtedMove == 'd') {
+				newY++;
+			}
+			// Validate movement boundaries and obstacles
+			if (newX < 0 || newX >= this.size || newY < 0 || newY >= this.size 
+				|| this.currentBoard[newX][newY].getPieceType() == PieceType.WALL 
+				|| this.currentBoard[newX][newY].getPieceType() == PieceType.OBSTACLE) {
+				return false;
+			}
+			return true;
+		}
+
+		// Check if the input is an attack index
 		try {
-			attackIdx = Integer.parseInt(inputtedMove.toString());
+			int attackIdx = Integer.parseInt(inputtedMove.toString()) - 1;
+			ArrayList<AttackOption> heroAttackList = this.currHeroAttackList();
+			if (attackIdx < 0 || attackIdx >= heroAttackList.size()) {
+				System.out.println("Invalid attack index");
+				return false;
+			}
+			return true;
 		} catch (NumberFormatException e) {
 			// Handle invalid number format
 			System.out.println("Invalid input: not a number.");
-		}
-		if(attackIdx < 0 || attackIdx > heroAttackList.size()){
-			System.out.println("Invalid attack index");
 			return false;
 		}
-
-
-		Position pos = this.getCurrHeroLocation();
-		int newX = pos.getX();
-		int newY = pos.getY();
-		if(inputtedMove == 'w'){
-			newX--;
-		} else if(inputtedMove == 's'){
-			newX++;
-		} else if(inputtedMove == 'a'){
-			newY--;
-		} else if(inputtedMove == 'd'){
-			newY++;
-		}
-		if(newX < 0 || newX >= this.size || newY < 0 || newY >= this.size 
-			|| this.currentBoard[newX][newY].getPieceType() == PieceType.WALL || this.currentBoard[newX][newY].getPieceType() == PieceType.OBSTACLE ){
-			return false;
-		} 
-		return true;	
 	}
 
 	@Override
@@ -312,9 +315,12 @@ public class GameBoard implements PlayerControl, NewBattleInitializer{
 		/*
 		 * DEBUG: DON'T ROTATE TURN
 		 */
-		// if(this.turnKeeper.progressTurn()){
-		// 	this.turnKeeper.resetTurn();
-		// }
+		if(inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd'){
+			if(this.turnKeeper.progressTurn()){
+				this.turnKeeper.resetTurn();
+			}
+		}
+		
 
 		return null;
 	}
