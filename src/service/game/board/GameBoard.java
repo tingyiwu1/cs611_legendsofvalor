@@ -2,7 +2,9 @@ package src.service.game.board;
 import src.util.PieceType;
 import src.service.entities.Entity;
 import src.service.entities.Player;
+import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
+import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;
 import src.service.entities.monsters.MonsterTeam;
 import src.service.game.PlayerControl;
@@ -17,7 +19,7 @@ import java.util.Random;
 /*
  * Game Board for the entire game
  */
-public class GameBoard implements PlayerControl{
+public class GameBoard implements PlayerControl, NewBattleInitializer{
 	private MapPiece[][] currentBoard;
 	private Integer size;
 	private Character lastInput = null;
@@ -29,6 +31,13 @@ public class GameBoard implements PlayerControl{
 	private TurnKeeper turnKeeper;
 	private MonsterTeam monsterTeam;	
 	// later to have BossPosition, with a boss piece
+
+	/*
+	 * Vars for NewBattleInitializer
+	 */
+	private Boolean enteredBattle = false;
+	private Monster monsterTarget;
+	private AttackOption attackOption;
 
 	// make a new gameboard
 	public GameBoard(int size, double wallPercent, double marketPercent, Player player, MonsterTeam monsterTeam, TurnKeeper turnKeeper){
@@ -197,6 +206,27 @@ public class GameBoard implements PlayerControl{
 		// return this.getPieceAt(this.charX, this.charY).getPieceType() == PieceType.BOSS;
 	}
 
+	public ArrayList<AttackOption> currHeroAttackList(){
+		ArrayList<AttackOption> attackList = new ArrayList<AttackOption>();
+
+		ArrayList<Monster> monsterList = this.getMonsterTeam().getMonsters();
+
+		// TODO: Modify the ATTACKOPTION to include more information about which hero attacks which monster
+		// TODO: ATTACKOPTION.getTarget() type thing
+		for (int i = 0; i < monsterList.size(); i++){
+			Monster currMonster = monsterList.get(i);
+			Hero currHero = this.getPlayer().getParty()[turnKeeper.getPlayerTeamTurnCount()];
+			ArrayList<AttackOption> currMonsterAttackList = currHero.getAttacksListInRange(currMonster.getPosition(), currMonster);
+
+			for (int j = 0; j < currMonsterAttackList.size(); j++){
+				AttackOption currAttackOption = currMonsterAttackList.get(j);
+				attackList.add(currAttackOption);
+			}
+		}
+
+		return attackList;
+	}
+
 	@Override
 	public Boolean makeMove(Character inputtedMove){
 		this.lastInput = Character.toLowerCase(inputtedMove);
@@ -212,6 +242,23 @@ public class GameBoard implements PlayerControl{
 
 	@Override
 	public Boolean isMoveValid(Character inputtedMove){
+		/*
+		 * Validate attack battle frame initialization
+		 */
+		ArrayList<AttackOption> heroAttackList = this.currHeroAttackList();
+		Integer attackIdx = 0;
+		try {
+			attackIdx = Integer.parseInt(inputtedMove.toString());
+		} catch (NumberFormatException e) {
+			// Handle invalid number format
+			System.out.println("Invalid input: not a number.");
+		}
+		if(attackIdx < 0 || attackIdx > heroAttackList.size()){
+			System.out.println("Invalid attack index");
+			return false;
+		}
+
+
 		Position pos = this.getCurrHeroLocation();
 		int newX = pos.getX();
 		int newY = pos.getY();
@@ -225,7 +272,7 @@ public class GameBoard implements PlayerControl{
 			newY++;
 		}
 		if(newX < 0 || newX >= this.size || newY < 0 || newY >= this.size 
-			|| this.currentBoard[newX][newY].getPieceType() == PieceType.WALL){
+			|| this.currentBoard[newX][newY].getPieceType() == PieceType.WALL || this.currentBoard[newX][newY].getPieceType() == PieceType.OBSTACLE ){
 			return false;
 		} 
 		return true;	
@@ -249,13 +296,49 @@ public class GameBoard implements PlayerControl{
 		}
 
 		//TODO: ADD ENTER BATTLE PROCESS
+		try{
+			Integer attackIdx = Integer.parseInt(inputtedMove.toString()) - 1;
+			AttackOption attackOption = this.currHeroAttackList().get(attackIdx);
+			
+			this.attackOption = attackOption;
+			this.monsterTarget = attackOption.getMonsterTarget();
+			this.enteredBattle = true;
 
-		if(this.turnKeeper.progressTurn()){
-			this.turnKeeper.resetTurn();
+		}catch (NumberFormatException e) {
+			// Handle invalid number format
+			System.out.println("isMoveValid failed!");
 		}
+
+		/*
+		 * DEBUG: DON'T ROTATE TURN
+		 */
+		// if(this.turnKeeper.progressTurn()){
+		// 	this.turnKeeper.resetTurn();
+		// }
 
 		return null;
 	}
+
+	@Override
+	public void resetBattleInitializer() {
+		this.attackOption = null;
+		this.enteredBattle = false;
+		this.monsterTarget = null;
+	}
+
+	@Override
+	public Boolean getEnteredBattle() { return this.enteredBattle; }
+	@Override
+	public void setEnteredBattle(Boolean enteredBattle) {this.enteredBattle = enteredBattle; }
+
+	@Override
+	public void setMonsterTarget(Monster target) { this.monsterTarget = target; }
+	@Override
+	public Monster getMonsterTarget() { return this.monsterTarget; }
+	@Override
+	public void setAttackOption(AttackOption attackOption) { this.attackOption = attackOption; }
+	@Override
+	public AttackOption getAttackOption() { return this.attackOption; }
 
 
 }

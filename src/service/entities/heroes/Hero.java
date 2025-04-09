@@ -51,6 +51,7 @@ import src.service.entities.items.Item;
 import src.service.entities.items.Potion;
 import src.service.entities.items.Spell;
 import src.service.entities.items.Weapon;
+import src.service.entities.monsters.Monster;
 import src.util.ItemType;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
@@ -419,6 +420,21 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		for(AttackOption attack : allAttacks){
 			if(attack.getRange() != null && attack.getRange() >= targetDist){
 				attacks.add(attack);
+			}
+		}
+
+		return attacks;
+	}
+
+	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos, Monster target) {
+		Position heroPos = this.getPosition();
+		int targetDist = heroPos.distanceTo(targetPos);
+		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
+		ArrayList<AttackOption> allAttacks = this.getAttacksList();
+		for(AttackOption attack : allAttacks){
+			if(attack.getRange() != null && attack.getRange() >= targetDist){
+				attacks.add(attack);
+				attack.setMonsterTarget(target);
 			}
 		}
 

@@ -52,6 +52,12 @@ import src.util.PrintColor;
 import src.util.StatsTracker;
 import src.util.TextColor;
 
+/*
+ * TODO:
+ * Change ProcessHeroWin, ProcessMonsterWin
+ * ProcessMonsterWin should trigger a rollback from Main to reset the player at spawn
+ */
+
 public class Battle implements PlayerControl, StatusDisplay {
 
 	private static int critHitBonus = 20;
@@ -76,7 +82,10 @@ public class Battle implements PlayerControl, StatusDisplay {
 	
 	private TurnKeeper turnKeeper;
 
-	public Battle(Player player, Monster monster){
+	private AttackOption heroChosenAttack;
+
+	public Battle(Player player, Monster monster, TurnKeeper turnKeeper){
+		this.turnKeeper = turnKeeper;
 		this.monster = monster;
 		this.player = player;
 		this.hero = player.getFirstHero();
@@ -91,14 +100,55 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.didLevelUp = false;
 		this.isBossBattle = false;
 	}
-	
 
-	public Boolean battleCycle(){
+	public Battle(Player player, Monster monster, TurnKeeper turnKeeper, AttackOption heroChosenAttack){
+		this.turnKeeper = turnKeeper;
+		this.player = player;
+		this.hero = player.getParty()[turnKeeper.getPlayerTeamTurnCount()];
+		this.currHeroIdx = 0;
+		this.monster = monster;
+
+		this.heroAttacks = hero.getAttacksList();
+		this.monsterAttack = monster.mainHandAttack();
+
+		this.statuses = new ArrayList<String>();
+		this.statusColors = new ArrayList<TextColor>();
+		this.gameOver = false;
+		this.didLevelUp = false;
+		this.isBossBattle = false;
+		this.heroChosenAttack = heroChosenAttack;
+	}
+	public Boolean reportHP(){
 		StatsTracker.addToStats("Battle cycles progressed", 1);
+		this.addStatus("gaming is happening!", TextColor.YELLOW);
 		
 		this.addStatus("Hero health: " + hero.getCurrentHealth(), TextColor.WHITE);
 		this.addStatus("Monster health: " + monster.getCurrentHealth(), TextColor.WHITE);
 		return true;
+		
+	}
+	
+
+	public Boolean heroBattleCycle(){
+		StatsTracker.addToStats("Battle cycles progressed", 1);
+		this.addStatus("gaming is happening!", TextColor.YELLOW);
+		
+		/*
+		 * First hero attack, and effects, then monster attack and effects
+		 */
+
+		if(this.heroAttack(this.heroChosenAttack)){
+			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
+			return null;
+		}
+		if(monsterAttack()){
+			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
+			return null;
+		}
+
+		this.reportHP();
+		return null;
+
 		
 	}
 
@@ -111,6 +161,14 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 	private Boolean heroAttack(int idx) {
 		AttackOption chosenAttackOption = this.heroAttacks.get(idx);
+		return this.executeHeroAttack(chosenAttackOption);
+	}
+
+	private Boolean heroAttack(AttackOption chosenAttackOption){
+		return this.executeHeroAttack(chosenAttackOption);
+	}
+
+	private Boolean executeHeroAttack(AttackOption chosenAttackOption){
 		this.addStatus("Hero: " + chosenAttackOption.getDescription(), TextColor.CYAN);
 		Item heroItem = chosenAttackOption.getSourceItem();
 		if(heroItem.getItemType() == ItemType.POTION){
@@ -370,7 +428,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
 			return null;
 		}
-		this.battleCycle();
+		this.reportHP();
 		return null;
 	}
 

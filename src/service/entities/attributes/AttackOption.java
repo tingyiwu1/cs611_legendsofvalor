@@ -3,6 +3,7 @@ package src.service.entities.attributes;
 import src.service.entities.items.Item;
 import src.service.entities.items.Spell;
 import src.service.entities.items.Weapon;
+import src.service.entities.monsters.Monster;
 import src.util.ItemType;
 
 /**
@@ -14,6 +15,7 @@ public class AttackOption {
 	private String description;
 	private Item sourceItem;
 	private Integer damage;
+	private Monster target;
 
 	public AttackOption(String name, String description, Item sourceItem, Integer damage) {
 		this.name = name;
@@ -21,8 +23,23 @@ public class AttackOption {
 		this.sourceItem = sourceItem;
 		this.damage = damage;
 	}
+
+	public AttackOption(String name, String description, Item sourceItem, Integer damage, Monster target) {
+		this.name = name;
+		this.description = description;
+		this.sourceItem = sourceItem;
+		this.damage = damage;
+	}
+
 	public String getName() {
 		return this.name;
+	}
+
+	public void setMonsterTarget(Monster target) {
+		this.target = target;
+	}
+	public Monster getMonsterTarget() {
+		return this.target;
 	}
 
 	public String getDescription() {

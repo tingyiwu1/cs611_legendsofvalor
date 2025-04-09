@@ -12,8 +12,6 @@ import src.service.entities.Entity;
 import src.service.entities.Entity.EntityType;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
-import src.service.entities.heroes.Hero;
-import src.service.entities.monsters.Monster;
 import src.service.game.TurnKeeper;
 import src.service.game.board.GameBoard;
 import src.service.screens.ScreenInterfaces.InputInterface;
@@ -148,26 +146,7 @@ public class MapScreen implements Screen, InputInterface {
 		System.out.println("Current Hero: " + currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
 	}
 
-	private ArrayList<AttackOption> heroAttackList(){
-		ArrayList<AttackOption> attackList = new ArrayList<AttackOption>();
-
-		ArrayList<Monster> monsterList = this.currGameBoard.getMonsterTeam().getMonsters();
-
-		// TODO: Modify the ATTACKOPTION to include more information about which hero attacks which monster
-		// TODO: ATTACKOPTION.getTarget() type thing
-		for (int i = 0; i < monsterList.size(); i++){
-			Monster currMonster = monsterList.get(i);
-			Hero currHero = this.currGameBoard.getPlayer().getParty()[turnKeeper.getPlayerTeamTurnCount()];
-			ArrayList<AttackOption> currMonsterAttackList = currHero.getAttacksListInRange(currMonster.getPosition());
-
-			for (int j = 0; j < currMonsterAttackList.size(); j++){
-				AttackOption currAttackOption = currMonsterAttackList.get(j);
-				attackList.add(currAttackOption);
-			}
-		}
-
-		return attackList;
-	}
+	
 
 
 	@Override
@@ -186,7 +165,7 @@ public class MapScreen implements Screen, InputInterface {
 		// 	InputInterface.DisplayInputOption("Access Nexus Market", "M", src.util.TextColor.CYAN);
 		// }
 
-		ArrayList<AttackOption> heroAttackList = this.heroAttackList();
+		ArrayList<AttackOption> heroAttackList = this.currGameBoard.currHeroAttackList();
 		if(heroAttackList.size() > 0){
 			for(int i = 0; i < heroAttackList.size(); i++){
 				AttackOption currAttackOption = heroAttackList.get(i);

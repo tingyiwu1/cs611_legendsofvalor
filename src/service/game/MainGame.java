@@ -26,7 +26,6 @@ import src.service.game.battle.Battle;
 import src.service.game.battle.BattleMonsterFactory;
 import src.service.game.battle.BattleMonsterFactory.monsterType;
 import src.service.screens.BattleScreen;
-import src.service.screens.IntroScreen;
 import src.service.screens.InventoryScreen;
 import src.service.entities.monsters.MonsterTeam;
 import src.util.PieceType;
@@ -207,9 +206,41 @@ public class MainGame {
 			 * Change the battling system :(
 			 */
 
-			if(this.currentScreen == ScreenState.MAP && 
-			(this.currentBoard.isMoveValid(lastInput) || this.currentBoard.isAtBoss()) && 
-			lastInput != null && (lastInput == 'w' || lastInput == 'a' || lastInput == 's' || lastInput == 'd')){
+			if(this.currentScreen == ScreenState.MAP && this.currentBoard.getEnteredBattle()){
+
+				/*
+				 * TODO: Make this smoother
+				 */
+				// myScreen.getScreen().displayPauseAndProgress("You attacked an enemy!");
+				StatsTracker.addToStats("Encountered Enemies", 1);
+
+				lastInput = myScreen.getLastInput();
+				this.currentScreen = ScreenState.BATTLE;
+				this.currBattle = new Battle(this.currentPlayer, this.currentBoard.getMonsterTarget(), this.turnKeeper, this.currentBoard.getAttackOption());
+				myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
+				myScreen.getScreen().displayPauseAndProgress("You attacked an enemy with: " + this.currentBoard.getAttackOption().getSourceItem().getName());
+				
+				this.currBattle.heroBattleCycle();
+
+				myScreen.getScreen().displayPauseAndProgress("You attacked an enemy with: " + this.currentBoard.getAttackOption().getSourceItem().getName());
+
+				this.currentBoard.resetBattleInitializer();
+				/*
+				 * TODO: PROCESS GAME END
+				 * TODO: PROCESS LEVEL UP
+				 * etc etc etc.
+				 */
+				if(this.currBattle.isGameOver()){
+					System.out.println("TODO: WE LOST");
+					break;
+				}
+
+				this.currentScreen = ScreenState.MAP;
+				myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
+				this.currBattle = null;
+				
+
+				/* 
 					// random chance to fight an enemy
 					
 					int randomNum = rand.nextInt(100);
@@ -241,7 +272,9 @@ public class MainGame {
 						this.currBattle = new Battle(currentPlayer, BattleMonsterFactory.generateRandomMonster(monsterType.NORMAL, this.currentPlayer.getMonsterLevel()));
 						myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
 					}
-				}
+
+				*/
+			}
 			myScreen.displayScreen();
 
 			lastInput = myScreen.getLastInput();

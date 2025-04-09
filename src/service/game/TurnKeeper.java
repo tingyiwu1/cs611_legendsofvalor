@@ -27,6 +27,9 @@ public class TurnKeeper {
 	public CurrentTurn getCurrentTurn() {
 		return currentTurn;
 	}
+	public int getTurnCount() {
+		return turnCount;
+	}
 
 	public int getPlayerTeamTurnCount() {
 		if(currentTurn == CurrentTurn.PLAYER) {
