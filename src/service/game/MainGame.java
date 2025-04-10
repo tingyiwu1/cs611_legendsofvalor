@@ -6,6 +6,7 @@
  *
  */
 package src.service.game;
+
 import src.service.game.board.GameBoard;
 import src.service.game.enemyControl.EnemyController;
 import src.service.game.market.MarketItem;
@@ -51,7 +52,7 @@ public class MainGame {
 	MonsterTeam monsterTeam;
 	TurnKeeper turnKeeper;
 
-	public MainGame(){
+	public MainGame() {
 		this.currentPlayer = new Player(Difficulty.EASY, 3);
 		this.monsterTeam = new MonsterTeam();
 
@@ -63,17 +64,16 @@ public class MainGame {
 
 		this.currentBoard = new GameBoard(8, 0.3, 0.2, this.currentPlayer, this.monsterTeam, this.turnKeeper);
 		this.currBattle = null;
-		
+
 		this.marketHash = new HashMap<>();
 		this.continueToGame = true;
 
 		this.currentScreen = ScreenState.MAP;
 		this.previousScreen = null;
 
-
 	}
 
-	public void playGame(){
+	public void playGame() {
 		System.out.println("Welcome to the game!!");
 
 		Scanner scanny = new Scanner(System.in);
@@ -86,33 +86,30 @@ public class MainGame {
 
 		// this.currentPlayer = initScreen.initializePlayer();
 		// if(initScreen.getLastInput() == 'q'){
-		// 	continueToGame = false;
+		// continueToGame = false;
 		// }
 
 		// if(continueToGame){
-		// 	myScreen.displayScreen();
-		// 	if(myScreen.getLastInput() == 'q'){
-		// 		continueToGame = false;
-		// 	}
+		// myScreen.displayScreen();
+		// if(myScreen.getLastInput() == 'q'){
+		// continueToGame = false;
+		// }
 		// }
 
-
-		
 		myScreen.setScreen(new MapScreen(currentBoard, scanny, turnKeeper));
 
-		while(continueToGame){
-			if(this.turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER){
+		while (continueToGame) {
+			if (this.turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER) {
 				System.out.println("====== HERO TURN ======");
-				if(processHeroTurn(myScreen, scanny)){
+				if (processHeroTurn(myScreen, scanny)) {
 					break;
 				}
 			} else {
-				if(processEnemyTurn(myScreen, scanny)){
+				if (processEnemyTurn(myScreen, scanny)) {
 					break;
 				}
 			}
 		}
-
 
 		scanny.close();
 		PrintingUtil.clearScreen();
@@ -125,28 +122,28 @@ public class MainGame {
 		System.out.println("");
 
 		StatsTracker.printStatsMap();
-		
+
 		// something.printStats();
 	}
 
-	public Boolean processEnemyTurn(ScreenContext myScreen, Scanner scanny){
+	public Boolean processEnemyTurn(ScreenContext myScreen, Scanner scanny) {
 		/*
 		 * TODO:
 		 * Process the enemy turn
-		 * do the stuff here :):):):) ok 
+		 * do the stuff here :):):):) ok
 		 */
 		StatsTracker.addToStats("Screens Visited", 1);
 		Character lastInput = myScreen.getLastInput();
-		if(lastInput == 'q'){
+		if (lastInput == 'q') {
 			return true;
 		}
 
 		Boolean monsterWins = false;
 		myScreen.getScreen().displayPauseAndProgress("Enemy Makes a move!");
 
-
-		// move returns either true for monster entered battle, or false for monster simply moving
-		if(EnemyController.makeCurrentEnemyMove(turnKeeper, currentBoard, monsterTeam)){
+		// move returns either true for monster entered battle, or false for monster
+		// simply moving
+		if (EnemyController.makeCurrentEnemyMove(turnKeeper, currentBoard, monsterTeam)) {
 			System.out.println("uh oh");
 
 			Monster currMonster = this.monsterTeam.getMonsters().get(turnKeeper.getMonsterTeamTurnCount());
@@ -155,7 +152,7 @@ public class MainGame {
 			this.currBattle = new Battle(this.currentPlayer, currMonster, this.turnKeeper);
 			myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
 			myScreen.getScreen().displayPauseAndProgress("The monster begins its attack!");
-			
+
 			this.currBattle.monsterBattleCycle();
 
 			myScreen.getScreen().displayPauseAndProgress("The monster attacked you!");
@@ -164,74 +161,72 @@ public class MainGame {
 			myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
 			this.currBattle = null;
 
-		} 
+		}
 
-		if(turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER){
+		if (turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER) {
 			// if the turn is back to the player, then we are done
 			myScreen.getScreen().displayPauseAndProgress("Your turn!");
 		}
 
 		return monsterWins;
 	}
-	
 
-
-	public Boolean processHeroTurn(ScreenContext myScreen, Scanner scanny){
+	public Boolean processHeroTurn(ScreenContext myScreen, Scanner scanny) {
 		StatsTracker.addToStats("Screens Visited", 1);
 
 		Character lastInput = myScreen.getLastInput();
-		if(lastInput == 'q'){
+		if (lastInput == 'q') {
 			return true;
 		}
 
-		//opening up the market
-		if(lastInput == 'm' && this.currentScreen == ScreenState.MAP){
-			if(this.currentBoard.characterAtMarket()){
+		// opening up the market
+		if (lastInput == 'm' && this.currentScreen == ScreenState.MAP) {
+			if (this.currentBoard.characterAtMarket()) {
 				StatsTracker.addToStats("Visited Market", 1);
-				
+
 				this.previousScreen = this.currentScreen;
 				this.currentScreen = ScreenState.MARKET;
 
 				int marketIndex = this.currentBoard.getCurrentMarketIndex();
 				ArrayList<MarketItem> savedItems = this.marketHash.getOrDefault(marketIndex, null);
 
-				if(savedItems == null){
+				if (savedItems == null) {
 					myScreen.setScreen(new MarketScreen(this.currentPlayer, scanny));
-				} else{
+				} else {
 					myScreen.setScreen(new MarketScreen(this.currentPlayer, scanny, savedItems));
-				}	
+				}
 			}
 		}
-		if(this.currentScreen == ScreenState.MARKET && lastInput == 'b'){
-			
+		if (this.currentScreen == ScreenState.MARKET && lastInput == 'b') {
+
 			int marketIndex = this.currentBoard.getCurrentMarketIndex();
 			Screen current = myScreen.getScreen();
 			if (current instanceof MarketScreen) {
 				MarketScreen marketScreen = (MarketScreen) current;
-				if(marketScreen.getCurrentMarket() != null){
+				if (marketScreen.getCurrentMarket() != null) {
 					// Save back into hash
 					ArrayList<MarketItem> updatedItems = marketScreen.getCurrentMarket().getMarketOfferings();
 					this.marketHash.put(marketIndex, updatedItems);
 				}
 			}
 
-
 			this.currentScreen = this.previousScreen;
 			myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
 			this.previousScreen = null;
 		}
 
-		//opening up the inventory
-		if(lastInput == 'i'){
+		// opening up the inventory
+		if (lastInput == 'i') {
 			this.previousScreen = this.currentScreen;
 
 			this.currentScreen = ScreenState.INVENTORY;
 			myScreen.setScreen(new InventoryScreen(this.currentPlayer, scanny));
 		}
 
-		// if we are in the inventory screen and we want to go back to the previous screen
-		if(this.currentScreen == ScreenState.INVENTORY && lastInput == 'b'){
-			if(this.currBattle == null){
+		// if we are in the inventory screen and we want to go back to the previous
+		// screen
+		if (this.currentScreen == ScreenState.INVENTORY && lastInput == 'b') {
+			if (this.currBattle == null) {
 				this.currentScreen = this.previousScreen;
 				myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
 				this.previousScreen = null;
@@ -246,27 +241,28 @@ public class MainGame {
 		 * Battle is over, level up time
 		 */
 
-		if(this.currBattle != null && this.currBattle.isBattleOver()){
+		if (this.currBattle != null && this.currBattle.isBattleOver()) {
 			myScreen.getScreen().displayPauseAndProgress("Battle is over!");
 			// if(this.currBattle.getDidLevelUp()){
-			// 	System.out.println("TODO: PROCESS LEVEL UP!");
-			// 	this.currentPlayer.getFirstHero().earnGold(100);
+			// System.out.println("TODO: PROCESS LEVEL UP!");
+			// this.currentPlayer.getFirstHero().earnGold(100);
 			// } else
-			if(this.currBattle.isGameOver()){
+			if (this.currBattle.isGameOver()) {
 				System.out.println("TODO: WE LOST");
 				return true;
 			}
-			
-			if(this.currentBoard.getCurrentPiece().getPieceType() == PieceType.BOSS){
+
+			if (this.currentBoard.getCurrentPiece().getPieceType() == PieceType.BOSS) {
 				int[] charLocation = this.currentBoard.getCurrHeroLocation().getPositionXY();
-				System.out.println("Boss defeated at (" + charLocation[0] + "," + charLocation[1] + ") — clearing and spawning new boss.");
+				System.out.println(
+						"Boss defeated at (" + charLocation[0] + "," + charLocation[1] + ") — clearing and spawning new boss.");
 				StatsTracker.addToStats("Defeated Bosses", 1);
 				this.currentBoard.setPieceAt(charLocation[0], charLocation[1], PieceType.EMPTY);
 				// this.currentBoard.setNewBoss();
 			}
 
 			lastInput = myScreen.getLastInput();
-			if(lastInput == 'q'){
+			if (lastInput == 'q') {
 				return true;
 			}
 
@@ -275,14 +271,13 @@ public class MainGame {
 			this.currBattle = null;
 		}
 
-
 		/*
 		 * TODO:
 		 * Change this to be a BattleFrame perhaps?
 		 * Change the battling system :(
 		 */
 
-		if(this.currentScreen == ScreenState.MAP && this.currentBoard.getEnteredBattle()){
+		if (this.currentScreen == ScreenState.MAP && this.currentBoard.getEnteredBattle()) {
 
 			/*
 			 * TODO: Make this smoother
@@ -292,13 +287,16 @@ public class MainGame {
 
 			lastInput = myScreen.getLastInput();
 			this.currentScreen = ScreenState.BATTLE;
-			this.currBattle = new Battle(this.currentPlayer, this.currentBoard.getMonsterTarget(), this.turnKeeper, this.currentBoard.getAttackOption());
+			this.currBattle = new Battle(this.currentPlayer, this.currentBoard.getMonsterTarget(), this.turnKeeper,
+					this.currentBoard.getAttackOption());
 			myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
-			myScreen.getScreen().displayPauseAndProgress("You attacked an enemy with: " + this.currentBoard.getAttackOption().getSourceItem().getName());
-			
+			myScreen.getScreen().displayPauseAndProgress(
+					"You attacked an enemy with: " + this.currentBoard.getAttackOption().getSourceItem().getName());
+
 			this.currBattle.heroBattleCycle();
 
-			myScreen.getScreen().displayPauseAndProgress("You attacked an enemy with: " + this.currentBoard.getAttackOption().getSourceItem().getName());
+			myScreen.getScreen().displayPauseAndProgress(
+					"You attacked an enemy with: " + this.currentBoard.getAttackOption().getSourceItem().getName());
 
 			this.currentBoard.resetBattleInitializer();
 			/*
@@ -306,7 +304,7 @@ public class MainGame {
 			 * TODO: PROCESS LEVEL UP
 			 * etc etc etc.
 			 */
-			if(this.currBattle.isGameOver()){
+			if (this.currBattle.isGameOver()) {
 				System.out.println("TODO: WE LOST");
 				return true;
 			}
@@ -314,12 +312,12 @@ public class MainGame {
 			this.currentScreen = ScreenState.MAP;
 			myScreen.setScreen(new MapScreen(this.currentBoard, scanny, this.turnKeeper));
 			this.currBattle = null;
-		
+
 		}
 		myScreen.displayScreen();
 
 		lastInput = myScreen.getLastInput();
-		if(lastInput == 'q'){
+		if (lastInput == 'q') {
 			return true;
 		}
 

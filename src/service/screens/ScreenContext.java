@@ -18,23 +18,23 @@ public class ScreenContext {
 	}
 
 	public void displayScreen() {
-        if (currScreen != null) {
-            currScreen.displayAndProgress();
-        } else {
-            System.out.println("No screen set.");
-        }
-    }
+		if (currScreen != null) {
+			currScreen.displayAndProgress();
+		} else {
+			System.out.println("No screen set.");
+		}
+	}
 
-	public Screen getScreen(){
+	public Screen getScreen() {
 		return this.currScreen;
 	}
 
-	public void setScreen(Screen newScreen){
+	public void setScreen(Screen newScreen) {
 		this.currScreen = newScreen;
 	}
 
-	public Character getLastInput(){
+	public Character getLastInput() {
 		return this.currScreen.getLastInput();
 	}
-	
+
 }

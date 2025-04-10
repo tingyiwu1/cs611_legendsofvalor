@@ -20,8 +20,6 @@ import src.util.PieceType;
 import src.util.PrintColor;
 import src.util.PrintingUtil;
 
-
-
 public class MapScreen implements Screen, InputInterface {
 
 	private GameBoard currGameBoard;
@@ -30,18 +28,17 @@ public class MapScreen implements Screen, InputInterface {
 	private Character lastInput;
 	private TurnKeeper turnKeeper;
 
-
 	public MapScreen(GameBoard gameBoard, Scanner scanny, TurnKeeper turnKeeper) {
 		this.scanny = scanny;
 		this.currGameBoard = gameBoard;
 		this.gameSize = gameBoard.getSize();
 		this.lastInput = ' ';
 		this.turnKeeper = turnKeeper;
-		
+
 	}
 
-	@Override 
-	public void displayAndProgress(){
+	@Override
+	public void displayAndProgress() {
 		PrintingUtil.clearScreen();
 		System.out.println("This is the Map Screen!");
 		this.displayMap();
@@ -80,7 +77,7 @@ public class MapScreen implements Screen, InputInterface {
 							if (entity.getPosition().equals(new Position(r, c))) {
 								if (entity.getType() == EntityType.HERO) {
 									hasHero = true;
-									if(turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER){
+									if (turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER) {
 										if (idx == turnKeeper.getPlayerTeamTurnCount()) {
 											isActiveHero = true;
 										}
@@ -91,7 +88,7 @@ public class MapScreen implements Screen, InputInterface {
 							}
 						}
 						// TODO: IS THERE A BETTER WAY TO DISPLAY WHICH HERO IS ACTIVE?
-						if(isActiveHero){
+						if (isActiveHero) {
 							if (hasHero && hasMonster) {
 								PrintColor.blue("AH  ");
 								PrintColor.yellow(" M ");
@@ -114,23 +111,22 @@ public class MapScreen implements Screen, InputInterface {
 								System.out.print("       ");
 							}
 						}
-						
+
 					} else if (currentPieceType == PieceType.HERO_NEXUS && inner == 1) {
 						PrintColor.blue(" NEXUS ");
 					} else if (currentPieceType == PieceType.MONSTER_NEXUS && inner == 1) {
 						PrintColor.red(" NEXUS ");
-					} else if(currentPieceType == PieceType.BUSH && inner == 1){
+					} else if (currentPieceType == PieceType.BUSH && inner == 1) {
 						System.out.print("  ~B~  ");
-					}else if(currentPieceType == PieceType.CAVE && inner == 1){
+					} else if (currentPieceType == PieceType.CAVE && inner == 1) {
 						System.out.print("  [C]  ");
-					}else if(currentPieceType == PieceType.KOULOU && inner == 1){
+					} else if (currentPieceType == PieceType.KOULOU && inner == 1) {
 						System.out.print("  _K_  ");
-						
-					}else if(currentPieceType == PieceType.OBSTACLE && inner == 1){
+
+					} else if (currentPieceType == PieceType.OBSTACLE && inner == 1) {
 						System.out.print("  xxx  ");
-						
-					}
-					else if (currentPieceType == PieceType.MARKET && inner == 2) {
+
+					} else if (currentPieceType == PieceType.MARKET && inner == 2) {
 						PrintColor.yellow("     M ");
 					} else {
 						System.out.print("       ");
@@ -144,24 +140,21 @@ public class MapScreen implements Screen, InputInterface {
 		}
 		System.out.println("+");
 		System.out.println("H = Hero, M = Monster, NEXUS = Nexus, X = Wall");
-		if(turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER){
-			System.out.println("Current Hero: " + currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
+		if (turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER) {
+			System.out
+					.println("Current Hero: " + currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
 		} else {
 			/*
 			 * Handle enemy turn progression!
 			 */
 			System.out.println("TODO: Handle Enemy Turn");
 		}
-		
+
 	}
 
-	
-
-
 	@Override
-	public Character DisplayInputs(){
+	public Character DisplayInputs() {
 		System.out.println("These are the inputs!");
-
 
 		// TODO: make this list of options more pretty ==> stack attacks on the right?
 		InputInterface.DisplayInputOption("Move Hero North", "W", src.util.TextColor.BLUE);
@@ -172,14 +165,16 @@ public class MapScreen implements Screen, InputInterface {
 		InputInterface.DisplayInputOption("Pass the Turn", "P", src.util.TextColor.CYAN);
 
 		// if(this.currGameBoard.characterAtMarket()){
-		// 	InputInterface.DisplayInputOption("Access Nexus Market", "M", src.util.TextColor.CYAN);
+		// InputInterface.DisplayInputOption("Access Nexus Market", "M",
+		// src.util.TextColor.CYAN);
 		// }
 
 		ArrayList<AttackOption> heroAttackList = this.currGameBoard.currHeroAttackList();
-		if(heroAttackList.size() > 0){
-			for(int i = 0; i < heroAttackList.size(); i++){
+		if (heroAttackList.size() > 0) {
+			for (int i = 0; i < heroAttackList.size(); i++) {
 				AttackOption currAttackOption = heroAttackList.get(i);
-				InputInterface.DisplayInputOption("Attack with" + currAttackOption.getSourceItem().getName(), "A" + (i+1), src.util.TextColor.RED);
+				InputInterface.DisplayInputOption("Attack with" + currAttackOption.getSourceItem().getName(), "A" + (i + 1),
+						src.util.TextColor.RED);
 			}
 		}
 
@@ -187,27 +182,26 @@ public class MapScreen implements Screen, InputInterface {
 
 		Character input = this.scanny.next().charAt(0);
 		this.lastInput = input;
-		
+
 		// scanny.close();
 
 		return input;
-		
 
 		// return null;
 	}
 
 	@Override
-	public Character getLastInput(){
+	public Character getLastInput() {
 		return this.lastInput;
 	}
 
 	@Override
-	public void displayPauseAndProgress(String message){
+	public void displayPauseAndProgress(String message) {
 		PrintingUtil.clearScreen();
 		System.out.println("This is the Map Screen!");
 		this.displayMap();
 
-		//you encountered an enemy!
+		// you encountered an enemy!
 		PrintColor.yellow(message);
 		System.out.println();
 		InputInterface.DisplayInputOption("Input Any Character to Continue", "", src.util.TextColor.BLUE);
@@ -215,7 +209,7 @@ public class MapScreen implements Screen, InputInterface {
 		this.displayQuit();
 		Character input = this.scanny.next().charAt(0);
 		this.lastInput = input;
-		if(input != 'q'){
+		if (input != 'q') {
 			this.lastInput = ' ';
 		}
 	}

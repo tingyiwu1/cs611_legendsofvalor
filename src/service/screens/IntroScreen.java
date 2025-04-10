@@ -15,20 +15,21 @@ import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.TextColor;
 
-public class IntroScreen implements Screen{
+public class IntroScreen implements Screen {
 
 	private Scanner scanny;
 	private Character lastInput;
 
-	public IntroScreen(Scanner scanny){
+	public IntroScreen(Scanner scanny) {
 		this.scanny = scanny;
 	}
 
-	public Player initializePlayer(){
+	public Player initializePlayer() {
 		PrintingUtil.clearScreen();
 
 		System.out.println("Welcome to the game! This is a RPG-type turn based fighting game.");
-		System.out.println("Your goal is to survive for as long as possible, while defeating bosses, obtaining new gear, and levelling up!");
+		System.out.println(
+				"Your goal is to survive for as long as possible, while defeating bosses, obtaining new gear, and levelling up!");
 		System.out.println(this.rainbowText("Live through your dream for as long as possible!"));
 		System.out.println("Select a difficulty!");
 		InputInterface.DisplayInputOption("Difficulty: Easy", "1", src.util.TextColor.RED);
@@ -62,11 +63,15 @@ public class IntroScreen implements Screen{
 			break;
 		}
 
-		if(!lastInput.equals('q')){
+		if (!lastInput.equals('q')) {
 			System.out.println("Select the number of heroes in your party (1-3):");
-			InputInterface.DisplayInputOption(PrintingUtil.printWithPadding("1 Hero: The Warrior", 50), "1", src.util.TextColor.GREEN);
-			InputInterface.DisplayInputOption(PrintingUtil.printWithPadding("2 Heros: The Warrior / The Mage", 50), "2", src.util.TextColor.YELLOW);
-			InputInterface.DisplayInputOption(PrintingUtil.printWithPadding("3 Heros: The Warrior / The Mage / The Assassin", 50), "3", src.util.TextColor.RED);
+			InputInterface.DisplayInputOption(PrintingUtil.printWithPadding("1 Hero: The Warrior", 50), "1",
+					src.util.TextColor.GREEN);
+			InputInterface.DisplayInputOption(PrintingUtil.printWithPadding("2 Heros: The Warrior / The Mage", 50), "2",
+					src.util.TextColor.YELLOW);
+			InputInterface.DisplayInputOption(
+					PrintingUtil.printWithPadding("3 Heros: The Warrior / The Mage / The Assassin", 50), "3",
+					src.util.TextColor.RED);
 			this.displayQuit();
 			while (true) {
 				try {
@@ -86,12 +91,11 @@ public class IntroScreen implements Screen{
 				}
 			}
 		}
-		
-		
+
 		return new Player(diff, numHeroes); // Assuming 3 heroes as default party size
 	}
 
-	public void DisplayIntroToGame(){
+	public void DisplayIntroToGame() {
 		PrintingUtil.clearScreen();
 		System.out.println("After a long day of work and coding, you sink into bed, ready to sleep");
 		System.out.println("...");
@@ -105,13 +109,10 @@ public class IntroScreen implements Screen{
 		this.displayQuit();
 		Character input = this.scanny.next().charAt(0);
 		this.lastInput = input;
-		if(input != 'q'){
+		if (input != 'q') {
 			this.lastInput = ' ';
 		}
 	}
-
-
-
 
 	@Override
 	public void displayAndProgress() {
@@ -130,8 +131,8 @@ public class IntroScreen implements Screen{
 
 	public String rainbowText(String status) {
 		TextColor[] rainbowColors = {
-			TextColor.RED, TextColor.ORANGE, TextColor.YELLOW, 
-			TextColor.GREEN, TextColor.BLUE, TextColor.PURPLE
+				TextColor.RED, TextColor.ORANGE, TextColor.YELLOW,
+				TextColor.GREEN, TextColor.BLUE, TextColor.PURPLE
 		};
 
 		StringBuilder rainbowStatus = new StringBuilder();
@@ -141,5 +142,5 @@ public class IntroScreen implements Screen{
 		}
 		return rainbowStatus.toString();
 	}
-	
+
 }

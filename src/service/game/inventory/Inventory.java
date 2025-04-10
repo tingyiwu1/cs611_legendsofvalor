@@ -29,27 +29,24 @@ import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
 import src.service.entities.items.Potion;
 
-
-
 public class Inventory implements InventoryControl, StatusDisplay {
 
 	private Hero activeHero;
 	private ArrayList<String> statuses;
 	private ArrayList<TextColor> statusColors;
 
-	public Inventory(Player player, int activeHero){
+	public Inventory(Player player, int activeHero) {
 		this.activeHero = player.getParty()[activeHero];
 		this.statuses = new ArrayList<String>();
 		this.statusColors = new ArrayList<TextColor>();
 	}
 
-	
 	@Override
 	public Boolean isMoveValid(Integer itemSlot, Integer itemIndex) {
-		if(itemSlot < 0 || itemSlot > 6){
+		if (itemSlot < 0 || itemSlot > 6) {
 			this.addStatus("Invalid Item Slot, Please Try Again", TextColor.RED);
 			return false;
-		} else if(itemIndex < -1 || itemIndex > activeHero.getItemsList().size()){
+		} else if (itemIndex < -1 || itemIndex > activeHero.getItemsList().size()) {
 			this.addStatus("Invalid Item Index, Please Try Again", TextColor.RED);
 			return false;
 		} else {
@@ -59,7 +56,7 @@ public class Inventory implements InventoryControl, StatusDisplay {
 
 	@Override
 	public Boolean makeMove(Integer itemSlot, Integer itemIndex) {
-		if(isMoveValid(itemSlot, itemIndex)){
+		if (isMoveValid(itemSlot, itemIndex)) {
 			return processMove(itemSlot, itemIndex);
 		} else {
 			return false;
@@ -68,24 +65,23 @@ public class Inventory implements InventoryControl, StatusDisplay {
 
 	@Override
 	public Boolean processMove(Integer itemSlot, Integer itemIndex) {
-		if(itemSlot == 6){
-			try{
+		if (itemSlot == 6) {
+			try {
 				Potion p = (Potion) activeHero.getItemsList().get(itemIndex);
-				if(p.use(this.activeHero)){
+				if (p.use(this.activeHero)) {
 					this.addStatus("consumed potion!", TextColor.YELLOW);
 					return true;
-				} 
+				}
 				this.addStatus("No more uses of potion remaining! Can you take this?", TextColor.BLUE);
 				return false;
-			} catch(Exception e){
+			} catch (Exception e) {
 				throw new IllegalArgumentException("erm no");
 			}
 		}
 
-
 		Boolean result = activeHero.equipItem(itemSlot, itemIndex);
-		if(result){
-			if(itemIndex == -1){
+		if (result) {
+			if (itemIndex == -1) {
 				this.addStatus("Unequipped item slot " + itemSlot, TextColor.CYAN);
 				return result;
 			}
@@ -94,10 +90,11 @@ public class Inventory implements InventoryControl, StatusDisplay {
 		} else {
 			this.addStatus("Failed to update item slot", TextColor.RED);
 		}
-		// this.addStatus("Updated item slot to " + this.activeHero.getItemsList().get(itemSlot).getName(), TextColor.CYAN);
+		// this.addStatus("Updated item slot to " +
+		// this.activeHero.getItemsList().get(itemSlot).getName(), TextColor.CYAN);
 		return result;
 	}
-	
+
 	@Override
 	public void clearStatuses() {
 		// TODO Auto-generated method stub
@@ -115,7 +112,7 @@ public class Inventory implements InventoryControl, StatusDisplay {
 	public void removeStatus(int index) {
 		this.statuses.remove(index);
 		this.statusColors.remove(index);
-		
+
 	}
 
 	@Override
@@ -128,6 +125,4 @@ public class Inventory implements InventoryControl, StatusDisplay {
 		return this.statusColors.toArray(new TextColor[0]);
 	}
 
-
-	
 }

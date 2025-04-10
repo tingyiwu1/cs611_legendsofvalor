@@ -21,7 +21,7 @@ import src.util.PrintItemTable;
 import src.util.PrintingUtil;
 import src.util.TextColor;
 
-public class MarketScreen implements Screen, InputInterface, InnerInput  {
+public class MarketScreen implements Screen, InputInterface, InnerInput {
 	private Market currentMarket;
 	private Player player;
 	private Scanner scanny;
@@ -31,7 +31,7 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 
 	private ArrayList<MarketItem> marketItemList;
 
-	public MarketScreen(Player player, Scanner scanny){
+	public MarketScreen(Player player, Scanner scanny) {
 		this.player = player;
 		this.scanny = scanny;
 		this.lastInput = ' ';
@@ -39,7 +39,7 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 		this.marketItemList = null;
 	}
 
-	public MarketScreen(Player player, Scanner scanny, ArrayList<MarketItem> marketItemList){
+	public MarketScreen(Player player, Scanner scanny, ArrayList<MarketItem> marketItemList) {
 		this.player = player;
 		this.scanny = scanny;
 		this.lastInput = ' ';
@@ -47,11 +47,12 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 		this.marketItemList = marketItemList;
 	}
 
-	public Market getCurrentMarket(){
+	public Market getCurrentMarket() {
 		return this.currentMarket;
 	}
 
-	// this.displayStatuses(this.currentInventory.getStatusList(), this.currentInventory.getStatusColors());
+	// this.displayStatuses(this.currentInventory.getStatusList(),
+	// this.currentInventory.getStatusColors());
 
 	@Override
 	public void displayInnerQuery() {
@@ -77,19 +78,19 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 		 * Print input options
 		 */
 
-		PrintColor.blue("Select an Item to purchase! (0-" + (this.currentMarket.getMarketOfferings().size() - 1)+ ")");
+		PrintColor.blue("Select an Item to purchase! (0-" + (this.currentMarket.getMarketOfferings().size() - 1) + ")");
 		System.out.println("");
 		InputInterface.DisplayInputOption("Return to Hero Select", "B", TextColor.BLUE);
 		this.displayQuit();
 		Character chosenPurchase = this.MarketInput();
-		if(chosenPurchase != null){
+		if (chosenPurchase != null) {
 			this.currentMarket.makeMove(chosenPurchase);
 		}
 		InputInterface.DisplayInputOption("Return to Hero Select", "B", TextColor.BLUE);
 
 	}
 
-	public Character MarketInput(){
+	public Character MarketInput() {
 		System.out.println();
 		System.out.println("Purchase Item:");
 		String slotInput = this.scanny.next();
@@ -97,7 +98,7 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 		if (slotInput.equalsIgnoreCase("b")) {
 			this.lastInput = 'b';
 			return null;
-		} else if(slotInput.equals("q")){
+		} else if (slotInput.equals("q")) {
 			this.lastInput = 'q';
 			return null;
 		}
@@ -112,9 +113,9 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 
 	@Override
 	public Boolean checkInnerQuery(Integer input) {
-		if(input >= 1 && input <= this.party.length){
+		if (input >= 1 && input <= this.party.length) {
 			return true;
-		} 
+		}
 		return false;
 	}
 
@@ -126,7 +127,7 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 
 	@Override
 	public void displayAndProgress() {
-		if(activeHero != null){
+		if (activeHero != null) {
 			this.displayInnerQuery();
 		} else {
 			PrintingUtil.clearScreen();
@@ -143,22 +144,22 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 			if (input.equals("q")) {
 				this.lastInput = 'q';
 				return;
-			}else if(input.equals("b")){
+			} else if (input.equals("b")) {
 				this.lastInput = 'b';
 				return;
 			}
 
-			try{
+			try {
 
 				int heroIndex = Integer.parseInt(input);
 				if (this.checkInnerQuery(heroIndex)) {
 					heroIndex -= 1;
-					if(this.marketItemList == null){
+					if (this.marketItemList == null) {
 						this.currentMarket = new Market(this.player, heroIndex);
 					} else {
 						this.currentMarket = new Market(this.player, heroIndex, this.marketItemList);
 					}
-					
+
 					this.activeHero = party[heroIndex];
 					this.displayInnerQuery();
 				} else {
@@ -176,12 +177,10 @@ public class MarketScreen implements Screen, InputInterface, InnerInput  {
 		return this.lastInput;
 	}
 
-
 	@Override
 	public void displayPauseAndProgress(String message) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'displayPauseAndProgress'");
 	}
 
-	
 }

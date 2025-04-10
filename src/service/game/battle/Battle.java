@@ -36,8 +36,6 @@ package src.service.game.battle;
 
 import java.util.ArrayList;
 
-
-
 import src.service.entities.Player;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
@@ -80,12 +78,12 @@ public class Battle implements PlayerControl, StatusDisplay {
 	private Boolean gameOver;
 	private Boolean didLevelUp;
 	private Boolean isBossBattle;
-	
+
 	private TurnKeeper turnKeeper;
 
 	private AttackOption heroChosenAttack;
 
-	public Battle(Player player, Monster monster, TurnKeeper turnKeeper){
+	public Battle(Player player, Monster monster, TurnKeeper turnKeeper) {
 		this.turnKeeper = turnKeeper;
 		this.monster = monster;
 		this.player = player;
@@ -102,7 +100,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.isBossBattle = false;
 	}
 
-	public Battle(Player player, Monster monster, TurnKeeper turnKeeper, AttackOption heroChosenAttack){
+	public Battle(Player player, Monster monster, TurnKeeper turnKeeper, AttackOption heroChosenAttack) {
 		this.turnKeeper = turnKeeper;
 		this.player = player;
 		this.hero = player.getParty()[turnKeeper.getPlayerTeamTurnCount()];
@@ -119,63 +117,62 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.isBossBattle = false;
 		this.heroChosenAttack = heroChosenAttack;
 	}
-	public Boolean reportHP(){
+
+	public Boolean reportHP() {
 		StatsTracker.addToStats("Battle cycles progressed", 1);
 		this.addStatus("gaming is happening!", TextColor.YELLOW);
-		
+
 		this.addStatus("Hero health: " + hero.getCurrentHealth(), TextColor.WHITE);
 		this.addStatus("Monster health: " + monster.getCurrentHealth(), TextColor.WHITE);
 		return true;
-		
-	}
-	
 
+	}
 
 	/*
 	 * TODO:
-	 * Talked with TF: She said that the battle cycle should be a single attack from one party
+	 * Talked with TF: She said that the battle cycle should be a single attack from
+	 * one party
 	 * But, game design wise it should probably be a full exchange on both sides :)
 	 */
-	public Boolean heroBattleCycle(){
+	public Boolean heroBattleCycle() {
 		StatsTracker.addToStats("Battle cycles progressed", 1);
 		this.addStatus("Hero is Attacking!", TextColor.YELLOW);
-		
+
 		/*
 		 * First hero attack, and effects, then monster attack and effects
 		 */
 
-		if(this.heroAttack(this.heroChosenAttack)){
+		if (this.heroAttack(this.heroChosenAttack)) {
 			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
 			return null;
 		}
 		// if(monsterAttack(this.hero.getPosition())){
-		// 	this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
-		// 	return null;
+		// this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
+		// return null;
 		// }
 
 		this.reportHP();
 
 		this.turnKeeper.progressTurn();
-		
 
 		return null;
 	}
 
-	public Boolean monsterBattleCycle(){
+	public Boolean monsterBattleCycle() {
 		StatsTracker.addToStats("Battle cycles progressed", 1);
 		this.addStatus("Monster is Attacking!", TextColor.YELLOW);
-		
+
 		/*
 		 * First MONSTER attack, and effects
 		 */
 
-		if(this.monsterAttack(this.hero.getPosition())){
+		if (this.monsterAttack(this.hero.getPosition())) {
 			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
 			return null;
 		}
 		// if(this.heroAttack(this.heroChosenAttack)){
-		// 	this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
-		// 	return null;
+		// this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
+		// return null;
 		// }
 		this.reportHP();
 
@@ -184,10 +181,11 @@ public class Battle implements PlayerControl, StatusDisplay {
 		return null;
 	}
 
-	public Boolean isBattleOver(){
+	public Boolean isBattleOver() {
 		return this.isBattleOver;
 	}
-	public boolean isBossBattle(){
+
+	public boolean isBossBattle() {
 		return this.isBossBattle;
 	}
 
@@ -196,51 +194,55 @@ public class Battle implements PlayerControl, StatusDisplay {
 		return this.executeHeroAttack(chosenAttackOption);
 	}
 
-	private Boolean heroAttack(AttackOption chosenAttackOption){
+	private Boolean heroAttack(AttackOption chosenAttackOption) {
 		return this.executeHeroAttack(chosenAttackOption);
 	}
 
-	private Boolean executeHeroAttack(AttackOption chosenAttackOption){
+	private Boolean executeHeroAttack(AttackOption chosenAttackOption) {
 		this.addStatus("Hero: " + chosenAttackOption.getDescription(), TextColor.CYAN);
 		Item heroItem = chosenAttackOption.getSourceItem();
-		if(heroItem.getItemType() == ItemType.POTION){
+		if (heroItem.getItemType() == ItemType.POTION) {
 			Potion p = (Potion) heroItem;
-			if(p.use(this.hero)){
-				this.addStatus(this.hero.getName() + " buffs " + p.getPotionType() + " for " + heroItem.getDamage(), TextColor.YELLOW);
-			}else {
-				this.addStatus("The hero's " + heroItem.getName() + " fails to do anything! Can you use this item?", TextColor.CYAN);
+			if (p.use(this.hero)) {
+				this.addStatus(this.hero.getName() + " buffs " + p.getPotionType() + " for " + heroItem.getDamage(),
+						TextColor.YELLOW);
+			} else {
+				this.addStatus("The hero's " + heroItem.getName() + " fails to do anything! Can you use this item?",
+						TextColor.CYAN);
 			}
 		} else {
 			if (heroItem.use()) {
 				// Calculate dodge chance
 				double dodgeChance = monster.getDodge() / (monster.getDodge() + 250.0);
 				double dodgeRoll = Math.random() * 100;
-				this.addStatus("Monster Dodge Chance: " + (int)(dodgeChance * 100) + "%", TextColor.PURPLE);
+				this.addStatus("Monster Dodge Chance: " + (int) (dodgeChance * 100) + "%", TextColor.PURPLE);
 				this.addStatus("Dodge Roll: " + String.format("%.2f", dodgeRoll), TextColor.PURPLE);
 
 				if (dodgeRoll < dodgeChance * 100) {
 					this.addStatus("The monster dodged the attack!", TextColor.YELLOW);
 					return false;
 				}
-	
+
 				// Calculate damage
 				int baseDamage = chosenAttackOption.getDamage() - monster.getDefense();
 				int criticalHit = (int) (Math.random() * critHitBonus); // Random critical hit
 				int totalDamage = Math.max(0, baseDamage + criticalHit);
 				StatsTracker.addToStats("Damage hero delt", totalDamage);
-	
+
 				this.addStatus("", TextColor.PURPLE);
-				this.addStatus("Base Damage: Hero Strength + Weapon Damage - Monster Defense = " + baseDamage, TextColor.PURPLE);
+				this.addStatus("Base Damage: Hero Strength + Weapon Damage - Monster Defense = " + baseDamage,
+						TextColor.PURPLE);
 				this.addStatus("Critical Hit: Random Value = " + criticalHit, TextColor.PURPLE);
 				this.addStatus("Total Damage: Base Damage + Critical Hit = " + totalDamage, TextColor.PURPLE);
 				this.addStatus("", TextColor.PURPLE);
-	
+
 				this.addStatus("The hero's " + heroItem.getName() + " does " + totalDamage + " damage!", TextColor.CYAN);
 				monster.takeDamage(totalDamage);
 			} else {
-				this.addStatus("The hero's " + heroItem.getName() + " fails to do anything! Can you use this item?", TextColor.CYAN);
+				this.addStatus("The hero's " + heroItem.getName() + " fails to do anything! Can you use this item?",
+						TextColor.CYAN);
 			}
-	
+
 			if (monster.getCurrentHealth() <= 0) {
 				this.isBattleOver = true;
 				this.processHeroWin();
@@ -248,12 +250,11 @@ public class Battle implements PlayerControl, StatusDisplay {
 			}
 		}
 
-		
 		return false;
 	}
 
-	private Boolean monsterAttack(Position heroPos){
-		if(heroPos.distanceTo(this.monster.getPosition()) > 1){
+	private Boolean monsterAttack(Position heroPos) {
+		if (heroPos.distanceTo(this.monster.getPosition()) > 1) {
 			this.addStatus("The monster is too far away to attack!", TextColor.YELLOW);
 			return false;
 		} else {
@@ -268,7 +269,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 		// Calculate dodge chance
 		double dodgeChance = hero.getDodge() / (hero.getDodge() + 250.0);
 		double dodgeRoll = Math.random() * 100;
-		this.addStatus("Hero Dodge Chance: " + (int)(dodgeChance * 100) + "%", TextColor.PURPLE);
+		this.addStatus("Hero Dodge Chance: " + (int) (dodgeChance * 100) + "%", TextColor.PURPLE);
 		this.addStatus("Dodge Roll: " + String.format("%.2f", dodgeRoll), TextColor.PURPLE);
 
 		if (dodgeRoll < dodgeChance * 100) {
@@ -291,7 +292,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 		StatsTracker.addToStats("Damage Heros took", totalDamage);
 		Item monsterItem = this.monsterAttack.getSourceItem();
 		this.addStatus("The monster's " + monsterItem.getName() + " does " + totalDamage + " damage!", TextColor.PURPLE);
-		this.addStatus( hero.getName() + "'s remaining health: " + hero.getCurrentHealth(), TextColor.WHITE);
+		this.addStatus(hero.getName() + "'s remaining health: " + hero.getCurrentHealth(), TextColor.WHITE);
 
 		if (hero.getCurrentHealth() <= 0) {
 			this.processMonsterWin();
@@ -300,66 +301,65 @@ public class Battle implements PlayerControl, StatusDisplay {
 		return false;
 	}
 
-	private void processHeroWin(){
+	private void processHeroWin() {
 		String name = this.hero.getName();
 		this.addStatus("------------------------\n", TextColor.WHITE);
-		this.addStatus( name + " has defeated the monster!", TextColor.GREEN);
+		this.addStatus(name + " has defeated the monster!", TextColor.GREEN);
 		int rewardedXP = monster.getRewardXP();
 		int rewardedGold = monster.getRewardGold();
-		this.addStatus( "Your party gains experience and gold! The slayer of the monster gets full rewards, the rest get half rewards!", 
-						TextColor.GREEN);
+		this.addStatus(
+				"Your party gains experience and gold! The slayer of the monster gets full rewards, the rest get half rewards!",
+				TextColor.GREEN);
 
 		processPartyWin(this.currHeroIdx, rewardedGold, rewardedXP);
 
-
 	}
 
-	private void processPartyWin(int currHero, int rewardedGold, int rewardedXP){
+	private void processPartyWin(int currHero, int rewardedGold, int rewardedXP) {
 		Hero[] currParty = this.player.getParty();
-		for(int i = 0; i < currParty.length; i++){
+		for (int i = 0; i < currParty.length; i++) {
 			String name = currParty[i].getName();
-			if(currParty[i].getCurrentHealth() < 1){
-				currParty[i].healDamage(currParty[i].getCurrentHealth()*-1 + 1);
+			if (currParty[i].getCurrentHealth() < 1) {
+				currParty[i].healDamage(currParty[i].getCurrentHealth() * -1 + 1);
 				this.addStatus(name + " is revieved with 1 hp!", TextColor.RED);
 			}
-			if(i == currHero){
-				this.addStatus( name + " obtains " + rewardedGold + " Gold!", TextColor.GREEN);
-				this.addStatus( name + " obtains " + rewardedXP	 + " XP!", TextColor.GREEN);
-				if(currParty[i].willLevelUp(rewardedXP)){
-									
+			if (i == currHero) {
+				this.addStatus(name + " obtains " + rewardedGold + " Gold!", TextColor.GREEN);
+				this.addStatus(name + " obtains " + rewardedXP + " XP!", TextColor.GREEN);
+				if (currParty[i].willLevelUp(rewardedXP)) {
+
 					this.processHeroLevelUp(name);
 				}
 				currParty[i].earnGold(rewardedGold);
 				currParty[i].gainExperience(rewardedXP);
 			} else {
-				this.addStatus( name + " obtains " + (rewardedGold / 2) + " Gold!", TextColor.GREEN);
-				this.addStatus( name + " obtains " + (rewardedXP / 2)	 + " XP!", TextColor.GREEN);
-				if(currParty[i].willLevelUp((rewardedXP / 2))){
-									
+				this.addStatus(name + " obtains " + (rewardedGold / 2) + " Gold!", TextColor.GREEN);
+				this.addStatus(name + " obtains " + (rewardedXP / 2) + " XP!", TextColor.GREEN);
+				if (currParty[i].willLevelUp((rewardedXP / 2))) {
+
 					this.processHeroLevelUp(name);
 				}
 				currParty[i].earnGold((rewardedGold / 2));
 				currParty[i].gainExperience((rewardedXP / 2));
 			}
 
-			
 		}
 	}
 
-	private void processHeroLevelUp(String name){
+	private void processHeroLevelUp(String name) {
 		// String name = this.hero.getName();
-		this.addStatus( name + " Levelled up!", TextColor.GREEN);
+		this.addStatus(name + " Levelled up!", TextColor.GREEN);
 		this.didLevelUp = true;
-		this.addStatus( name + " Earns 100 Gold for levelling up!", TextColor.GREEN);
-		this.addStatus( name + " levels each of its status up by 5!", TextColor.GREEN);
-		this.addStatus( name + " heals 50 HP!", TextColor.GREEN);
-		this.addStatus( name + " regains max spell usage!", TextColor.CYAN);
+		this.addStatus(name + " Earns 100 Gold for levelling up!", TextColor.GREEN);
+		this.addStatus(name + " levels each of its status up by 5!", TextColor.GREEN);
+		this.addStatus(name + " heals 50 HP!", TextColor.GREEN);
+		this.addStatus(name + " regains max spell usage!", TextColor.CYAN);
 
-		this.addRainbowStatus( "... you fall deeper into your dream ... ");
+		this.addRainbowStatus("... you fall deeper into your dream ... ");
 
 	}
 
-	private void processMonsterWin(){
+	private void processMonsterWin() {
 		boolean allHeroesDead = true;
 		for (Hero hero : this.player.getParty()) {
 			if (hero.getCurrentHealth() > 0) {
@@ -373,39 +373,37 @@ public class Battle implements PlayerControl, StatusDisplay {
 			this.isBattleOver = true;
 		} else {
 			this.addStatus(this.monster.getName() + " has defeated a Hero!", TextColor.RED);
-			if(lastInput != 's'){
+			if (lastInput != 's') {
 				this.switchHeroes();
 			}
-			
+
 		}
 	}
 
-	public Boolean isGameOver(){
+	public Boolean isGameOver() {
 		return this.gameOver;
 	}
-	
-	public Boolean getDidLevelUp(){
+
+	public Boolean getDidLevelUp() {
 		return this.didLevelUp;
 	}
 
-
-
 	@Override
 	public Boolean isMoveValid(Character inputtedMove) {
-		if(inputtedMove.equals('i') || inputtedMove.equals('b') ||  inputtedMove.equals('s')){
+		if (inputtedMove.equals('i') || inputtedMove.equals('b') || inputtedMove.equals('s')) {
 			return true;
 		}
 
 		int inputInt;
 
-		try{
+		try {
 			inputInt = Integer.parseInt(inputtedMove.toString());
-		} catch (NumberFormatException e){
+		} catch (NumberFormatException e) {
 			this.addStatus("Invalid Move, please try again.", TextColor.RED);
 			return false;
 		}
 
-		if(inputInt >= 1 && inputInt <= this.heroAttacks.size()){
+		if (inputInt >= 1 && inputInt <= this.heroAttacks.size()) {
 			return true;
 		}
 		return false;
@@ -418,18 +416,18 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.lastInput = Character.toLowerCase(inputtedMove);
 		this.clearStatuses();
 
-		if(!isMoveValid(lastInput)){
+		if (!isMoveValid(lastInput)) {
 			// System.out.println("INVALID MOVE");
 			this.addStatus(Character.toString(inputtedMove), TextColor.YELLOW);
 			this.addStatus("Invalid Move, please try again.", TextColor.RED);
 			return false;
-		} 
+		}
 
 		processMove(inputtedMove, this.turnKeeper);
 		return null;
 	}
 
-	public void switchHeroes(){
+	public void switchHeroes() {
 		int startingIdx = currHeroIdx;
 		do {
 			currHeroIdx = (currHeroIdx + 1) % player.getParty().length;
@@ -442,14 +440,14 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 	@Override
 	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
-		
-		//TODO: REFACTOR BATTLE SYSTEM
 
-		if(inputtedMove.equals('i') || inputtedMove.equals('b')){
+		// TODO: REFACTOR BATTLE SYSTEM
+
+		if (inputtedMove.equals('i') || inputtedMove.equals('b')) {
 			return null;
 		}
-		if(inputtedMove.equals('s')){
-			if(monsterAttack()){
+		if (inputtedMove.equals('s')) {
+			if (monsterAttack()) {
 				this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
 			}
 
@@ -462,11 +460,11 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 		this.addStatus("Processing attack: " + inputInt, TextColor.CYAN);
 
-		if(this.heroAttack(inputInt - 1)){
+		if (this.heroAttack(inputInt - 1)) {
 			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
 			return null;
 		}
-		if(monsterAttack()){
+		if (monsterAttack()) {
 			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
 			return null;
 		}
@@ -474,11 +472,11 @@ public class Battle implements PlayerControl, StatusDisplay {
 		return null;
 	}
 
-	public Hero getHero(){
+	public Hero getHero() {
 		return this.hero;
 	}
 
-	public ArrayList<AttackOption> getHeroAttacks(){
+	public ArrayList<AttackOption> getHeroAttacks() {
 		return this.heroAttacks;
 	}
 
@@ -497,8 +495,8 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 	public void addRainbowStatus(String status) {
 		TextColor[] rainbowColors = {
-			TextColor.RED, TextColor.ORANGE, TextColor.YELLOW, 
-			TextColor.GREEN, TextColor.BLUE, TextColor.PURPLE
+				TextColor.RED, TextColor.ORANGE, TextColor.YELLOW,
+				TextColor.GREEN, TextColor.BLUE, TextColor.PURPLE
 		};
 
 		StringBuilder rainbowStatus = new StringBuilder();
@@ -515,7 +513,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 	public void removeStatus(int index) {
 		this.statuses.remove(index);
 		this.statusColors.remove(index);
-		
+
 	}
 
 	@Override
@@ -527,6 +525,5 @@ public class Battle implements PlayerControl, StatusDisplay {
 	public TextColor[] getStatusColors() {
 		return this.statusColors.toArray(new TextColor[0]);
 	}
-
 
 }

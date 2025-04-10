@@ -9,13 +9,16 @@ import src.service.entities.monsters.Monster;
  */
 public interface NewBattleInitializer {
 	public Boolean getEnteredBattle();
+
 	public void setEnteredBattle(Boolean enteredBattle);
-	
+
 	public void resetBattleInitializer();
 
 	public void setMonsterTarget(Monster target);
+
 	public Monster getMonsterTarget();
 
 	public void setAttackOption(AttackOption attackOption);
+
 	public AttackOption getAttackOption();
 }

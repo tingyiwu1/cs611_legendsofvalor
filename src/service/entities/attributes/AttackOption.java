@@ -38,6 +38,7 @@ public class AttackOption {
 	public void setMonsterTarget(Monster target) {
 		this.target = target;
 	}
+
 	public Monster getMonsterTarget() {
 		return this.target;
 	}
@@ -54,15 +55,16 @@ public class AttackOption {
 		return this.damage;
 	}
 
-	public Integer getRange(){
-		// if(this.sourceItem.getItemType() == ItemType.WEAPON || this.sourceItem.getItemType() == ItemType.BIG_WEAPON){
-		if(this.sourceItem.getItemType() == ItemType.WEAPON){
+	public Integer getRange() {
+		// if(this.sourceItem.getItemType() == ItemType.WEAPON ||
+		// this.sourceItem.getItemType() == ItemType.BIG_WEAPON){
+		if (this.sourceItem.getItemType() == ItemType.WEAPON) {
 			Weapon item = (Weapon) this.sourceItem;
 			return item.getRange();
-		} else if(this.sourceItem.getItemType() == ItemType.SPELL){
+		} else if (this.sourceItem.getItemType() == ItemType.SPELL) {
 			Spell item = (Spell) this.sourceItem;
 			return item.getRange();
-		} 
+		}
 
 		return null;
 	}

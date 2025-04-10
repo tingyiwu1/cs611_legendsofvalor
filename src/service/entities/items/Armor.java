@@ -28,7 +28,6 @@ package src.service.entities.items;
 
 import src.util.ItemType;
 
-
 public class Armor implements Item, Equippable {
 
 	private Integer bonusStrength;
@@ -40,7 +39,7 @@ public class Armor implements Item, Equippable {
 	private Integer levelRequirement;
 	private ItemType itemType;
 
-	public Armor(String name, String description, ItemType type){
+	public Armor(String name, String description, ItemType type) {
 		this.name = name;
 		this.description = description;
 		this.bonusStrength = 0;
@@ -51,7 +50,8 @@ public class Armor implements Item, Equippable {
 		this.itemType = type;
 	}
 
-	public Armor(String name, String description, ItemType type, Integer bonusStrength, Integer bonusMagicStrength, Integer bonusDefense, Integer bonusDodge) {
+	public Armor(String name, String description, ItemType type, Integer bonusStrength, Integer bonusMagicStrength,
+			Integer bonusDefense, Integer bonusDodge) {
 		this.name = name;
 		this.description = description;
 		this.bonusStrength = bonusStrength;
