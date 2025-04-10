@@ -1,7 +1,7 @@
 package src.util;
 
 public enum PieceType {
-	EMPTY, 
+	EMPTY,
 	WALL,
 	MONSTER,
 	MARKET,

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import src.service.entities.items.Item;
 
-
 public interface Attacks {
 	// getSpellsList();
 	// getAttacksList();
@@ -21,8 +20,7 @@ public interface Attacks {
 	// public Integer useMagicAttack();
 
 	public ArrayList<AttackOption> getAttacksList();
+
 	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos);
 
-
-	
-} 
+}

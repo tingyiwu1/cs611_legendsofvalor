@@ -8,8 +8,7 @@ package src.service.entities.items;
 
 import src.util.ItemType;
 
-
-public class Spell extends Consumable{
+public class Spell extends Consumable {
 	private int range;
 
 	public Spell(int damage, String name, String description, Integer levelRequirement,
@@ -22,8 +21,9 @@ public class Spell extends Consumable{
 	public int getRange() {
 		return range;
 	}
+
 	public void setRange(int range) {
 		this.range = range;
 	}
-	
+
 }

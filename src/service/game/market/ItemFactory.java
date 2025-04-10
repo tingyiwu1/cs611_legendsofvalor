@@ -7,8 +7,6 @@
  */
 package src.service.game.market;
 
-
-
 import src.service.entities.InfoTextReader;
 
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ import java.util.Random;
 public class ItemFactory {
 	public static final String FILEPATH = "src/service/entities/infoTexts/MarketItemList.txt";
 
-	public static ArrayList<MarketItem> generateRandomMarketItems(int numItems){
+	public static ArrayList<MarketItem> generateRandomMarketItems(int numItems) {
 		ArrayList<MarketItem> randomList = new ArrayList<>();
 		Random rng = new Random();
 

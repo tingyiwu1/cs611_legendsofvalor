@@ -6,16 +6,15 @@
 
  */
 package src.service.entities;
+
 import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;
 import src.service.entities.attributes.Position;
 import src.service.entities.heroes.BattleWinnerHandler;
 
+public class Player implements BattleWinnerHandler {
 
-
-public class Player implements BattleWinnerHandler{
-
-	public enum Difficulty{
+	public enum Difficulty {
 		EASY(1),
 		MEDIUM(2),
 		HARD(3);
@@ -35,19 +34,19 @@ public class Player implements BattleWinnerHandler{
 
 	Hero[] party;
 
-	public Player(){
-		//constructor
+	public Player() {
+		// constructor
 
 		this.party = new Hero[1];
 		this.party[0] = new Hero();
 	}
 
-	public Player(Difficulty diff, int numHeros){
+	public Player(Difficulty diff, int numHeros) {
 		Player.currDifficulty = diff;
 
-		if(diff == Difficulty.EASY){
+		if (diff == Difficulty.EASY) {
 			Monster.setLevelBoon(3);
-		} else if(diff == Difficulty.MEDIUM){
+		} else if (diff == Difficulty.MEDIUM) {
 			Monster.setLevelBoon(6);
 		} else {
 			Monster.setLevelBoon(12);
@@ -56,8 +55,8 @@ public class Player implements BattleWinnerHandler{
 		this.party = new Hero[numHeros];
 
 		Hero warrior = new Hero(150, 1, "The Warrior", 50, 30, 45, 10, new Position(7, 0));
-		Hero mage = new Hero(90, 1, "The Mage", 30, 75, 35, 1,  new Position(7, 3));
-		Hero assassin = new Hero(120, 1, "The Assassin", 50, 50, 40, 507,  new Position(7, 6));
+		Hero mage = new Hero(90, 1, "The Mage", 30, 75, 35, 1, new Position(7, 3));
+		Hero assassin = new Hero(120, 1, "The Assassin", 50, 50, 40, 507, new Position(7, 6));
 
 		for (int i = 0; i < numHeros; i++) {
 			if (i == 0) {
@@ -70,13 +69,11 @@ public class Player implements BattleWinnerHandler{
 		}
 	}
 
-
-
-	public Hero[] getParty(){
+	public Hero[] getParty() {
 		return this.party;
 	}
 
-	public Hero getFirstHero(){
+	public Hero getFirstHero() {
 		return this.party[0];
 	}
 
@@ -95,15 +92,12 @@ public class Player implements BattleWinnerHandler{
 		hero.earnGold(amt);
 	}
 
-	public int getMonsterLevel(){
+	public int getMonsterLevel() {
 		double avg_level = 0;
-		for(Hero h : party){
+		for (Hero h : party) {
 			avg_level += h.getLevel();
 		}
 		return (int) (avg_level / 3.0) - 1;
 	}
-
-	
-
 
 }

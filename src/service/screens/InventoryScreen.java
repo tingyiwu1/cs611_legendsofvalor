@@ -36,15 +36,15 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		this.scanny = scanny;
 		this.lastInput = ' ';
 		this.party = player.getParty();
-		//constructor
+		// constructor
 	}
 
 	@Override
-	public void displayAndProgress(){
-		if(activeHero != null){
+	public void displayAndProgress() {
+		if (activeHero != null) {
 			this.displayInnerQuery();
 		} else {
-			
+
 			PrintingUtil.clearScreen();
 			PrintColor.green("Select the inventory you wish to manage:");
 			System.out.println("-----------------------------");
@@ -59,7 +59,7 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 			if (input.equals("q")) {
 				this.lastInput = 'q';
 				return;
-			}else if(input.equals("b")){
+			} else if (input.equals("b")) {
 				this.lastInput = 'b';
 				return;
 			}
@@ -84,9 +84,9 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 
 	@Override
 	public Boolean checkInnerQuery(Integer input) {
-		if(input >= 1 && input <= this.party.length){
+		if (input >= 1 && input <= this.party.length) {
 			return true;
-		} 
+		}
 		return false;
 	}
 
@@ -99,8 +99,8 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 	@Override
 	public void displayInnerQuery() {
 		/*
-			* Printing the header of the inventory screen
-			*/
+		 * Printing the header of the inventory screen
+		 */
 		PrintingUtil.clearScreen();
 		System.out.println("This is the Inventory Screen!");
 		System.out.println("Managing Hero: " + this.activeHero.getName());
@@ -108,42 +108,42 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		this.displayStatuses(this.currentInventory.getStatusList(), this.currentInventory.getStatusColors());
 		this.currentInventory.clearStatuses();
 		System.out.println("-----------------------------");
-		
+
 		/*
-		* Printing the table
-		*/
+		 * Printing the table
+		 */
 
 		System.out.println(Hero.getHeroDisplay(this.activeHero));
 		PrintItemTable.printInventoryTable(this.activeHero.getItemsList(), this.activeHero.getEquippedItems());
 		PrintItemTable.printItemTable(this.activeHero.getItemsList());
-		
+
 		/*
-			* Printing the input options
-			*/
+		 * Printing the input options
+		 */
 		System.out.println("Main Hand attack determined by equipment in Main hand");
 		PrintColor.blue("Select an equipment slot on the top: (0-5)");
 		System.out.println("");
-		PrintColor.blue("Select an item from the inventory on the right: (1-" + (this.getInventoryList().length-1) + ")");
+		PrintColor.blue("Select an item from the inventory on the right: (1-" + (this.getInventoryList().length - 1) + ")");
 		System.out.println("");
 		InputInterface.DisplayInputOption("Unequip Item", "0", TextColor.BLUE);
 		InputInterface.DisplayInputOption("Consume Item", "6", TextColor.BLUE);
 		InputInterface.DisplayInputOption("Return to Hero Select", "B", TextColor.BLUE);
 		this.displayQuit();
 		int[] chosenSwap = this.InventoryInput();
-		if(chosenSwap != null){
+		if (chosenSwap != null) {
 			this.currentInventory.makeMove(chosenSwap[0], chosenSwap[1]);
 		}
 		InputInterface.DisplayInputOption("Return to Hero Select", "B", TextColor.BLUE);
 
 	}
 
-	public String[] getCurrentEquipmentList(){
+	public String[] getCurrentEquipmentList() {
 		int[] equipment = this.activeHero.getEquippedItems();
 		ArrayList<Item> items = this.activeHero.getItemsList();
-		String[] slots = {"Main Hand", "Off Hand", "Helmet", "Chest", "Legs", "Boots"};
+		String[] slots = { "Main Hand", "Off Hand", "Helmet", "Chest", "Legs", "Boots" };
 		String[] slotStrings = new String[6];
-		for(int i = 0; i < equipment.length + 1; i++){
-			if(equipment[i] != -1){
+		for (int i = 0; i < equipment.length + 1; i++) {
+			if (equipment[i] != -1) {
 				slotStrings[i] = "(" + i + ")" + slots[i] + ": " + items.get(equipment[i]).getName();
 			} else {
 				slotStrings[i] = "(" + i + ")" + slots[i] + ": Empty";
@@ -152,11 +152,12 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 
 		return slotStrings;
 	}
-	public String[] getInventoryList(){
+
+	public String[] getInventoryList() {
 		ArrayList<Item> items = this.activeHero.getItemsList();
 		ArrayList<String> rightCol = new ArrayList<>();
 		Integer display_idx;
-		for(int i = 0; i < items.size(); i++){
+		for (int i = 0; i < items.size(); i++) {
 			display_idx = i + 1;
 			Item item = items.get(i);
 
@@ -167,10 +168,10 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		return rightCol.toArray(new String[rightCol.size()]);
 	}
 
-	public String[] getInventoryDamageStrings(){
+	public String[] getInventoryDamageStrings() {
 		ArrayList<Item> items = this.activeHero.getItemsList();
 		ArrayList<String> col = new ArrayList<>();
-		for(int i = 0; i < items.size(); i++){
+		for (int i = 0; i < items.size(); i++) {
 			Item item = items.get(i);
 			col.add(item.getDamage().toString());
 		}
@@ -178,7 +179,7 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		return col.toArray(new String[col.size()]);
 	}
 
-	public int[] InventoryInput(){
+	public int[] InventoryInput() {
 		System.out.println();
 
 		System.out.print("Item Slot(Or 6 to consume Potion): ");
@@ -187,7 +188,7 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		if (slotInput.equalsIgnoreCase("b")) {
 			this.lastInput = 'b';
 			return null;
-		} else if(slotInput.equals("q")){
+		} else if (slotInput.equals("q")) {
 			this.lastInput = 'q';
 			return null;
 		}
@@ -205,7 +206,7 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		if (indexInput.equalsIgnoreCase("b")) {
 			this.lastInput = 'b';
 			return null;
-		} else if(slotInput.equals("q")){
+		} else if (slotInput.equals("q")) {
 			this.lastInput = 'q';
 			return null;
 		}
@@ -218,7 +219,7 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 			return null;
 		}
 		// System.out.println("ITEM INDEX: " + itemIndex);
-		if(itemIndex == 0){
+		if (itemIndex == 0) {
 			itemIndex = -1;
 		} else {
 			itemIndex -= 1;
@@ -237,7 +238,4 @@ public class InventoryScreen implements Screen, InputInterface, InnerInput {
 		return this.lastInput;
 	}
 
-
-	
-	
 }

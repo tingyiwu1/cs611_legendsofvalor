@@ -15,8 +15,6 @@ import src.service.entities.attributes.Position;
 import src.service.entities.items.Item;
 import src.service.entities.items.Weapon;
 
-
-
 public class Monster extends Entity implements Attacks {
 
 	private int rewardXP;
@@ -26,38 +24,38 @@ public class Monster extends Entity implements Attacks {
 
 	private static int levelBoon = 3;
 
-	public static void setLevelBoon(int i){
+	public static void setLevelBoon(int i) {
 		levelBoon = i;
 	}
 
-	public Monster(){
+	public Monster() {
 		super();
 		Random rng = new Random();
 		rewardGold = 50 + rng.nextInt(50);
 		rewardXP = 50 + rng.nextInt(50);
 		this.monsterWeapon = new Weapon(0, "Generic Debugging Monster Weapon", "a developers tool to trick you");
 	}
-	//Integer maxHealth, Integer level, String name, Integer strength, Integer magicStrength, Integer defense, Integer dodge
-	//xp, gold, description
+	// Integer maxHealth, Integer level, String name, Integer strength, Integer
+	// magicStrength, Integer defense, Integer dodge
+	// xp, gold, description
 	//
 
-	public Monster( Integer maxHealth, 
-					Integer level, 
-					String name,
-					Integer strength, Integer magicStrength, Integer defense, Integer dodge,
-					int xp, int gold,
-					String description,
-					Item monsterWeapon){
+	public Monster(Integer maxHealth,
+			Integer level,
+			String name,
+			Integer strength, Integer magicStrength, Integer defense, Integer dodge,
+			int xp, int gold,
+			String description,
+			Item monsterWeapon) {
 		super(
-			maxHealth + level*levelBoon + new Random().nextInt(10),
-			level,
-			name,
-			strength + level*levelBoon + new Random().nextInt(5),
-			magicStrength + level*levelBoon + new Random().nextInt(5),
-			defense + level*levelBoon + new Random().nextInt(5),
-			dodge + (level*levelBoon)/2 + new Random().nextInt(3),
-			new Position(0, 0)
-		);
+				maxHealth + level * levelBoon + new Random().nextInt(10),
+				level,
+				name,
+				strength + level * levelBoon + new Random().nextInt(5),
+				magicStrength + level * levelBoon + new Random().nextInt(5),
+				defense + level * levelBoon + new Random().nextInt(5),
+				dodge + (level * levelBoon) / 2 + new Random().nextInt(3),
+				new Position(0, 0));
 
 		this.description = description;
 
@@ -69,22 +67,24 @@ public class Monster extends Entity implements Attacks {
 
 	}
 
-	public Monster(int xp, int gold){
+	public Monster(int xp, int gold) {
 		this.rewardGold = gold;
 		this.rewardXP = xp;
 	}
 
 	@Override
-	public EntityType getType(){
+	public EntityType getType() {
 		return EntityType.MONSTER;
 	}
 
-	public Integer basicDebugAttack(){
+	public Integer basicDebugAttack() {
 		return this.getStrength();
 	}
+
 	public int getRewardGold() {
 		return rewardGold;
 	}
+
 	public int getRewardXP() {
 		return rewardXP;
 	}
@@ -97,10 +97,8 @@ public class Monster extends Entity implements Attacks {
 		return monsterWeapon;
 	}
 
-
-
 	@Override
-	public Item[] getSpellsList() { 
+	public Item[] getSpellsList() {
 		throw new UnsupportedOperationException("Unimplemented method 'getSpellsList'");
 	}
 
@@ -110,21 +108,22 @@ public class Monster extends Entity implements Attacks {
 		Item monsterItem = this.monsterWeapon;
 		int monsterItemDamage = monsterItem.getDamage() + this.getStrength();
 
-		return new AttackOption("Basic Attack", "The " + this.name +" Attacks!", monsterItem, monsterItemDamage);
+		return new AttackOption("Basic Attack", "The " + this.name + " Attacks!", monsterItem, monsterItemDamage);
 	}
 
 	@Override
 	public ArrayList<AttackOption> getAttacksList() {
 		throw new UnsupportedOperationException("Unimplemented method 'getAttacksList'");
 	}
+
 	@Override
 	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos) {
 		Position heroPos = this.getPosition();
 		int targetDist = heroPos.distanceTo(targetPos);
 		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
 		ArrayList<AttackOption> allAttacks = this.getAttacksList();
-		for(AttackOption attack : allAttacks){
-			if(attack.getRange() >= targetDist){
+		for (AttackOption attack : allAttacks) {
+			if (attack.getRange() >= targetDist) {
 				attacks.add(attack);
 			}
 		}
@@ -132,5 +131,4 @@ public class Monster extends Entity implements Attacks {
 		return attacks;
 	}
 
-	
 }
