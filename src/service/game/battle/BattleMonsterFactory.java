@@ -15,18 +15,18 @@ public class BattleMonsterFactory {
 	public static final String FILEPATH = "src/service/entities/infoTexts/BasicMonsterList.txt";
 	public static final String BOSSFILEPATH = "src/service/entities/infoTexts/BossMonsterList.txt";
 
-	public static enum monsterType {
+	public static enum MonsterType {
 		NORMAL,
 		BOSS;
 	}
 
-	public static Monster generateRandomMonster(monsterType type, int monsterLevel) {
+	public static Monster generateRandomMonster(MonsterType type, int monsterLevel) {
 		Monster randomMonster = null;
 		Random rng = new Random();
 		ArrayList<Monster> allItems;
 
 		// Read all items from the MarketItemList.txt file
-		if (type == monsterType.BOSS) {
+		if (type == MonsterType.BOSS) {
 			allItems = InfoTextReader.readMonsterTextFile(BOSSFILEPATH, monsterLevel);
 		} else {
 			allItems = InfoTextReader.readMonsterTextFile(FILEPATH, monsterLevel);

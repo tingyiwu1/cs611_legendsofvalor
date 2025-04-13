@@ -21,12 +21,12 @@ public class MonsterTeam {
 	}
 
 	public void addGenericMonster() {
-		Monster monster = BattleMonsterFactory.generateRandomMonster(BattleMonsterFactory.monsterType.NORMAL, 1);
+		Monster monster = BattleMonsterFactory.generateRandomMonster(BattleMonsterFactory.MonsterType.NORMAL, 1);
 		monsters.add(monster);
 	}
 
 	public void addGenericMonster(Position pos) {
-		Monster monster = BattleMonsterFactory.generateRandomMonster(BattleMonsterFactory.monsterType.NORMAL, 1);
+		Monster monster = BattleMonsterFactory.generateRandomMonster(BattleMonsterFactory.MonsterType.NORMAL, 1);
 		monster.setPosition(pos);
 		monsters.add(monster);
 	}
