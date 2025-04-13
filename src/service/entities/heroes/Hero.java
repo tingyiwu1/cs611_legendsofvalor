@@ -85,6 +85,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		this.equipment = new int[] { 0, -1, -1, -1, -1, -1 }; // main hand, offhand, helmet, chest, legs, boots
 		// this.levelBoon = 5; //increase all stats per level
 		this.gold = 1;
+		this.gold = 1000000; // TODO: remove this
 	}
 
 	public Hero(int hp, int lvl, String name, int str, int mstr, int def, int dodge, Position pos) {
@@ -104,6 +105,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		this.equipment = new int[] { 0, -1, -1, -1, -1, -1 }; // main hand, offhand, helmet, chest, legs, boots
 		// this.levelBoon = 5; //increase all stats per level
 		this.gold = 1;
+		this.gold = 1000000; // TODO: remove this
 	}
 
 	public static void setLevelBoon(int i) {

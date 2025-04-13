@@ -4,7 +4,10 @@ import java.util.Scanner;
 
 import src.service.screens.ScreenInterfaces.Process;
 
-public class ContinueProcess implements Process<ContinueProcess.ContinueResult> {
+/*
+ * Process which simply waits for the user to press Enter.
+ */
+public class ContinueProcess extends Process<ContinueProcess.ContinueResult> {
   public static enum ContinueResult implements Process.Result {
     INSTANCE
   }
@@ -17,6 +20,7 @@ public class ContinueProcess implements Process<ContinueProcess.ContinueResult> 
   }
 
   public ContinueProcess(Scanner scanner, String prompt) {
+    super(scanner);
     this.scanner = scanner;
     this.prompt = prompt;
   }

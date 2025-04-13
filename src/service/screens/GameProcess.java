@@ -11,17 +11,19 @@ import src.service.entities.monsters.MonsterTeam;
 import src.service.game.TurnKeeper;
 import src.service.game.battle.Battle;
 import src.service.game.board.GameBoard;
+import src.service.game.market.MarketFactory;
 import src.service.game.market.MarketItem;
 import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintingUtil;
 import src.util.ScreenState;
 import src.util.StatsTracker;
 
-public class GameProcess implements Process<GameProcess.GameResult> {
+public class GameProcess extends Process<GameProcess.GameResult> {
   public static enum GameResult implements Process.Result {
     QUIT, WIN, LOSE
   }
 
+  // TODO: combine all these into single context object
   private final Scanner scanner;
   private final GameBoard currentBoard;
   private final Battle currBattle;
@@ -29,11 +31,12 @@ public class GameProcess implements Process<GameProcess.GameResult> {
   // ScreenState currentScreen;
   // ScreenState previousScreen;
   // Boolean continueToGame;
-  private final HashMap<Integer, ArrayList<MarketItem>> marketHash;
+  private final MarketFactory marketFactory;
   private final MonsterTeam monsterTeam;
   private final TurnKeeper turnKeeper;
 
   public GameProcess(Scanner scanner) {
+    super(scanner);
     this.scanner = scanner;
     this.currentPlayer = new Player(Difficulty.EASY, 3);
     this.monsterTeam = new MonsterTeam();
@@ -46,8 +49,7 @@ public class GameProcess implements Process<GameProcess.GameResult> {
 
     this.currentBoard = new GameBoard(8, 0.3, 0.2, this.currentPlayer, this.monsterTeam, this.turnKeeper);
     this.currBattle = null;
-
-    this.marketHash = new HashMap<>();
+    this.marketFactory = new MarketFactory();
   }
 
   @Override
@@ -57,7 +59,7 @@ public class GameProcess implements Process<GameProcess.GameResult> {
     while (true) {
       Process<ScreenResult<Void>> turnProcess;
       if (turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER) {
-        turnProcess = new HeroTurnProcess(scanner, currentBoard, turnKeeper, currentPlayer);
+        turnProcess = new HeroTurnProcess(scanner, currentBoard, turnKeeper, currentPlayer, marketFactory);
       } else {
         turnProcess = null;
         // turnProcess = new MonsterTurnProcess(scanner, currentBoard, turnKeeper);

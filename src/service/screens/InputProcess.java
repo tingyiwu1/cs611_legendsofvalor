@@ -9,7 +9,7 @@ import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintColor;
 import src.util.TextColor;
 
-public class InputProcess<T> implements Process<InputResult<T>> {
+public class InputProcess<T> extends Process<InputResult<T>> {
   public static class Option<T> {
     private final String actionDescription;
     private final String charInput;
@@ -31,12 +31,11 @@ public class InputProcess<T> implements Process<InputResult<T>> {
     }
   }
 
-  private final Scanner scanner;
   private final List<Option<T>> options;
   private final String prompt;
 
   public InputProcess(Scanner scanner, List<Option<T>> options, String prompt) {
-    this.scanner = scanner;
+    super(scanner);
     this.options = options;
     this.prompt = prompt;
   }

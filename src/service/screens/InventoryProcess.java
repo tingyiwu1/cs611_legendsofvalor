@@ -13,14 +13,13 @@ import src.util.PrintItemTable;
 import src.util.PrintingUtil;
 import src.util.TextColor;
 
-public class InventoryProcess implements Process<ScreenResult<Void>> {
-  private final Scanner scanner;
+public class InventoryProcess extends Process<ScreenResult<Void>> {
   private final Hero activeHero;
   private final Inventory currentInventory;
 
   public InventoryProcess(Scanner scanner, Player player, Hero activeHero) {
+    super(scanner);
     this.activeHero = activeHero;
-    this.scanner = scanner;
     this.currentInventory = new Inventory(player, activeHero);
   }
 

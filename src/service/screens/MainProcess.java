@@ -7,16 +7,18 @@ import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
 
-public class MainProcess implements Process<MainProcess.MainProcessResult> {
+public class MainProcess extends Process<MainProcess.MainProcessResult> {
   // Singleton instance
   public static enum MainProcessResult implements Process.Result {
     INSTANCE
   }
 
+  public MainProcess() {
+    super(new Scanner(System.in));
+  }
+
   @Override
   public MainProcessResult run() {
-    Scanner scanner = new Scanner(System.in);
-
     GameProcess gameProcess = new GameProcess(scanner);
     GameResult gameResult = gameProcess.run();
 

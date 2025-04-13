@@ -1,6 +1,7 @@
 package src.service.screens;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import src.service.entities.Entity;
@@ -11,6 +12,10 @@ import src.service.entities.attributes.Position;
 import src.service.game.TurnKeeper;
 import src.service.game.TurnKeeper.CurrentTurn;
 import src.service.game.board.GameBoard;
+import src.service.game.market.ItemFactory;
+import src.service.game.market.Market;
+import src.service.game.market.MarketFactory;
+import src.service.game.market.MarketItem;
 import src.service.screens.ScreenInterfaces.InputInterface;
 import src.service.screens.ScreenInterfaces.Process;
 import src.util.PieceType;
@@ -19,19 +24,21 @@ import src.util.PrintingUtil;
 import src.util.StatsTracker;
 import src.util.TextColor;
 
-public class HeroTurnProcess implements Process<ScreenResult<Void>> {
+public class HeroTurnProcess extends Process<ScreenResult<Void>> {
   private final GameBoard currGameBoard;
   private final int gameSize;
   private final TurnKeeper turnKeeper;
-  private final Scanner scanner;
   private final Player player;
+  private final MarketFactory marketFactory;
 
-  public HeroTurnProcess(Scanner scanner, GameBoard gameBoard, TurnKeeper turnKeeper, Player player) {
-    this.scanner = scanner;
+  public HeroTurnProcess(Scanner scanner, GameBoard gameBoard, TurnKeeper turnKeeper, Player player,
+      MarketFactory marketFactory) {
+    super(scanner);
     this.currGameBoard = gameBoard;
     this.gameSize = gameBoard.getSize();
     this.turnKeeper = turnKeeper;
     this.player = player;
+    this.marketFactory = marketFactory;
   }
 
   @Override
@@ -57,13 +64,17 @@ public class HeroTurnProcess implements Process<ScreenResult<Void>> {
       if (input == 'q') {
         return ScreenResult.quit();
       } else if (input == 'm') {
-        // TODO: run market process
-        ScreenResult<?> marketResult = null;
+
+        Market market = marketFactory.getMarket(currGameBoard.getCurrentHero());
+        MarketProcess marketProcess = new MarketProcess(scanner, currGameBoard.getCurrentHero(), market);
+        ScreenResult<?> marketResult = marketProcess.run();
 
         if (marketResult.isQuit()) {
           return ScreenResult.quit();
-        } else {
+        } else if (marketResult.isGoBack()) {
           continue;
+        } else {
+          turnKeeper.progressTurn();
         }
       } else if (input == 'i') {
         InventoryProcess inventoryProcess = new InventoryProcess(scanner, player,
