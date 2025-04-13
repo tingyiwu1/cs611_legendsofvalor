@@ -37,7 +37,7 @@ public class MarketProcess extends Process<ScreenResult<Void>> {
 
       while (inputResult.isInvalid()) {
         PrintingUtil.clearScreen();
-        displayMarket();
+        display();
         inputResult = inputProcess.run();
         if (inputResult.isInvalid()) {
           market.addStatus("Invalid input. Please try again.", TextColor.RED);
@@ -53,7 +53,7 @@ public class MarketProcess extends Process<ScreenResult<Void>> {
           market.addStatus("Purchased item successfully!", TextColor.GREEN);
           market.addStatus("You have " + activeHero.getGold() + " gold left.", TextColor.YELLOW);
           PrintingUtil.clearScreen();
-          displayMarket();
+          display();
           new ContinueProcess(scanner).run();
           return ScreenResult.success(null);
         } else {
@@ -81,7 +81,7 @@ public class MarketProcess extends Process<ScreenResult<Void>> {
     return new InputProcess<>(this.scanner, options, "Select an item to purchase:");
   }
 
-  public void displayMarket() {
+  private void display() {
     /**
      * Print header
      */

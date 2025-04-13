@@ -399,6 +399,16 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		return spells.toArray(new Item[spells.size()]);
 	}
 
+	public Potion[] getPotionsList() {
+		ArrayList<Potion> potions = new ArrayList<Potion>();
+		for (Item item : this.items) {
+			if (item.getItemType() == ItemType.POTION) {
+				potions.add((Potion) item);
+			}
+		}
+		return potions.toArray(new Potion[potions.size()]);
+	}
+
 	@Override
 	public AttackOption mainHandAttack() {
 		// (Base Strength + Item Damage) * (1 + level / 10)

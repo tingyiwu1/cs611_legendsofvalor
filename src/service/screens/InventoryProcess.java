@@ -1,11 +1,14 @@
 package src.service.screens;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Scanner;
 
 import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
+import src.service.entities.items.Item;
+import src.service.entities.items.Potion;
 import src.service.game.inventory.Inventory;
 import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintColor;
@@ -16,48 +19,48 @@ import src.util.TextColor;
 public class InventoryProcess extends Process<ScreenResult<Void>> {
   private final Hero activeHero;
   private final Inventory currentInventory;
+  private final Potion[] availablePotions;
 
   public InventoryProcess(Scanner scanner, Player player, Hero activeHero) {
     super(scanner);
     this.activeHero = activeHero;
     this.currentInventory = new Inventory(player, activeHero);
+    this.availablePotions = activeHero.getPotionsList();
   }
 
   @Override
   public ScreenResult<Void> run() {
     // don't actually need this label, but helps for clarity
     slotSelect: while (true) {
-      InputProcess<Character> inputProcess = getSlotSelectProcess();
-      InputResult<Character> inputResult = InputResult.invalid();
-      while (inputResult.isInvalid()) {
+      char input = getSlotSelectProcess().runLoop(() -> {
         PrintingUtil.clearScreen();
-        displayInfo();
-        inputResult = inputProcess.run();
-        if (inputResult.isInvalid()) {
-          currentInventory.addStatus("Invalid input. Please try again.", TextColor.RED);
-        }
-      }
-
-      char input = inputResult.getResult();
+        display();
+      }, () -> currentInventory.addStatus("Invalid input. Please try again.", TextColor.RED));
       if (input == 'q') {
         return ScreenResult.quit();
       } else if (input == 'b') {
         return ScreenResult.goBack();
+      } else if (input == 'p') {
+        assert availablePotions.length > 0 : "No potions available";
+        ScreenResult<Void> potionResult = new PotionProcess(scanner, activeHero, currentInventory).run();
+        if (potionResult.isQuit()) {
+          return ScreenResult.quit();
+        } else if (potionResult.isGoBack()) {
+          continue slotSelect; // don't actually need this label, but helps for clarity
+        } else {
+          currentInventory.addStatus("Successfully used potion!", TextColor.YELLOW);
+          PrintingUtil.clearScreen();
+          display();
+          new ContinueProcess(scanner).run();
+          return ScreenResult.success(null);
+        }
       } else {
         int slot = Character.getNumericValue(input);
-        // TODO: remove handling for selecting slot 6 to consume potion
         assert slot >= 0 && slot <= 5 : "Invalid slot number";
-        InputProcess<Character> itemSelectProcess = getItemSelectProcess();
-        InputResult<Character> itemInputResult = InputResult.invalid();
-        while (itemInputResult.isInvalid()) {
+        char itemInput = getItemSelectProcess().runLoop(() -> {
           PrintingUtil.clearScreen();
-          displayInfo();
-          itemInputResult = itemSelectProcess.run();
-          if (itemInputResult.isInvalid()) {
-            currentInventory.addStatus("Invalid input. Please try again.", TextColor.RED);
-          }
-        }
-        char itemInput = itemInputResult.getResult();
+          display();
+        }, () -> currentInventory.addStatus("Invalid input. Please try again.", TextColor.RED));
 
         if (itemInput == 'q') {
           return ScreenResult.quit();
@@ -69,7 +72,7 @@ public class InventoryProcess extends Process<ScreenResult<Void>> {
           if (currentInventory.makeMove(slot, itemIndex)) {
             currentInventory.addStatus("Successfully moved item!", TextColor.YELLOW);
             PrintingUtil.clearScreen();
-            displayInfo();
+            display();
             new ContinueProcess(scanner).run();
             return ScreenResult.success(null);
           } else {
@@ -91,11 +94,33 @@ public class InventoryProcess extends Process<ScreenResult<Void>> {
       return Optional.empty();
     }));
 
+    if (availablePotions.length > 0) {
+      options.add(new InputProcess.Option<>("p", "Use Potion", TextColor.BLUE, 'p'));
+    }
+
     options.add(new InputProcess.Option<>("b", "Go Back", TextColor.CYAN, 'b'));
 
     options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, 'q'));
 
     return new InputProcess<>(this.scanner, options, "Select an equipment slot to manage:");
+  }
+
+  private InputProcess<Character> getPotionSelectProcess() {
+    int size = availablePotions.length;
+
+    ArrayList<InputProcess.Option<Character>> options = new ArrayList<>();
+
+    options.add(new InputProcess.Option<>("1-" + size, "Select potion", TextColor.BLUE, (input) -> {
+      if (input.matches("[1-" + size + "]")) {
+        return Optional.of(input.charAt(0));
+      }
+      return Optional.empty();
+    }));
+    options.add(new InputProcess.Option<>("b", "Go Back", TextColor.CYAN, 'b'));
+
+    options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, 'q'));
+
+    return new InputProcess<>(this.scanner, options, "Select a potion to use:");
   }
 
   private InputProcess<Character> getItemSelectProcess() {
@@ -118,7 +143,7 @@ public class InventoryProcess extends Process<ScreenResult<Void>> {
     return new InputProcess<>(this.scanner, options, "Select an item to equip or swap, or 0 to unequip current item:");
   }
 
-  public void displayInfo() {
+  private void display() {
     /*
      * Printing the header of the inventory screen
      */
@@ -137,7 +162,6 @@ public class InventoryProcess extends Process<ScreenResult<Void>> {
     /*
      * Printing the table
      */
-
     System.out.println(Hero.getHeroDisplay(this.activeHero));
     PrintItemTable.printInventoryTable(this.activeHero.getItemsList(), this.activeHero.getEquippedItems());
     PrintItemTable.printItemTable(this.activeHero.getItemsList());

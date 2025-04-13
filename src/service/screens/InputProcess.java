@@ -3,6 +3,7 @@ package src.service.screens;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import src.service.screens.ScreenInterfaces.Process;
@@ -59,4 +60,22 @@ public class InputProcess<T> extends Process<InputResult<T>> {
     return InputResult.invalid();
   }
 
+  @FunctionalInterface
+  public static interface Action {
+    void execute();
+  }
+
+  public T runLoop(Action before, Action onInvalid) {
+    InputResult<T> inputResult = InputResult.invalid();
+    while (inputResult.isInvalid()) {
+      if (before != null) {
+        before.execute();
+      }
+      inputResult = run();
+      if (inputResult.isInvalid() && onInvalid != null) {
+        onInvalid.execute();
+      }
+    }
+    return inputResult.getResult();
+  }
 }
