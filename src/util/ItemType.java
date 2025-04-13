@@ -1,7 +1,7 @@
 package src.util;
 
 public enum ItemType {
-	WEAPON("Weapon"), 
+	WEAPON("Weapon"),
 	BIG_WEAPON("Two Handed Weapon"),
 	SPELL("Spell"),
 	POTION("Potion"),
@@ -14,11 +14,11 @@ public enum ItemType {
 	private final String displayName;
 
 	ItemType(String displayName) {
-        this.displayName = displayName;
-    }
+		this.displayName = displayName;
+	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return displayName;
 	}
 

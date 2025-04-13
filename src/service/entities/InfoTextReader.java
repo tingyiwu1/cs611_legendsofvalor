@@ -7,7 +7,6 @@
  */
 package src.service.entities;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,11 +22,11 @@ import src.service.game.market.MarketItem;
 import src.util.ItemType;
 
 public class InfoTextReader {
-	// # filepath: /Users/charlesli/Documents/schoolCS/cs611/HeroesAndMonsters/src/service/entities/infoTexts/MarketItemList.txt
+	// # filepath:
+	// /Users/charlesli/Documents/schoolCS/cs611/HeroesAndMonsters/src/service/entities/infoTexts/MarketItemList.txt
 
-	public static ArrayList<Monster> readMonsterTextFile(String filepath, int monsterLevel){
+	public static ArrayList<Monster> readMonsterTextFile(String filepath, int monsterLevel) {
 		ArrayList<Monster> resultingList = new ArrayList<>();
-
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
 			String line;
@@ -35,13 +34,15 @@ public class InfoTextReader {
 			reader.readLine();
 
 			while ((line = reader.readLine()) != null) {
-                // Normalize spacing/tabs → split by whitespace
-                String[] parts = line.trim().split(",");
-                if (parts.length < 5) continue; // skip malformed lines
+				// Normalize spacing/tabs → split by whitespace
+				String[] parts = line.trim().split(",");
+				if (parts.length < 5)
+					continue; // skip malformed lines
 
-				//Integer maxHealth, Integer level, String name, Integer strength, Integer magicStrength, Integer defense, Integer dodge
-				//xp, gold, description
-				//monster item dmg, name, description
+				// Integer maxHealth, Integer level, String name, Integer strength, Integer
+				// magicStrength, Integer defense, Integer dodge
+				// xp, gold, description
+				// monster item dmg, name, description
 				int maxHealth = Integer.parseInt(parts[1]);
 				int level = monsterLevel;
 				String name = parts[0];
@@ -57,41 +58,42 @@ public class InfoTextReader {
 				String monsterItemDescription = parts[12];
 
 				Item monsterItem = new Weapon(monsterItemDamage, monsterItemName, monsterItemDescription);
-				Monster monster = new Monster(maxHealth, level, name, strength, magicStrength, defense, dodge, xp, gold, description, monsterItem);
+				Monster monster = new Monster(maxHealth, level, name, strength, magicStrength, defense, dodge, xp, gold,
+						description, monsterItem);
 
 				resultingList.add(monster);
 
-            }
-
+			}
 
 		} catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        }
+			System.out.println("Error reading file: " + e.getMessage());
+		}
 
 		return resultingList;
 
 	}
 
-	public static ArrayList<MarketItem> readItemTextFile(String filepath){
+	public static ArrayList<MarketItem> readItemTextFile(String filepath) {
 		ArrayList<MarketItem> resultingList = new ArrayList<>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
-            String line;
+			String line;
 
-            // Skip the header
-            reader.readLine();
+			// Skip the header
+			reader.readLine();
 
-			// name, cost, description, damage, level requirement, item type, 
+			// name, cost, description, damage, level requirement, item type,
 			// bonus str, bonus def, bonus mp, bonus dodge
 			// maxUses
 
-            while ((line = reader.readLine()) != null) {
-                // Normalize spacing/tabs → split by whitespace
-                String[] parts = line.trim().split(",");
-                if (parts.length < 5) continue; // skip malformed lines
+			while ((line = reader.readLine()) != null) {
+				// Normalize spacing/tabs → split by whitespace
+				String[] parts = line.trim().split(",");
+				if (parts.length < 5)
+					continue; // skip malformed lines
 
-                String name = parts[0];
-                int cost = Integer.parseInt(parts[1]);
+				String name = parts[0];
+				int cost = Integer.parseInt(parts[1]);
 				String description = parts[2];
 				int damage = Integer.parseInt(parts[3]);
 				int levelRequirement = Integer.parseInt(parts[4]);
@@ -132,24 +134,22 @@ public class InfoTextReader {
 						break;
 					default:
 						System.out.println("Unhandled item type: " + type);
-						continue; 
+						continue;
 				}
-				
+
 				MarketItem mItem = new MarketItem(item, cost);
-				if(name.equals("Small Health Potion") || name.equals("Large Health Potion")){
-					for(int i = 0; i < 20; i++){
+				if (name.equals("Small Health Potion") || name.equals("Large Health Potion")) {
+					for (int i = 0; i < 20; i++) {
 						resultingList.add(mItem);
 					}
 				}
 
 				resultingList.add(mItem);
 
-
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        }
-
+			}
+		} catch (IOException e) {
+			System.out.println("Error reading file: " + e.getMessage());
+		}
 
 		return resultingList;
 	}

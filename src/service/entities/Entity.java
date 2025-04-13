@@ -12,8 +12,6 @@ import src.service.entities.attributes.IsOnBoard;
 import src.util.StatsTracker;
 import src.service.entities.attributes.Position;
 
-
-
 public abstract class Entity implements IsOnBoard {
 
 	protected Integer currentHealth;
@@ -33,7 +31,7 @@ public abstract class Entity implements IsOnBoard {
 		// BOSS
 	}
 
-	public Entity(){
+	public Entity() {
 		this.currentHealth = 100;
 		this.maxHealth = 100;
 		this.level = 1;
@@ -44,7 +42,8 @@ public abstract class Entity implements IsOnBoard {
 		this.defense = 10;
 	}
 
-	public Entity(Integer maxHealth, Integer level, String name, Integer strength, Integer magicStrength, Integer defense, Integer dodge, Position pos){
+	public Entity(Integer maxHealth, Integer level, String name, Integer strength, Integer magicStrength, Integer defense,
+			Integer dodge, Position pos) {
 		this.currentHealth = maxHealth;
 		this.maxHealth = maxHealth;
 		this.level = level;
@@ -98,70 +97,77 @@ public abstract class Entity implements IsOnBoard {
 		this.position = pos;
 	}
 
-
 	// public void printStats();
-	
-	public Integer getCurrentHealth(){
+
+	public Integer getCurrentHealth() {
 		return this.currentHealth;
 	}
-	public Integer getMaxHealth(){
+
+	public Integer getMaxHealth() {
 		return this.maxHealth;
 	}
 
-	public void takeDamage(Integer damage){
-		if(damage >= 0){
+	public void takeDamage(Integer damage) {
+		if (damage >= 0) {
 			this.currentHealth -= damage;
 		}
 	}
-	public void healDamage(Integer heal){
+
+	public void healDamage(Integer heal) {
 		StatsTracker.addToStats("Health Healed", 1);
 		this.currentHealth += heal;
-		if(currentHealth > maxHealth){
+		if (currentHealth > maxHealth) {
 			currentHealth = maxHealth;
 		}
 	}
 
-	public Integer getLevel(){	
+	public Integer getLevel() {
 		StatsTracker.addToStats("Times Levelled Up", 1);
 		return this.level;
 	}
-	public void levelUp(){
+
+	public void levelUp() {
 		this.level += 1;
 	}
 
-	public String getName(){
+	public String getName() {
 		return this.name;
 	}
-	public void setName(String name){
+
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public Integer getStrength(){
+	public Integer getStrength() {
 		return this.strength;
 	}
-	public void setStrength(Integer strength){
+
+	public void setStrength(Integer strength) {
 		this.strength = strength;
 	}
 
-	public Integer getMagicStrength(){
+	public Integer getMagicStrength() {
 		return this.magicStrength;
 	}
-	public void setMagicStrength(Integer magicStrength){
+
+	public void setMagicStrength(Integer magicStrength) {
 		this.magicStrength = magicStrength;
 	}
 
-	public Integer getDodge(){
+	public Integer getDodge() {
 		return this.dodge;
 	}
-	public void setDodge(Integer dodge){
+
+	public void setDodge(Integer dodge) {
 		this.dodge = dodge;
 	}
 
-	public Integer getDefense(){
+	public Integer getDefense() {
 		return this.defense;
 	}
-	public void setDefense(Integer defense){
+
+	public void setDefense(Integer defense) {
 		this.defense = defense;
 	}
-	
-} 
+
+}

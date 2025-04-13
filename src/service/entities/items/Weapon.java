@@ -6,10 +6,8 @@ package src.service.entities.items;
 
 import src.util.ItemType;
 
-
-
 public class Weapon implements Item, Equippable {
-	
+
 	private Integer damage;
 	private String name;
 	private String description;
@@ -22,7 +20,7 @@ public class Weapon implements Item, Equippable {
 	private Integer bonusDodge;
 	private Integer range;
 
-	public Weapon(Integer damage, String name, String description){
+	public Weapon(Integer damage, String name, String description) {
 		this.damage = damage;
 		this.name = name;
 		this.description = description;
@@ -37,9 +35,9 @@ public class Weapon implements Item, Equippable {
 		this.range = 0;
 
 	}
-	
-	public Weapon(Integer damage, String name, String description, 
-			int bonusStrength, int bonusMagicPower, int bonusDefense, int bonusDodge, int range){
+
+	public Weapon(Integer damage, String name, String description,
+			int bonusStrength, int bonusMagicPower, int bonusDefense, int bonusDodge, int range) {
 		this.damage = damage;
 		this.name = name;
 		this.description = description;
@@ -57,53 +55,56 @@ public class Weapon implements Item, Equippable {
 	public Integer getRange() {
 		return this.range;
 	}
+
 	public void setRange(Integer range) {
 		this.range = range;
 	}
-	
-	public Integer getDamage(){
+
+	public Integer getDamage() {
 		return this.damage;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return this.name;
 	}
-	
-	public String getDescription(){
+
+	public String getDescription() {
 		return this.description;
 	}
-	
-	public Boolean use(){
+
+	public Boolean use() {
 		// System.out.println("Weapon used.");
 		return true;
 	}
-	
-	public void setDamage(Integer damage){
+
+	public void setDamage(Integer damage) {
 		this.damage = damage;
 	}
-	
-	public void setName(String name){
+
+	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public void setDescription(String description){
+
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	public Integer getLevelRequirement() {
 		return 0;
 	}
+
 	public void setLevelRequirement(Integer levelRequirement) {
 		this.levelRequirement = levelRequirement;
 	}
 
-	public Boolean canUse(Integer level){
+	public Boolean canUse(Integer level) {
 		return level >= this.levelRequirement;
 	}
 
 	public ItemType getItemType() {
 		return this.itemType;
 	}
+
 	public void setItemType(ItemType itemType) {
 		// do nothing
 	}
@@ -149,5 +150,5 @@ public class Weapon implements Item, Equippable {
 	public Integer getBonusDodge() {
 		return this.bonusDodge;
 	}
-	
+
 }

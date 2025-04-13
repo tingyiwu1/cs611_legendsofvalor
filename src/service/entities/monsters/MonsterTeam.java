@@ -8,10 +8,10 @@ import src.service.game.battle.BattleMonsterFactory;
 public class MonsterTeam {
 	private ArrayList<Monster> monsters;
 
-
 	public MonsterTeam() {
 		this.monsters = new ArrayList<>();
 	}
+
 	public ArrayList<Monster> getMonsters() {
 		return monsters;
 	}
@@ -23,7 +23,8 @@ public class MonsterTeam {
 	public void addGenericMonster() {
 		Monster monster = BattleMonsterFactory.generateRandomMonster(BattleMonsterFactory.monsterType.NORMAL, 1);
 		monsters.add(monster);
-	}	
+	}
+
 	public void addGenericMonster(Position pos) {
 		Monster monster = BattleMonsterFactory.generateRandomMonster(BattleMonsterFactory.monsterType.NORMAL, 1);
 		monster.setPosition(pos);
