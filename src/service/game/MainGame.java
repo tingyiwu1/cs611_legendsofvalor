@@ -198,7 +198,6 @@ public class MainGame {
 			}
 		}
 		if (this.currentScreen == ScreenState.MARKET && lastInput == 'b') {
-
 			int marketIndex = this.currentBoard.getCurrentMarketIndex();
 			Screen current = myScreen.getScreen();
 			if (current instanceof MarketScreen) {

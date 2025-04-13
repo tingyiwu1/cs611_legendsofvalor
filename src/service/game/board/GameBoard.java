@@ -251,6 +251,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 
 	@Override
 	public Boolean isMoveValid(Character inputtedMove) {
+		// TODO: remove board handling turn passing
 		if (inputtedMove == 'p') {
 			return true;
 		}
@@ -295,6 +296,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 
 	@Override
 	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
+		// TODO: remove board handling quit
 		if (inputtedMove == 'q') {
 			return true;
 		}
@@ -309,6 +311,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 		} else if (inputtedMove == 'd') {
 			this.getCurrHeroLocation().moveY(1);
 		}
+		// TODO: remove board handling turn passing
 		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd'
 				|| inputtedMove == 'p') {
 			this.turnKeeper.progressTurn();
@@ -373,6 +376,21 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	@Override
 	public AttackOption getAttackOption() {
 		return this.attackOption;
+	}
+
+	public boolean isHeroWin() {
+		return false;
+	}
+
+	public boolean isMonsterWin() {
+		return false;
+	}
+
+	public Hero getCurrentHero() {
+		assert turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER : "Not player's turn";
+		int turnIdx = this.turnKeeper.getPlayerTeamTurnCount();
+		Hero currHero = this.player.getParty()[turnIdx];
+		return currHero;
 	}
 
 }

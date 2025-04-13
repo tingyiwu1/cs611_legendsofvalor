@@ -1,7 +1,9 @@
 package src.service.screens;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Function;
 
 import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintColor;
@@ -12,23 +14,31 @@ public class InputProcess<T> implements Process<InputResult<T>> {
     private final String actionDescription;
     private final String charInput;
     private final TextColor colorCode;
-    private final T result;
+    private final Function<String, Optional<T>> parseInput;
 
-    public Option(String charInput, String actionDescription, TextColor colorCode, T result) {
+    public Option(String charInput, String actionDescription, TextColor colorCode,
+        T output) {
+      this(charInput, actionDescription, colorCode,
+          (input) -> input.equalsIgnoreCase(charInput) ? Optional.of(output) : Optional.empty());
+    }
+
+    public Option(String charInput, String actionDescription, TextColor colorCode,
+        Function<String, Optional<T>> parseInput) {
       this.actionDescription = actionDescription;
       this.charInput = charInput;
       this.colorCode = colorCode;
-      this.result = result;
+      this.parseInput = parseInput;
     }
-
   }
 
   private final Scanner scanner;
   private final List<Option<T>> options;
+  private final String prompt;
 
-  public InputProcess(Scanner scanner, List<Option<T>> options) {
+  public InputProcess(Scanner scanner, List<Option<T>> options, String prompt) {
     this.scanner = scanner;
     this.options = options;
+    this.prompt = prompt;
   }
 
   private void displayInputOption(Option<T> option) {
@@ -37,13 +47,14 @@ public class InputProcess<T> implements Process<InputResult<T>> {
 
   @Override
   public InputResult<T> run() {
+    System.out.println(prompt);
     for (Option<T> option : options) {
       displayInputOption(option);
     }
-    String input = scanner.next().trim();
+    String input = scanner.nextLine().trim();
     for (Option<T> option : options) {
-      if (option.charInput.equalsIgnoreCase(input)) {
-        return InputResult.of(option.result);
+      if (option.parseInput.apply(input).isPresent()) {
+        return InputResult.of(option.parseInput.apply(input).get());
       }
     }
     return InputResult.invalid();

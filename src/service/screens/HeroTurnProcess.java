@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import src.service.entities.Entity;
+import src.service.entities.Player;
 import src.service.entities.Entity.EntityType;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
@@ -23,16 +24,19 @@ public class HeroTurnProcess implements Process<ScreenResult<Void>> {
   private final int gameSize;
   private final TurnKeeper turnKeeper;
   private final Scanner scanner;
+  private final Player player;
 
-  public HeroTurnProcess(Scanner scanner, GameBoard gameBoard, TurnKeeper turnKeeper) {
+  public HeroTurnProcess(Scanner scanner, GameBoard gameBoard, TurnKeeper turnKeeper, Player player) {
     this.scanner = scanner;
     this.currGameBoard = gameBoard;
     this.gameSize = gameBoard.getSize();
     this.turnKeeper = turnKeeper;
+    this.player = player;
   }
 
   @Override
   public ScreenResult<Void> run() {
+    assert turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER : "Not player's turn";
     while (turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER) {
       StatsTracker.addToStats("Screens Visited", 1);
 
@@ -58,30 +62,33 @@ public class HeroTurnProcess implements Process<ScreenResult<Void>> {
 
         if (marketResult.isQuit()) {
           return ScreenResult.quit();
-        } else if (marketResult.isGoBack()) {
-          continue;
         } else {
-          return ScreenResult.success(null);
+          continue;
         }
       } else if (input == 'i') {
-        // TODO: run inventory process
-        ScreenResult<?> inventoryResult = null;
+        InventoryProcess inventoryProcess = new InventoryProcess(scanner, player,
+            currGameBoard.getCurrentHero());
+        ScreenResult<?> inventoryResult = inventoryProcess.run();
 
         if (inventoryResult.isQuit()) {
           return ScreenResult.quit();
         } else if (inventoryResult.isGoBack()) {
           continue;
         } else {
-          return ScreenResult.success(null);
+          turnKeeper.progressTurn();
         }
-
-      } else { // input is an attackOption index
+      } else if (input == 'p') {
+        turnKeeper.progressTurn();
+      } else if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
+        assert currGameBoard.isMoveValid(input);
         currGameBoard.makeMove(input);
-        // TODO: extract out to battle process?
-        StatsTracker.addToStats("Encountered Enemies", 1);
+        return ScreenResult.success(null);
+      } else { // input is battle index
+        assert currGameBoard.isMoveValid(input);
+        currGameBoard.makeMove(input);
 
+        // TODO: run battle process
       }
-
     }
 
     return ScreenResult.success(null);
@@ -120,7 +127,7 @@ public class HeroTurnProcess implements Process<ScreenResult<Void>> {
     options.add(new InputProcess.Option<>("p", "Pass the Turn", TextColor.CYAN, 'p'));
     options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, 'q'));
 
-    return new InputProcess<>(scanner, options);
+    return new InputProcess<>(scanner, options, "Select an action:");
   }
 
   // need to display the game board
