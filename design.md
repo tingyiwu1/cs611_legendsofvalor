@@ -83,14 +83,25 @@ To understand the architecture, we can start from a top-down overview, and conti
 
 ### Top Level Entry layers
 
-- `Main.java` is the entry point to the program. It simply calls and instantiates the Main Game
-- `src.service.game.MainGame.java` is the primary State Machine for the game screens.
-  - In the constructor, it initializes an 8 by 8 game board, and then a Screen strategy context.
-  - It provides the core logic for when the strategy should switch screens.
-- `src.service.screens.ScreenContext.java` This is the Screen strategy context that `MainGame.java` utilizes to display each screen. It primarily implements the following methods:
-  - `setScreen()` will set the screen to a new screen
-  - `displayScreen()` will call the current screens `displayAndProgress()` method, abstracting the displayed screen from the main state machine logic.
-  - `getLastInput()` will return the current screens last seen input, which is how the Main state machine logic progresses.
+- `Main.java` is the entry point to the program. It simply calls and instantiates the Main Game process
+- `src.service.process.MainProcess.java` is the primary intializer of the game. It handles results: Game Quit, Game Win, and Game Loss
+- `src.service.process.GameProcess.java` This is the primary state processer. It continuously makes recursive calls to `MonsterTurnProcess` and `HeroTurnProcess` to keep the game going, until either of those return a state that ends the game. 
+ 
+### Context Modules
+
+Many of the processes and other modules require knowledge of the entire gamestate. To reduce coupling between all of these objects, we pass in a `GameContext` module which wraps many other game controller modules. This way, each object can have the required information without being dependent on access to other modules. 
+
+1. **TurnKeeper**
+- `src.service.game.TurnKeeper`
+- Purpose: Keep track of turn state between hero turn and monster turn
+- Structure: tracks and exposes various information on turn counts and a `CurrentTurn` enum for player and monster turn.
+  - `progressTurn()` increments a `teamTurnCount` counter. If this iterates through every entity of a Hero or Monster team, it switches the turn to the other team.
+ 
+2. **GameContext**
+- `src.service.game.GameContext`
+- Purpose: packages many modules together, to pass information to other submodules
+- Structure: provides public access to `gameBoard`, `player`, `marketFactory`, `monsterTeam`, `turnKeeper`. 
+
 
 ### Mid Level Modules
 
