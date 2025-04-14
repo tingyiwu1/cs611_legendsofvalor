@@ -13,6 +13,7 @@ import src.service.game.TurnKeeper;
 import src.service.game.TurnKeeper.CurrentTurn;
 import src.service.game.battle.Battle;
 import src.service.game.board.GameBoard;
+import src.service.game.board.MapPiece;
 import src.service.game.market.Market;
 import src.service.game.market.MarketFactory;
 import src.service.process.display.MapDisplay;
@@ -105,10 +106,40 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
   private InputProcess<Character> getInputProcess() {
     ArrayList<InputProcess.Option<Character>> options = new ArrayList<>();
 
-    options.add(new InputProcess.Option<>("w", "Move Up", TextColor.BLUE, 'w'));
-    options.add(new InputProcess.Option<>("a", "Move Left", TextColor.BLUE, 'a'));
-    options.add(new InputProcess.Option<>("s", "Move Down", TextColor.BLUE, 's'));
-    options.add(new InputProcess.Option<>("d", "Move Right", TextColor.BLUE, 'd'));
+    MapPiece[] adjacentTiles = gameBoard.getAdjacentTiles(gameBoard.getCurrHeroLocation());
+
+    if (adjacentTiles[0] != null) {
+      PieceType pieceType = adjacentTiles[0].getPieceType();
+      if (pieceType == PieceType.OBSTACLE) {
+        options.add(new InputProcess.Option<>("w", "Break obstacle above", TextColor.ORANGE, 'w'));
+      } else if (pieceType != PieceType.WALL) {
+        options.add(new InputProcess.Option<>("w", "Move Up", TextColor.BLUE, 'w'));
+      }
+    }
+    if (adjacentTiles[1] != null) {
+      PieceType pieceType = adjacentTiles[1].getPieceType();
+      if (pieceType == PieceType.OBSTACLE) {
+        options.add(new InputProcess.Option<>("a", "Break obstacle left", TextColor.ORANGE, 'a'));
+      } else if (pieceType != PieceType.WALL) {
+        options.add(new InputProcess.Option<>("a", "Move Left", TextColor.BLUE, 'a'));
+      }
+    }
+    if (adjacentTiles[2] != null) {
+      PieceType pieceType = adjacentTiles[2].getPieceType();
+      if (pieceType == PieceType.OBSTACLE) {
+        options.add(new InputProcess.Option<>("s", "Break obstacle below", TextColor.ORANGE, 's'));
+      } else if (pieceType != PieceType.WALL) {
+        options.add(new InputProcess.Option<>("s", "Move Down", TextColor.BLUE, 's'));
+      }
+    }
+    if (adjacentTiles[3] != null) {
+      PieceType pieceType = adjacentTiles[3].getPieceType();
+      if (pieceType == PieceType.OBSTACLE) {
+        options.add(new InputProcess.Option<>("d", "Break obstacle right", TextColor.ORANGE, 'd'));
+      } else if (pieceType != PieceType.WALL) {
+        options.add(new InputProcess.Option<>("d", "Move Right", TextColor.BLUE, 'd'));
+      }
+    }
 
     options.add(new InputProcess.Option<>("i", "Access Inventory", TextColor.ORANGE, 'i'));
 

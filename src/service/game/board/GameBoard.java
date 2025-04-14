@@ -15,6 +15,7 @@ import src.service.game.TurnKeeper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /*
@@ -220,6 +221,29 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 		// PieceType.BOSS;
 	}
 
+	/**
+	 * Order (wasd): up, left, down, right
+	 */
+	public MapPiece[] getAdjacentTiles(Position position) {
+		int[][] dirs = {
+				{ -1, 0 }, // up
+				{ 0, -1 }, // left
+				{ 1, 0 }, // down
+				{ 0, 1 }, // right
+		};
+		MapPiece[] adjacentTiles = new MapPiece[4];
+		for (int i = 0; i < dirs.length; i++) {
+			int newX = position.getX() + dirs[i][0];
+			int newY = position.getY() + dirs[i][1];
+			if (newX >= 0 && newX < size && newY >= 0 && newY < size) {
+				adjacentTiles[i] = this.currentBoard[newX][newY];
+			} else {
+				adjacentTiles[i] = null; // Out of bounds
+			}
+		}
+		return adjacentTiles;
+	}
+
 	public ArrayList<AttackOption> currHeroAttackList() {
 		ArrayList<AttackOption> attackList = new ArrayList<AttackOption>();
 
@@ -274,8 +298,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 			}
 			// Validate movement boundaries and obstacles
 			if (newX < 0 || newX >= this.size || newY < 0 || newY >= this.size
-					|| this.currentBoard[newX][newY].getPieceType() == PieceType.WALL
-					|| this.currentBoard[newX][newY].getPieceType() == PieceType.OBSTACLE) {
+					|| this.currentBoard[newX][newY].getPieceType() == PieceType.WALL) {
 				return false;
 			}
 			// Check if we go past a monster
@@ -305,20 +328,42 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 
 	@Override
 	public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
+		// TODO: clean
 		if (inputtedMove == 'w') {
-			this.getCurrHeroLocation().moveX(-1);
+			Position newPos = new Position(this.getCurrHeroLocation().getX() - 1,
+					this.getCurrHeroLocation().getY());
+			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
+				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
+			} else {
+				this.getCurrHeroLocation().moveX(-1);
+			}
 		} else if (inputtedMove == 's') {
-			this.getCurrHeroLocation().moveX(1);
+			Position newPos = new Position(this.getCurrHeroLocation().getX() + 1,
+					this.getCurrHeroLocation().getY());
+			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
+				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
+			} else {
+				this.getCurrHeroLocation().moveX(1);
+			}
 		} else if (inputtedMove == 'a') {
-			this.getCurrHeroLocation().moveY(-1);
+			Position newPos = new Position(this.getCurrHeroLocation().getX(),
+					this.getCurrHeroLocation().getY() - 1);
+			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
+				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
+			} else {
+				this.getCurrHeroLocation().moveY(-1);
+			}
 		} else if (inputtedMove == 'd') {
-			this.getCurrHeroLocation().moveY(1);
+			Position newPos = new Position(this.getCurrHeroLocation().getX(),
+					this.getCurrHeroLocation().getY() + 1);
+			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
+				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
+			} else {
+				this.getCurrHeroLocation().moveY(1);
+			}
 		}
 		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd') {
 			this.turnKeeper.progressTurn();
-			// if(this.turnKeeper.progressTurn()){
-			// this.turnKeeper.resetTurn();
-			// }
 			return true;
 		}
 
