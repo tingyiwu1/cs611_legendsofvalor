@@ -2,6 +2,7 @@ package src.service.screens;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Scanner;
 
 import src.service.entities.Entity;
@@ -11,6 +12,7 @@ import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
 import src.service.game.TurnKeeper;
 import src.service.game.TurnKeeper.CurrentTurn;
+import src.service.game.battle.Battle;
 import src.service.game.board.GameBoard;
 import src.service.game.market.ItemFactory;
 import src.service.game.market.Market;
@@ -30,6 +32,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
   private final TurnKeeper turnKeeper;
   private final Player player;
   private final MarketFactory marketFactory;
+  private final MapDisplay mapDisplay;
 
   public HeroTurnProcess(Scanner scanner, GameBoard gameBoard, TurnKeeper turnKeeper, Player player,
       MarketFactory marketFactory) {
@@ -39,6 +42,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
     this.turnKeeper = turnKeeper;
     this.player = player;
     this.marketFactory = marketFactory;
+    this.mapDisplay = new MapDisplay(gameBoard, turnKeeper);
   }
 
   @Override
@@ -47,24 +51,13 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
     while (turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER) {
       StatsTracker.addToStats("Screens Visited", 1);
 
-      InputProcess<Character> inputProcess = getInputProcess();
-
-      InputResult<Character> inputResult = InputResult.invalid();
-      while (inputResult.isInvalid()) {
+      char input = getInputProcess().runLoop(() -> {
         PrintingUtil.clearScreen();
-        System.out.println("This is the Map Screen!");
-        this.displayMap();
-        inputResult = inputProcess.run();
-        if (inputResult.isInvalid()) {
-          System.out.println("Invalid input. Please try again.");
-        }
-      }
-
-      char input = inputResult.getResult();
+        display();
+      }, () -> System.out.println("Invalid input. Please try again."));
       if (input == 'q') {
         return ScreenResult.quit();
       } else if (input == 'm') {
-
         Market market = marketFactory.getMarket(currGameBoard.getCurrentHero());
         MarketProcess marketProcess = new MarketProcess(scanner, currGameBoard.getCurrentHero(), market);
         ScreenResult<?> marketResult = marketProcess.run();
@@ -97,8 +90,18 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
       } else { // input is battle index
         assert currGameBoard.isMoveValid(input);
         currGameBoard.makeMove(input);
-
-        // TODO: run battle process
+        assert currGameBoard.getEnteredBattle() : "should have entered battle after attack move";
+        Battle battle = new Battle(player, currGameBoard.getMonsterTeam(), currGameBoard.getMonsterTarget(), turnKeeper,
+            currGameBoard.getAttackOption());
+        BattleProcess battleProcess = new BattleProcess(scanner, battle, turnKeeper);
+        ScreenResult<?> battleResult = battleProcess.run();
+        currGameBoard.resetBattleInitializer();
+        // TODO: handle battle result
+        if (battleResult.isQuit()) {
+          return ScreenResult.quit();
+        } else {
+          // turnKeeper.progressTurn();
+        }
       }
     }
 
@@ -125,9 +128,16 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
         AttackOption currAttackOption = heroAttackList.get(i);
         options.add(
             new InputProcess.Option<>(
-                "A" + (i + 1), "Attack with " + currAttackOption.getSourceItem().getName(),
+                "" + (i + 1), "Attack with " + currAttackOption.getSourceItem().getName(),
                 TextColor.RED,
-                Character.forDigit(i + 1, 10) // TODO: replace move reprensation before passing to game board
+                (input) -> {
+                  if (input.matches("[1-" + heroAttackList.size() + "]")) {
+                    return Optional.of(input.charAt(0));
+                  }
+                  return Optional.empty();
+                }
+            // Character.forDigit(i + 1, 10) // TODO: replace move reprensation before
+            // passing to game board
             ));
 
         InputInterface.DisplayInputOption("Attack with" + currAttackOption.getSourceItem().getName(), "" + (i + 1),
@@ -141,110 +151,11 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
     return new InputProcess<>(scanner, options, "Select an action:");
   }
 
-  // need to display the game board
-  private void displayMap() {
-
-    ArrayList<Entity> entityList = currGameBoard.getEntityList();
-    ArrayList<Position> entityPositions = new ArrayList<Position>();
-    for (Entity entity : entityList) {
-      entityPositions.add(entity.getPosition());
-    }
-    // rows
-    for (int r = 0; r < gameSize; r++) {
-      for (int i = 0; i < gameSize; i++) {
-        System.out.print("+-------");
-      }
-      System.out.println("+");
-
-      for (int inner = 0; inner < 3; inner++) {
-        for (int c = 0; c < gameSize; c++) {
-          PieceType currentPieceType = currGameBoard.getPieceAt(r, c).getPieceType();
-          System.out.print("|");
-          if (currentPieceType == PieceType.WALL) {
-            System.out.print(" XXXXX ");
-          } else if (inner == 0 && entityPositions.contains(new Position(r, c))) {
-            // Check if a hero is at this position and print " H " in the center row
-            boolean hasHero = false;
-            boolean hasMonster = false;
-            boolean isActiveHero = false;
-            for (int idx = 0; idx < entityList.size(); idx++) {
-              Entity entity = entityList.get(idx);
-              if (entity.getPosition().equals(new Position(r, c))) {
-                if (entity.getType() == EntityType.HERO) {
-                  hasHero = true;
-                  if (turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER) {
-                    if (idx == turnKeeper.getPlayerTeamTurnCount()) {
-                      isActiveHero = true;
-                    }
-                  }
-                } else if (entity.getType() == EntityType.MONSTER) {
-                  hasMonster = true;
-                }
-              }
-            }
-            // TODO: IS THERE A BETTER WAY TO DISPLAY WHICH HERO IS ACTIVE?
-            if (isActiveHero) {
-              if (hasHero && hasMonster) {
-                PrintColor.blue("AH  ");
-                PrintColor.yellow(" M ");
-              } else if (hasHero) {
-                PrintColor.blue("AH     ");
-              } else if (hasMonster) {
-                PrintColor.yellow("     M ");
-              } else {
-                System.out.print("       ");
-              }
-            } else {
-              if (hasHero && hasMonster) {
-                PrintColor.red(" H  ");
-                PrintColor.yellow(" M ");
-              } else if (hasHero) {
-                PrintColor.red(" H     ");
-              } else if (hasMonster) {
-                PrintColor.yellow("     M ");
-              } else {
-                System.out.print("       ");
-              }
-            }
-
-          } else if (currentPieceType == PieceType.HERO_NEXUS && inner == 1) {
-            PrintColor.blue(" NEXUS ");
-          } else if (currentPieceType == PieceType.MONSTER_NEXUS && inner == 1) {
-            PrintColor.red(" NEXUS ");
-          } else if (currentPieceType == PieceType.BUSH && inner == 1) {
-            System.out.print("  ~B~  ");
-          } else if (currentPieceType == PieceType.CAVE && inner == 1) {
-            System.out.print("  [C]  ");
-          } else if (currentPieceType == PieceType.KOULOU && inner == 1) {
-            System.out.print("  _K_  ");
-
-          } else if (currentPieceType == PieceType.OBSTACLE && inner == 1) {
-            System.out.print("  xxx  ");
-
-          } else if (currentPieceType == PieceType.MARKET && inner == 2) {
-            PrintColor.yellow("     M ");
-          } else {
-            System.out.print("       ");
-          }
-        }
-        System.out.println("|");
-      }
-    }
-    for (int col = 0; col < gameSize; col++) {
-      System.out.print("+-------");
-    }
-    System.out.println("+");
-    System.out.println("H = Hero, M = Monster, NEXUS = Nexus, X = Wall");
-    if (turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER) {
-      System.out
-          .println("Current Hero: " + currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
-    } else {
-      /*
-       * Handle enemy turn progression!
-       */
-      System.out.println("TODO: Handle Enemy Turn");
-    }
-
+  private void display() {
+    mapDisplay.display();
+    PrintColor.blue("Active Hero: ");
+    System.out
+        .println(currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
   }
 
 }

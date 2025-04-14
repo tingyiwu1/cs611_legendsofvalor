@@ -55,10 +55,16 @@ public class Position {
 		return "(" + x + ", " + y + ")";
 	}
 
-	public int distanceTo(Position targetPos) {
+	public int manhattanDistance(Position targetPos) {
 		int xDiff = Math.abs(this.x - targetPos.getX());
 		int yDiff = Math.abs(this.y - targetPos.getY());
-		return xDiff + yDiff; // Manhattan distance
+		return xDiff + yDiff;
+	}
+
+	public int chebyshevDistance(Position targetPos) {
+		int xDiff = Math.abs(this.x - targetPos.getX());
+		int yDiff = Math.abs(this.y - targetPos.getY());
+		return Math.max(xDiff, yDiff);
 	}
 
 }

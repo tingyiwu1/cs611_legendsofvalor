@@ -26,8 +26,7 @@ public class GameProcess extends Process<GameProcess.GameResult> {
   // TODO: combine all these into single context object
   private final Scanner scanner;
   private final GameBoard currentBoard;
-  private final Battle currBattle;
-  private final Player currentPlayer;
+  private final Player player;
   // ScreenState currentScreen;
   // ScreenState previousScreen;
   // Boolean continueToGame;
@@ -38,17 +37,18 @@ public class GameProcess extends Process<GameProcess.GameResult> {
   public GameProcess(Scanner scanner) {
     super(scanner);
     this.scanner = scanner;
-    this.currentPlayer = new Player(Difficulty.EASY, 3);
-    this.monsterTeam = new MonsterTeam();
+    this.player = new Player(Difficulty.EASY, 3);
+    this.monsterTeam = new MonsterTeam(new Position[] {
+        new Position(0, 0),
+        new Position(0, 3),
+        new Position(0, 6),
+    });
 
-    this.monsterTeam.addGenericMonster(new Position(0, 0));
-    this.monsterTeam.addGenericMonster(new Position(0, 3));
-    this.monsterTeam.addGenericMonster(new Position(0, 6));
+    monsterTeam.spawnMonsters(1);
 
-    this.turnKeeper = new TurnKeeper(this.currentPlayer, this.monsterTeam);
+    this.turnKeeper = new TurnKeeper(this.player, this.monsterTeam);
 
-    this.currentBoard = new GameBoard(8, 0.3, 0.2, this.currentPlayer, this.monsterTeam, this.turnKeeper);
-    this.currBattle = null;
+    this.currentBoard = new GameBoard(8, 0.3, 0.2, this.player, this.monsterTeam, this.turnKeeper);
     this.marketFactory = new MarketFactory();
   }
 
@@ -59,10 +59,12 @@ public class GameProcess extends Process<GameProcess.GameResult> {
     while (true) {
       Process<ScreenResult<Void>> turnProcess;
       if (turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER) {
-        turnProcess = new HeroTurnProcess(scanner, currentBoard, turnKeeper, currentPlayer, marketFactory);
+        if (turnKeeper.shouldSpawnMonsters()) {
+          monsterTeam.spawnMonsters(player.getMonsterLevel());
+        }
+        turnProcess = new HeroTurnProcess(scanner, currentBoard, turnKeeper, player, marketFactory);
       } else {
-        turnProcess = null;
-        // turnProcess = new MonsterTurnProcess(scanner, currentBoard, turnKeeper);
+        turnProcess = new MonsterTurnProcess(scanner, currentBoard, monsterTeam, turnKeeper, player);
       }
 
       ScreenResult<Void> turnResult = turnProcess.run();

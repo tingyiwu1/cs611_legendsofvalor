@@ -1,6 +1,8 @@
 package src.service.game.enemyControl;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import src.service.entities.Entity;
 import src.service.entities.attributes.Position;
@@ -18,34 +20,30 @@ public class EnemyController {
 	 * Probably should somewhat refactor this
 	 */
 
-	public static Boolean makeCurrentEnemyMove(TurnKeeper turnKeeper, GameBoard gameBoard, MonsterTeam monsterTeam) {
+	public static MonsterAction makeCurrentEnemyMove(TurnKeeper turnKeeper, GameBoard gameBoard,
+			List<Monster> monsterList) {
 
-		boolean isMonsterAttacking = false;
 		// Check if it's the monster's turn
-		if (turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.MONSTER) {
-			// Get the monster team and make a move
-			Monster monster = monsterTeam.getMonsters().get(turnKeeper.getMonsterTeamTurnCount());
-			for (Entity entity : gameBoard.getEntityList()) {
-				if (entity.getType() == Entity.EntityType.HERO) {
-					Hero hero = (Hero) entity;
-					if (monsterWillAttack(monster, hero)) {
-						isMonsterAttacking = true;
-						monsterAttacks(monster, hero);
-					}
-				}
-			}
-
-			if (!isMonsterAttacking) {
-				EnemyController.monsterMoves(monster, gameBoard, turnKeeper);
-			}
-			// if(turnKeeper.progressTurn()){
-			// turnKeeper.resetTurn();
-			// }
-		} else {
+		if (turnKeeper.getCurrentTurn() != TurnKeeper.CurrentTurn.MONSTER) {
 			throw new IllegalStateException("It's not the monster's turn.");
 		}
 
-		return isMonsterAttacking;
+		// Get the monster team and make a move
+		Monster monster = monsterList.get(turnKeeper.getMonsterTeamTurnCount());
+		for (Entity entity : gameBoard.getEntityList()) {
+			if (entity.getType() == Entity.EntityType.HERO) {
+				Hero hero = (Hero) entity;
+				if (monsterWillAttack(monster, hero)) {
+					return MonsterAction.attack(monster, hero);
+				}
+			}
+		}
+
+		Optional<Position> newPos = EnemyController.monsterMoves(monster, gameBoard, turnKeeper);
+		if (newPos.isPresent())
+			return MonsterAction.move(monster, newPos.get());
+		else
+			return MonsterAction.doNothing(monster);
 	}
 
 	private static Boolean monsterWillAttack(Monster monster, Hero hero) {
@@ -53,14 +51,14 @@ public class EnemyController {
 		Position monsterPos = monster.getPosition();
 		Position heroPos = hero.getPosition();
 
-		if (monsterPos.distanceTo(heroPos) <= 1) {
+		if (monsterPos.chebyshevDistance(heroPos) <= 1) {
 			return true;
 		}
 
 		return false;
 	}
 
-	private static Boolean monsterMoves(Monster monster, GameBoard gameBoard, TurnKeeper turnKeeper) {
+	private static Optional<Position> monsterMoves(Monster monster, GameBoard gameBoard, TurnKeeper turnKeeper) {
 		Position currPos = monster.getPosition();
 		ArrayList<Entity> entityList = gameBoard.getEntityList();
 		for (Entity en : entityList) {
@@ -68,7 +66,7 @@ public class EnemyController {
 				Hero hero = (Hero) en;
 				Position heroPos = hero.getPosition();
 				if (currPos.getX() == heroPos.getX()) {
-					throw new IllegalStateException("Monster cannot progress pass Hero");
+					return Optional.empty();
 				}
 			}
 		}
@@ -97,7 +95,7 @@ public class EnemyController {
 		monster.setPosition(newPos);
 		turnKeeper.progressTurn();
 
-		return false;
+		return Optional.of(newPos);
 
 	}
 

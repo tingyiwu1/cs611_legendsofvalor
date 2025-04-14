@@ -67,8 +67,12 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	private static int levelBoon = 5;
 	private static Random rng = new Random();
 
+	private final Position spawnPos;
+
 	public Hero() {
 		super(100, 1, "DEBUGGING HERO", 40, 40, 30, 10, new Position(7, 0));
+
+		this.spawnPos = new Position(7, 0);
 
 		this.items = new ArrayList<Item>();
 
@@ -90,6 +94,8 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 
 	public Hero(int hp, int lvl, String name, int str, int mstr, int def, int dodge, Position pos) {
 		super(hp, lvl, name, str, mstr, def, dodge, pos);
+
+		this.spawnPos = pos;
 
 		this.items = new ArrayList<Item>();
 
@@ -216,6 +222,11 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 				}
 			}
 		}
+	}
+
+	public void respawn() {
+		this.setPosition(this.spawnPos);
+		this.currentHealth = this.maxHealth;
 	}
 
 	public int getBreakpoint() {
@@ -455,7 +466,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	@Override
 	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos) {
 		Position heroPos = this.getPosition();
-		int targetDist = heroPos.distanceTo(targetPos);
+		int targetDist = heroPos.manhattanDistance(targetPos);
 		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
 		ArrayList<AttackOption> allAttacks = this.getAttacksList();
 		for (AttackOption attack : allAttacks) {
@@ -469,7 +480,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 
 	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos, Monster target) {
 		Position heroPos = this.getPosition();
-		int targetDist = heroPos.distanceTo(targetPos);
+		int targetDist = heroPos.manhattanDistance(targetPos);
 		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
 		ArrayList<AttackOption> allAttacks = this.getAttacksList();
 		for (AttackOption attack : allAttacks) {

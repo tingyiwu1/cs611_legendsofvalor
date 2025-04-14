@@ -43,6 +43,7 @@ import src.service.entities.heroes.Hero;
 import src.service.entities.items.Item;
 import src.service.entities.items.Potion;
 import src.service.entities.monsters.Monster;
+import src.service.entities.monsters.MonsterTeam;
 import src.service.game.PlayerControl;
 import src.service.game.StatusDisplay;
 import src.service.game.TurnKeeper;
@@ -62,6 +63,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 	private static int critHitBonus = 20;
 
 	public Player player;
+	private final MonsterTeam monsterTeam;
 	public Monster monster;
 	public Hero hero;
 	public Character lastInput;
@@ -83,11 +85,14 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 	private AttackOption heroChosenAttack;
 
-	public Battle(Player player, Monster monster, TurnKeeper turnKeeper) {
+	// TODO: refactor these ugly constructors this one is used when monster attacks
+	// hero
+	public Battle(Player player, MonsterTeam monsterTeam, Monster monster, TurnKeeper turnKeeper, Hero monsterTarget) {
 		this.turnKeeper = turnKeeper;
 		this.monster = monster;
 		this.player = player;
-		this.hero = player.getFirstHero();
+		this.monsterTeam = monsterTeam;
+		this.hero = monsterTarget;
 		this.currHeroIdx = 0;
 
 		this.heroAttacks = hero.getAttacksList();
@@ -100,9 +105,13 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.isBossBattle = false;
 	}
 
-	public Battle(Player player, Monster monster, TurnKeeper turnKeeper, AttackOption heroChosenAttack) {
+	// TODO: refactor these ugly constructors this one is used when hero attacks
+	// monster
+	public Battle(Player player, MonsterTeam monsterTeam, Monster monster, TurnKeeper turnKeeper,
+			AttackOption heroChosenAttack) {
 		this.turnKeeper = turnKeeper;
 		this.player = player;
+		this.monsterTeam = monsterTeam;
 		this.hero = player.getParty()[turnKeeper.getPlayerTeamTurnCount()];
 		this.currHeroIdx = 0;
 		this.monster = monster;
@@ -126,6 +135,10 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.addStatus("Monster health: " + monster.getCurrentHealth(), TextColor.WHITE);
 		return true;
 
+	}
+
+	public AttackOption getHeroChosenAttack() {
+		return this.heroChosenAttack;
 	}
 
 	/*
@@ -245,6 +258,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 			if (monster.getCurrentHealth() <= 0) {
 				this.isBattleOver = true;
+				monsterTeam.removeMonster(monster);
 				this.processHeroWin();
 				return true;
 			}
@@ -254,7 +268,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 	}
 
 	private Boolean monsterAttack(Position heroPos) {
-		if (heroPos.distanceTo(this.monster.getPosition()) > 1) {
+		if (heroPos.chebyshevDistance(this.monster.getPosition()) > 1) {
 			this.addStatus("The monster is too far away to attack!", TextColor.YELLOW);
 			return false;
 		} else {
@@ -295,7 +309,8 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.addStatus(hero.getName() + "'s remaining health: " + hero.getCurrentHealth(), TextColor.WHITE);
 
 		if (hero.getCurrentHealth() <= 0) {
-			this.processMonsterWin();
+			hero.respawn();
+			// this.processMonsterWin();
 			return true;
 		}
 		return false;
@@ -321,7 +336,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 			String name = currParty[i].getName();
 			if (currParty[i].getCurrentHealth() < 1) {
 				currParty[i].healDamage(currParty[i].getCurrentHealth() * -1 + 1);
-				this.addStatus(name + " is revieved with 1 hp!", TextColor.RED);
+				this.addStatus(name + " is revived with 1 hp!", TextColor.RED);
 			}
 			if (i == currHero) {
 				this.addStatus(name + " obtains " + rewardedGold + " Gold!", TextColor.GREEN);
@@ -359,26 +374,28 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 	}
 
-	private void processMonsterWin() {
-		boolean allHeroesDead = true;
-		for (Hero hero : this.player.getParty()) {
-			if (hero.getCurrentHealth() > 0) {
-				allHeroesDead = false;
-				break;
-			}
-		}
-		this.gameOver = allHeroesDead;
-		if (allHeroesDead) {
-			this.addStatus(this.monster.getName() + " has defeated all the Heroes!", TextColor.RED);
-			this.isBattleOver = true;
-		} else {
-			this.addStatus(this.monster.getName() + " has defeated a Hero!", TextColor.RED);
-			if (lastInput != 's') {
-				this.switchHeroes();
-			}
+	// private void processMonsterWin() {
+	// boolean allHeroesDead = true;
+	// for (Hero hero : this.player.getParty()) {
+	// if (hero.getCurrentHealth() > 0) {
+	// allHeroesDead = false;
+	// break;
+	// }
+	// }
+	// this.gameOver = allHeroesDead;
+	// if (allHeroesDead) {
+	// this.addStatus(this.monster.getName() + " has defeated all the Heroes!",
+	// TextColor.RED);
+	// this.isBattleOver = true;
+	// } else {
+	// this.addStatus(this.monster.getName() + " has defeated a Hero!",
+	// TextColor.RED);
+	// if (lastInput != 's') {
+	// this.switchHeroes();
+	// }
 
-		}
-	}
+	// }
+	// }
 
 	public Boolean isGameOver() {
 		return this.gameOver;

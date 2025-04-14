@@ -5,9 +5,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import src.service.entities.heroes.Hero;
-import src.service.game.board.GameBoard;
 import src.service.game.market.Market;
-import src.service.game.market.MarketItem;
 import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintColor;
 import src.util.PrintItemTable;
