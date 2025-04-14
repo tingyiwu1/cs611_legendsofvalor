@@ -30,7 +30,7 @@ public class EnemyController {
 
 		// Get the monster team and make a move
 		Monster monster = monsterList.get(turnKeeper.getMonsterTeamTurnCount());
-		for (Entity entity : gameBoard.getEntityList()) {
+		for (Entity entity : gameBoard.getEntitiesInLane(monster.getPosition().getY())) {
 			if (entity.getType() == Entity.EntityType.HERO) {
 				Hero hero = (Hero) entity;
 				if (monsterWillAttack(monster, hero)) {
@@ -42,8 +42,10 @@ public class EnemyController {
 		Optional<Position> newPos = EnemyController.monsterMoves(monster, gameBoard, turnKeeper);
 		if (newPos.isPresent())
 			return MonsterAction.move(monster, newPos.get());
-		else
+		else {
+			turnKeeper.progressTurn();
 			return MonsterAction.doNothing(monster);
+		}
 	}
 
 	private static Boolean monsterWillAttack(Monster monster, Hero hero) {
@@ -60,10 +62,9 @@ public class EnemyController {
 
 	private static Optional<Position> monsterMoves(Monster monster, GameBoard gameBoard, TurnKeeper turnKeeper) {
 		Position currPos = monster.getPosition();
-		ArrayList<Entity> entityList = gameBoard.getEntityList();
-		for (Entity en : entityList) {
-			if (en.getType() == Entity.EntityType.HERO) {
-				Hero hero = (Hero) en;
+		for (Entity e : gameBoard.getEntitiesInLane(monster.getPosition().getY())) {
+			if (e.getType() == Entity.EntityType.HERO) {
+				Hero hero = (Hero) e;
 				Position heroPos = hero.getPosition();
 				if (currPos.getX() == heroPos.getX()) {
 					return Optional.empty();
@@ -98,9 +99,4 @@ public class EnemyController {
 		return Optional.of(newPos);
 
 	}
-
-	private static void monsterAttacks(Monster monster, Hero hero) {
-
-	}
-
 }

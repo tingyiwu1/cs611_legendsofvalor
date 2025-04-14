@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import src.service.entities.Player;
+import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;
 import src.service.entities.monsters.MonsterTeam;
 import src.service.game.TurnKeeper;
@@ -53,6 +54,11 @@ public class MonsterTurnProcess extends Process<ScreenResult<Void>> {
         BattleProcess battleProcess = new BattleProcess(scanner, battle, turnKeeper);
         ScreenResult<Void> battleResult = battleProcess.run();
         currGameBoard.resetBattleInitializer();
+        for (Hero hero : player.getParty()) {
+          if (hero.getCurrentHealth() <= 0) {
+            hero.respawn();
+          }
+        }
         // TODO: handle battle result
         if (battleResult.isQuit()) {
           return ScreenResult.quit();

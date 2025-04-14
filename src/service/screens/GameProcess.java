@@ -7,6 +7,7 @@ import java.util.Scanner;
 import src.service.entities.Player;
 import src.service.entities.Player.Difficulty;
 import src.service.entities.attributes.Position;
+import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.MonsterTeam;
 import src.service.game.TurnKeeper;
 import src.service.game.battle.Battle;

@@ -95,7 +95,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	public Hero(int hp, int lvl, String name, int str, int mstr, int def, int dodge, Position pos) {
 		super(hp, lvl, name, str, mstr, def, dodge, pos);
 
-		this.spawnPos = pos;
+		this.spawnPos = new Position(pos.getX(), pos.getY());
 
 		this.items = new ArrayList<Item>();
 
@@ -225,7 +225,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	}
 
 	public void respawn() {
-		this.setPosition(this.spawnPos);
+		this.setPosition(new Position(spawnPos.getX(), spawnPos.getY()));
 		this.currentHealth = this.maxHealth;
 	}
 

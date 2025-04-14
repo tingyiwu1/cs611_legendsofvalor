@@ -12,6 +12,7 @@ import src.service.game.PlayerControl;
 import src.service.game.TurnKeeper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -152,6 +153,17 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 			entityList.add(e);
 		}
 		return entityList;
+	}
+
+	public List<Entity> getEntitiesInLane(int y) {
+		int lane = y / 3;
+		ArrayList<Entity> entityList = new ArrayList<>();
+		for (Entity e : getEntityList()) {
+			if (e.getPosition().getY() / 3 == lane) {
+				entityList.add(e);
+			}
+		}
+		return Collections.unmodifiableList(entityList);
 	}
 
 	public Position getCurrHeroLocation() {
