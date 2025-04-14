@@ -119,7 +119,7 @@ public class Monster extends Entity implements Attacks {
 	@Override
 	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos) {
 		Position heroPos = this.getPosition();
-		int targetDist = heroPos.distanceTo(targetPos);
+		int targetDist = heroPos.manhattanDistance(targetPos);
 		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
 		ArrayList<AttackOption> allAttacks = this.getAttacksList();
 		for (AttackOption attack : allAttacks) {

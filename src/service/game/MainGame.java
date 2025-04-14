@@ -19,6 +19,7 @@ import src.service.entities.attributes.Position;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import src.service.game.MainGame;
 import src.service.game.TurnKeeper.CurrentTurn;
@@ -54,11 +55,13 @@ public class MainGame {
 
 	public MainGame() {
 		this.currentPlayer = new Player(Difficulty.EASY, 3);
-		this.monsterTeam = new MonsterTeam();
+		this.monsterTeam = new MonsterTeam(new Position[] {
+				new Position(0, 0),
+				new Position(0, 3),
+				new Position(0, 6),
+		});
 
-		this.monsterTeam.addGenericMonster(new Position(0, 0));
-		this.monsterTeam.addGenericMonster(new Position(0, 3));
-		this.monsterTeam.addGenericMonster(new Position(0, 6));
+		monsterTeam.spawnMonsters(1);
 
 		this.turnKeeper = new TurnKeeper(this.currentPlayer, this.monsterTeam);
 
@@ -141,15 +144,17 @@ public class MainGame {
 		Boolean monsterWins = false;
 		myScreen.getScreen().displayPauseAndProgress("Enemy Makes a move!");
 
+		List<Monster> monsterList = this.monsterTeam.getMonsters();
+
 		// move returns either true for monster entered battle, or false for monster
 		// simply moving
-		if (EnemyController.makeCurrentEnemyMove(turnKeeper, currentBoard, monsterTeam)) {
+		if (EnemyController.makeCurrentEnemyMove(turnKeeper, currentBoard, monsterList)) {
 			System.out.println("uh oh");
 
 			Monster currMonster = this.monsterTeam.getMonsters().get(turnKeeper.getMonsterTeamTurnCount());
 
 			this.currentScreen = ScreenState.BATTLE;
-			this.currBattle = new Battle(this.currentPlayer, currMonster, this.turnKeeper);
+			this.currBattle = new Battle(this.currentPlayer, currentBoard.getMonsterTeam(), currMonster, this.turnKeeper);
 			myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
 			myScreen.getScreen().displayPauseAndProgress("The monster begins its attack!");
 
@@ -198,7 +203,6 @@ public class MainGame {
 			}
 		}
 		if (this.currentScreen == ScreenState.MARKET && lastInput == 'b') {
-
 			int marketIndex = this.currentBoard.getCurrentMarketIndex();
 			Screen current = myScreen.getScreen();
 			if (current instanceof MarketScreen) {
@@ -287,7 +291,8 @@ public class MainGame {
 
 			lastInput = myScreen.getLastInput();
 			this.currentScreen = ScreenState.BATTLE;
-			this.currBattle = new Battle(this.currentPlayer, this.currentBoard.getMonsterTarget(), this.turnKeeper,
+			this.currBattle = new Battle(this.currentPlayer, this.currentBoard.getMonsterTeam(),
+					this.currentBoard.getMonsterTarget(), this.turnKeeper,
 					this.currentBoard.getAttackOption());
 			myScreen.setScreen(new BattleScreen(this.currBattle, scanny));
 			myScreen.getScreen().displayPauseAndProgress(

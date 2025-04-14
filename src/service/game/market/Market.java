@@ -28,6 +28,14 @@ public class Market implements PlayerControl, StatusDisplay {
 
 	private TurnKeeper turnKeeper;
 
+	public Market(Hero activeHero, ArrayList<MarketItem> marketOfferings) {
+		this.activeHero = activeHero;
+		this.statuses = new ArrayList<String>();
+		this.statusColors = new ArrayList<TextColor>();
+		this.lastInput = ' ';
+		this.marketOfferings = marketOfferings;
+	}
+
 	public Market(Player player, int activeHero) {
 		this.activeHero = player.getParty()[activeHero];
 		this.statuses = new ArrayList<String>();
@@ -90,7 +98,7 @@ public class Market implements PlayerControl, StatusDisplay {
 		StatsTracker.addToStats("Items purchased", 1);
 
 		this.marketOfferings.remove(inputInt);
-		return null;
+		return true;
 	}
 
 	@Override

@@ -35,6 +35,12 @@ public class Inventory implements InventoryControl, StatusDisplay {
 	private ArrayList<String> statuses;
 	private ArrayList<TextColor> statusColors;
 
+	public Inventory(Player player, Hero activeHero) {
+		this.activeHero = activeHero;
+		this.statuses = new ArrayList<String>();
+		this.statusColors = new ArrayList<TextColor>();
+	}
+
 	public Inventory(Player player, int activeHero) {
 		this.activeHero = player.getParty()[activeHero];
 		this.statuses = new ArrayList<String>();

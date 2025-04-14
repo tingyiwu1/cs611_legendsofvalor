@@ -67,8 +67,12 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	private static int levelBoon = 5;
 	private static Random rng = new Random();
 
+	private final Position spawnPos;
+
 	public Hero() {
 		super(100, 1, "DEBUGGING HERO", 40, 40, 30, 10, new Position(7, 0));
+
+		this.spawnPos = new Position(7, 0);
 
 		this.items = new ArrayList<Item>();
 
@@ -85,10 +89,13 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		this.equipment = new int[] { 0, -1, -1, -1, -1, -1 }; // main hand, offhand, helmet, chest, legs, boots
 		// this.levelBoon = 5; //increase all stats per level
 		this.gold = 1;
+		this.gold = 1000000; // TODO: remove this
 	}
 
 	public Hero(int hp, int lvl, String name, int str, int mstr, int def, int dodge, Position pos) {
 		super(hp, lvl, name, str, mstr, def, dodge, pos);
+
+		this.spawnPos = pos;
 
 		this.items = new ArrayList<Item>();
 
@@ -104,6 +111,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		this.equipment = new int[] { 0, -1, -1, -1, -1, -1 }; // main hand, offhand, helmet, chest, legs, boots
 		// this.levelBoon = 5; //increase all stats per level
 		this.gold = 1;
+		this.gold = 1000000; // TODO: remove this
 	}
 
 	public static void setLevelBoon(int i) {
@@ -214,6 +222,11 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 				}
 			}
 		}
+	}
+
+	public void respawn() {
+		this.setPosition(this.spawnPos);
+		this.currentHealth = this.maxHealth;
 	}
 
 	public int getBreakpoint() {
@@ -397,6 +410,16 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		return spells.toArray(new Item[spells.size()]);
 	}
 
+	public Potion[] getPotionsList() {
+		ArrayList<Potion> potions = new ArrayList<Potion>();
+		for (Item item : this.items) {
+			if (item.getItemType() == ItemType.POTION) {
+				potions.add((Potion) item);
+			}
+		}
+		return potions.toArray(new Potion[potions.size()]);
+	}
+
 	@Override
 	public AttackOption mainHandAttack() {
 		// (Base Strength + Item Damage) * (1 + level / 10)
@@ -443,7 +466,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	@Override
 	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos) {
 		Position heroPos = this.getPosition();
-		int targetDist = heroPos.distanceTo(targetPos);
+		int targetDist = heroPos.manhattanDistance(targetPos);
 		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
 		ArrayList<AttackOption> allAttacks = this.getAttacksList();
 		for (AttackOption attack : allAttacks) {
@@ -457,7 +480,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 
 	public ArrayList<AttackOption> getAttacksListInRange(Position targetPos, Monster target) {
 		Position heroPos = this.getPosition();
-		int targetDist = heroPos.distanceTo(targetPos);
+		int targetDist = heroPos.manhattanDistance(targetPos);
 		ArrayList<AttackOption> attacks = new ArrayList<AttackOption>();
 		ArrayList<AttackOption> allAttacks = this.getAttacksList();
 		for (AttackOption attack : allAttacks) {

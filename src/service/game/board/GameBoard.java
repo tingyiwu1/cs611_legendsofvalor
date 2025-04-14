@@ -13,6 +13,7 @@ import src.service.game.TurnKeeper;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
@@ -26,7 +27,6 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	// private int charX;
 	// private int charY;
 	private Player player;
-	private ArrayList<Entity> entityList;
 
 	private TurnKeeper turnKeeper;
 	private MonsterTeam monsterTeam;
@@ -96,15 +96,6 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 			}
 		}
 
-		ArrayList<Entity> entityList = new ArrayList<>();
-		for (Entity e : player.getParty()) {
-			entityList.add(e);
-		}
-		for (Entity e : monsterTeam.getMonsters()) {
-			entityList.add(e);
-		}
-
-		this.entityList = entityList;
 	}
 
 	/*
@@ -153,7 +144,14 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	}
 
 	public ArrayList<Entity> getEntityList() {
-		return this.entityList;
+		ArrayList<Entity> entityList = new ArrayList<>();
+		for (Entity e : player.getParty()) {
+			entityList.add(e);
+		}
+		for (Entity e : monsterTeam.getMonsters()) {
+			entityList.add(e);
+		}
+		return entityList;
 	}
 
 	public Position getCurrHeroLocation() {
@@ -164,9 +162,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	}
 
 	public boolean characterAtMarket() {
-		return true;
-		// return getPieceAt(this.charX, this.charY).getPieceType() ==
-		// PieceType.HERO_NEXUS;
+		return getPieceAt(getCurrHeroLocation()).getPieceType() == PieceType.HERO_NEXUS;
 	}
 
 	public int getCurrentMarketIndex() {
@@ -216,7 +212,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	public ArrayList<AttackOption> currHeroAttackList() {
 		ArrayList<AttackOption> attackList = new ArrayList<AttackOption>();
 
-		ArrayList<Monster> monsterList = this.getMonsterTeam().getMonsters();
+		List<Monster> monsterList = this.getMonsterTeam().getMonsters();
 
 		// TODO: Modify the ATTACKOPTION to include more information about which hero
 		// attacks which monster
@@ -251,6 +247,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 
 	@Override
 	public Boolean isMoveValid(Character inputtedMove) {
+		// TODO: remove board handling turn passing
 		if (inputtedMove == 'p') {
 			return true;
 		}
@@ -295,6 +292,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 
 	@Override
 	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
+		// TODO: remove board handling quit
 		if (inputtedMove == 'q') {
 			return true;
 		}
@@ -309,6 +307,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 		} else if (inputtedMove == 'd') {
 			this.getCurrHeroLocation().moveY(1);
 		}
+		// TODO: remove board handling turn passing
 		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd'
 				|| inputtedMove == 'p') {
 			this.turnKeeper.progressTurn();
@@ -373,6 +372,21 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	@Override
 	public AttackOption getAttackOption() {
 		return this.attackOption;
+	}
+
+	public boolean isHeroWin() {
+		return false;
+	}
+
+	public boolean isMonsterWin() {
+		return false;
+	}
+
+	public Hero getCurrentHero() {
+		assert turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER : "Not player's turn";
+		int turnIdx = this.turnKeeper.getPlayerTeamTurnCount();
+		Hero currHero = this.player.getParty()[turnIdx];
+		return currHero;
 	}
 
 }
