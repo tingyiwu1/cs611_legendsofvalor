@@ -206,7 +206,7 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	public void gainExperience(Integer newXp) {
 		this.experience += newXp;
 		while (this.experience >= breakpoint) {
-			StatsTracker.addToStats("times Levelled up", 1);
+			StatsTracker.addToStats("times Leveled up", 1);
 			this.levelUp();
 			this.experience -= breakpoint;
 			this.levelUpDefense();
@@ -225,8 +225,12 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	}
 
 	public void respawn() {
-		this.setPosition(new Position(spawnPos.getX(), spawnPos.getY()));
 		this.currentHealth = this.maxHealth;
+		recall();
+	}
+
+	public void recall() {
+		this.setPosition(new Position(spawnPos.getX(), spawnPos.getY()));
 	}
 
 	public int getBreakpoint() {
@@ -523,11 +527,12 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 
 		for (int i = 0; i < this.items.size(); i++) {
 			Item item = this.items.get(i);
-			if (!(item.getItemType() == ItemType.POTION && item.getRemainingUses() == 0)) {
+			if (item.getRemainingUses() == 0
+					&& (item.getItemType() == ItemType.POTION || item.getItemType() == ItemType.SPELL)) {
+				indexMapping[i] = -1;
+			} else {
 				newItems.add(item);
 				indexMapping[i] = newIndex++;
-			} else {
-				indexMapping[i] = -1;
 			}
 		}
 

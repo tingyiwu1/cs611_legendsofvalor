@@ -1,6 +1,5 @@
 package src.service.game.enemyControl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +7,6 @@ import src.service.entities.Entity;
 import src.service.entities.attributes.Position;
 import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;
-import src.service.entities.monsters.MonsterTeam;
 import src.service.game.TurnKeeper;
 import src.service.game.board.GameBoard;
 import src.util.PieceType;
@@ -30,6 +28,16 @@ public class EnemyController {
 
 		// Get the monster team and make a move
 		Monster monster = monsterList.get(turnKeeper.getMonsterTeamTurnCount());
+
+		// Prioritize getting to Nexus ifone tile away
+		if (monster.getPosition().getX() == gameBoard.getSize() - 2) {
+			Optional<Position> newPos = EnemyController.monsterMoves(monster, gameBoard, turnKeeper);
+			if (newPos.isPresent()) {
+				return MonsterAction.move(monster, newPos.get());
+			}
+		}
+
+		// Check for heroes in range to attack
 		for (Entity entity : gameBoard.getEntitiesInLane(monster.getPosition().getY())) {
 			if (entity.getType() == Entity.EntityType.HERO) {
 				Hero hero = (Hero) entity;
@@ -39,6 +47,7 @@ public class EnemyController {
 			}
 		}
 
+		// Move foward or try to go around obstacles
 		Optional<Position> newPos = EnemyController.monsterMoves(monster, gameBoard, turnKeeper);
 		if (newPos.isPresent())
 			return MonsterAction.move(monster, newPos.get());
@@ -71,8 +80,8 @@ public class EnemyController {
 				}
 			}
 		}
-		// Move the monster to a new position
 
+		// Move the monster to a new position
 		Position newPos = new Position(currPos.getX() + 1, currPos.getY());
 		// Check if the new position is valid (within bounds and not occupied)
 		if (gameBoard.getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {

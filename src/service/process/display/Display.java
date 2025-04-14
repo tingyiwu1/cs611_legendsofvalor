@@ -1,4 +1,4 @@
-package src.service.screens.ScreenInterfaces;
+package src.service.process.display;
 
 public interface Display {
   public void display();

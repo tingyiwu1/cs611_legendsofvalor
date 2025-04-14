@@ -1,8 +1,6 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.NoSuchElementException;
-
-import src.service.screens.ScreenInterfaces.Process;
 
 /* InputSignal is a signal that can be used to indicate the result of a process.
  * It can either be a valid result or a quit signal. 

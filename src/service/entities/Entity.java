@@ -122,7 +122,7 @@ public abstract class Entity implements IsOnBoard {
 	}
 
 	public Integer getLevel() {
-		StatsTracker.addToStats("Times Levelled Up", 1);
+		StatsTracker.addToStats("Times Leveled Up", 1);
 		return this.level;
 	}
 

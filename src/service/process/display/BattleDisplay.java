@@ -1,9 +1,8 @@
-package src.service.screens;
+package src.service.process.display;
 
 import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;
 import src.service.game.battle.Battle;
-import src.service.screens.ScreenInterfaces.Display;
 import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.TextColor;

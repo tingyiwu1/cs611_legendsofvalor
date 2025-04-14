@@ -1,11 +1,10 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Function;
 
-import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintColor;
 import src.util.TextColor;
 

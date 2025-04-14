@@ -1,8 +1,7 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.Scanner;
 
-import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintColor;
 
 /*

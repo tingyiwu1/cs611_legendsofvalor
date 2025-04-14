@@ -5,10 +5,10 @@
 package src.service.game;
 
 public interface PlayerControl {
-	public Boolean isMoveValid(Character inputtedMove);
+	public boolean isMoveValid(Character inputtedMove);
 
-	public Boolean makeMove(Character inputtedMove);
+	public boolean makeMove(Character inputtedMove);
 
-	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper);
+	public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper);
 
 }

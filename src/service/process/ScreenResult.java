@@ -1,8 +1,6 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.Optional;
-
-import src.service.screens.ScreenInterfaces.Process;
 
 public class ScreenResult<T> implements Process.Result {
   private static final ScreenResult<?> QUIT = new ScreenResult<>(null, Kind.QUIT);
@@ -20,7 +18,7 @@ public class ScreenResult<T> implements Process.Result {
 
   private ScreenResult(Optional<T> result, Kind kind) {
     // either success with result or not success with null result
-    assert (kind == Kind.SUCCESS) == (result == null);
+    assert (kind == Kind.SUCCESS) == (result != null);
 
     this.result = result;
     this.kind = kind;

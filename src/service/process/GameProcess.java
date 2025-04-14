@@ -1,23 +1,15 @@
-package src.service.screens;
+package src.service.process;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import src.service.entities.Player;
 import src.service.entities.Player.Difficulty;
 import src.service.entities.attributes.Position;
-import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.MonsterTeam;
+import src.service.game.GameContext;
 import src.service.game.TurnKeeper;
-import src.service.game.battle.Battle;
 import src.service.game.board.GameBoard;
 import src.service.game.market.MarketFactory;
-import src.service.game.market.MarketItem;
-import src.service.screens.ScreenInterfaces.Process;
-import src.util.PrintingUtil;
-import src.util.ScreenState;
-import src.util.StatsTracker;
 
 public class GameProcess extends Process<GameProcess.GameResult> {
   public static enum GameResult implements Process.Result {
@@ -34,6 +26,7 @@ public class GameProcess extends Process<GameProcess.GameResult> {
   private final MarketFactory marketFactory;
   private final MonsterTeam monsterTeam;
   private final TurnKeeper turnKeeper;
+  private final GameContext gameContext;
 
   public GameProcess(Scanner scanner) {
     super(scanner);
@@ -51,6 +44,8 @@ public class GameProcess extends Process<GameProcess.GameResult> {
 
     this.currentBoard = new GameBoard(8, 0.3, 0.2, this.player, this.monsterTeam, this.turnKeeper);
     this.marketFactory = new MarketFactory();
+
+    this.gameContext = new GameContext(currentBoard, player, marketFactory, monsterTeam, turnKeeper);
   }
 
   @Override
@@ -63,9 +58,9 @@ public class GameProcess extends Process<GameProcess.GameResult> {
         if (turnKeeper.shouldSpawnMonsters()) {
           monsterTeam.spawnMonsters(player.getMonsterLevel());
         }
-        turnProcess = new HeroTurnProcess(scanner, currentBoard, turnKeeper, player, marketFactory);
+        turnProcess = new HeroTurnProcess(scanner, gameContext);
       } else {
-        turnProcess = new MonsterTurnProcess(scanner, currentBoard, monsterTeam, turnKeeper, player);
+        turnProcess = new MonsterTurnProcess(scanner, gameContext);
       }
 
       ScreenResult<Void> turnResult = turnProcess.run();

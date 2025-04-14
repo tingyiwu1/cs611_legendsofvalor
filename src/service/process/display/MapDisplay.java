@@ -1,4 +1,4 @@
-package src.service.screens;
+package src.service.process.display;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,6 @@ import src.service.entities.Entity.EntityType;
 import src.service.entities.attributes.Position;
 import src.service.game.TurnKeeper;
 import src.service.game.board.GameBoard;
-import src.service.screens.ScreenInterfaces.Display;
 import src.util.PieceType;
 import src.util.PrintColor;
 
