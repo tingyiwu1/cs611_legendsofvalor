@@ -44,7 +44,6 @@ import src.service.entities.items.Item;
 import src.service.entities.items.Potion;
 import src.service.entities.monsters.Monster;
 import src.service.entities.monsters.MonsterTeam;
-import src.service.game.PlayerControl;
 import src.service.game.StatusDisplay;
 import src.service.game.TurnKeeper;
 import src.util.ItemType;
@@ -58,7 +57,7 @@ import src.util.TextColor;
  * ProcessMonsterWin should trigger a rollback from Main to reset the player at spawn
  */
 
-public class Battle implements PlayerControl, StatusDisplay {
+public class Battle implements StatusDisplay {
 
 	private static int critHitBonus = 20;
 
@@ -68,7 +67,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 	public Hero hero;
 	public Character lastInput;
 
-	private ArrayList<AttackOption> heroAttacks;
+	// private ArrayList<AttackOption> heroAttacks;
 	private AttackOption monsterAttack;
 	private int currHeroIdx;
 
@@ -77,8 +76,8 @@ public class Battle implements PlayerControl, StatusDisplay {
 	private ArrayList<String> statuses;
 	private ArrayList<TextColor> statusColors;
 
-	private Boolean gameOver;
-	private Boolean didLevelUp;
+	// private Boolean gameOver;
+	// private Boolean didLevelUp;
 	private Boolean isBossBattle;
 
 	private TurnKeeper turnKeeper;
@@ -95,13 +94,13 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.hero = monsterTarget;
 		this.currHeroIdx = 0;
 
-		this.heroAttacks = hero.getAttacksList();
+		// this.heroAttacks = hero.getAttacksList();
 		this.monsterAttack = monster.mainHandAttack();
 
 		this.statuses = new ArrayList<String>();
 		this.statusColors = new ArrayList<TextColor>();
-		this.gameOver = false;
-		this.didLevelUp = false;
+		// this.gameOver = false;
+		// this.didLevelUp = false;
 		this.isBossBattle = false;
 	}
 
@@ -116,13 +115,13 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.currHeroIdx = 0;
 		this.monster = monster;
 
-		this.heroAttacks = hero.getAttacksList();
+		// this.heroAttacks = hero.getAttacksList();
 		this.monsterAttack = monster.mainHandAttack();
 
 		this.statuses = new ArrayList<String>();
 		this.statusColors = new ArrayList<TextColor>();
-		this.gameOver = false;
-		this.didLevelUp = false;
+		// this.gameOver = false;
+		// this.didLevelUp = false;
 		this.isBossBattle = false;
 		this.heroChosenAttack = heroChosenAttack;
 	}
@@ -204,10 +203,10 @@ public class Battle implements PlayerControl, StatusDisplay {
 		return this.isBossBattle;
 	}
 
-	private boolean heroAttack(int idx) {
-		AttackOption chosenAttackOption = this.heroAttacks.get(idx);
-		return this.executeHeroAttack(chosenAttackOption);
-	}
+	// private boolean heroAttack(int idx) {
+	// AttackOption chosenAttackOption = this.heroAttacks.get(idx);
+	// return this.executeHeroAttack(chosenAttackOption);
+	// }
 
 	private boolean heroAttack(AttackOption chosenAttackOption) {
 		boolean result = this.executeHeroAttack(chosenAttackOption);
@@ -366,7 +365,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 	private void processHeroLevelUp(String name) {
 		// String name = this.hero.getName();
 		this.addStatus(name + " Levelled up!", TextColor.GREEN);
-		this.didLevelUp = true;
+		// this.didLevelUp = true;
 		this.addStatus(name + " Earns 100 Gold for levelling up!", TextColor.GREEN);
 		this.addStatus(name + " levels each of its status up by 5!", TextColor.GREEN);
 		this.addStatus(name + " heals 50 HP!", TextColor.GREEN);
@@ -376,75 +375,53 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 	}
 
-	// private void processMonsterWin() {
-	// boolean allHeroesDead = true;
-	// for (Hero hero : this.player.getParty()) {
-	// if (hero.getCurrentHealth() > 0) {
-	// allHeroesDead = false;
-	// break;
-	// }
-	// }
-	// this.gameOver = allHeroesDead;
-	// if (allHeroesDead) {
-	// this.addStatus(this.monster.getName() + " has defeated all the Heroes!",
-	// TextColor.RED);
-	// this.isBattleOver = true;
-	// } else {
-	// this.addStatus(this.monster.getName() + " has defeated a Hero!",
-	// TextColor.RED);
-	// if (lastInput != 's') {
-	// this.switchHeroes();
+	// public Boolean isGameOver() {
+	// return this.gameOver;
 	// }
 
+	// public Boolean getDidLevelUp() {
+	// return this.didLevelUp;
 	// }
+
+	// @Override
+	// public boolean isMoveValid(Character inputtedMove) {
+	// if (inputtedMove.equals('i') || inputtedMove.equals('b') ||
+	// inputtedMove.equals('s')) {
+	// return true;
 	// }
 
-	public Boolean isGameOver() {
-		return this.gameOver;
-	}
+	// int inputInt;
 
-	public Boolean getDidLevelUp() {
-		return this.didLevelUp;
-	}
+	// try {
+	// inputInt = Integer.parseInt(inputtedMove.toString());
+	// } catch (NumberFormatException e) {
+	// this.addStatus("Invalid Move, please try again.", TextColor.RED);
+	// return false;
+	// }
 
-	@Override
-	public boolean isMoveValid(Character inputtedMove) {
-		if (inputtedMove.equals('i') || inputtedMove.equals('b') || inputtedMove.equals('s')) {
-			return true;
-		}
+	// if (inputInt >= 1 && inputInt <= this.heroAttacks.size()) {
+	// return true;
+	// }
+	// return false;
+	// }
 
-		int inputInt;
+	// @Override
+	// public boolean makeMove(Character inputtedMove) {
+	// // at the beginning of the turn, update your move list
+	// this.heroAttacks = hero.getAttacksList();
+	// this.lastInput = Character.toLowerCase(inputtedMove);
+	// this.clearStatuses();
 
-		try {
-			inputInt = Integer.parseInt(inputtedMove.toString());
-		} catch (NumberFormatException e) {
-			this.addStatus("Invalid Move, please try again.", TextColor.RED);
-			return false;
-		}
+	// if (!isMoveValid(lastInput)) {
+	// // System.out.println("INVALID MOVE");
+	// this.addStatus(Character.toString(inputtedMove), TextColor.YELLOW);
+	// this.addStatus("Invalid Move, please try again.", TextColor.RED);
+	// return false;
+	// }
 
-		if (inputInt >= 1 && inputInt <= this.heroAttacks.size()) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean makeMove(Character inputtedMove) {
-		// at the beginning of the turn, update your move list
-		this.heroAttacks = hero.getAttacksList();
-		this.lastInput = Character.toLowerCase(inputtedMove);
-		this.clearStatuses();
-
-		if (!isMoveValid(lastInput)) {
-			// System.out.println("INVALID MOVE");
-			this.addStatus(Character.toString(inputtedMove), TextColor.YELLOW);
-			this.addStatus("Invalid Move, please try again.", TextColor.RED);
-			return false;
-		}
-
-		processMove(inputtedMove, this.turnKeeper);
-		return true;
-	}
+	// processMove(inputtedMove, this.turnKeeper);
+	// return true;
+	// }
 
 	public void switchHeroes() {
 		int startingIdx = currHeroIdx;
@@ -453,55 +430,54 @@ public class Battle implements PlayerControl, StatusDisplay {
 		} while (player.getParty()[currHeroIdx].getCurrentHealth() <= 0 && currHeroIdx != startingIdx);
 
 		this.hero = player.getParty()[currHeroIdx];
-		this.heroAttacks = this.hero.getAttacksList();
+		// this.heroAttacks = this.hero.getAttacksList();
 		this.addStatus("Switched to " + hero.getName() + "!", TextColor.CYAN);
 	}
 
-	@Override
-	public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
+	// @Override
+	// public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
 
-		// TODO: REFACTOR BATTLE SYSTEM
+	// // TODO: REFACTOR BATTLE SYSTEM
 
-		if (inputtedMove.equals('i') || inputtedMove.equals('b')) {
-			return false;
-		}
-		if (inputtedMove.equals('s')) {
-			if (monsterAttack()) {
-				this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
-			}
+	// if (inputtedMove.equals('i') || inputtedMove.equals('b')) {
+	// return false;
+	// }
+	// if (inputtedMove.equals('s')) {
+	// if (monsterAttack()) {
+	// this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
+	// }
 
-			this.switchHeroes();
-			return true;
+	// this.switchHeroes();
+	// return true;
 
-		}
+	// }
 
-		int inputInt = Integer.parseInt(inputtedMove.toString());
+	// int inputInt = Integer.parseInt(inputtedMove.toString());
 
-		this.addStatus("Processing attack: " + inputInt, TextColor.CYAN);
+	// this.addStatus("Processing attack: " + inputInt, TextColor.CYAN);
 
-		if (this.heroAttack(inputInt - 1)) {
-			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
-			return true;
-		}
-		if (monsterAttack()) {
-			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
-			return true;
-		}
-		this.reportHP();
-		return true;
-	}
+	// if (this.heroAttack(inputInt - 1)) {
+	// this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
+	// return true;
+	// }
+	// if (monsterAttack()) {
+	// this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
+	// return true;
+	// }
+	// this.reportHP();
+	// return true;
+	// }
 
 	public Hero getHero() {
 		return this.hero;
 	}
 
-	public ArrayList<AttackOption> getHeroAttacks() {
-		return this.heroAttacks;
-	}
+	// public ArrayList<AttackOption> getHeroAttacks() {
+	// return this.heroAttacks;
+	// }
 
 	@Override
 	public void clearStatuses() {
-		// TODO Auto-generated method stub
 		this.statuses.clear();
 		this.statusColors.clear();
 	}
@@ -532,7 +508,6 @@ public class Battle implements PlayerControl, StatusDisplay {
 	public void removeStatus(int index) {
 		this.statuses.remove(index);
 		this.statusColors.remove(index);
-
 	}
 
 	@Override

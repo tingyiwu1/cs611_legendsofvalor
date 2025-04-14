@@ -1,4 +1,4 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -7,36 +7,35 @@ import java.util.Scanner;
 import src.service.entities.Player;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
+import src.service.game.GameContext;
 import src.service.game.TurnKeeper;
 import src.service.game.TurnKeeper.CurrentTurn;
 import src.service.game.battle.Battle;
 import src.service.game.board.GameBoard;
 import src.service.game.market.Market;
 import src.service.game.market.MarketFactory;
-import src.service.screens.ScreenInterfaces.InputInterface;
-import src.service.screens.ScreenInterfaces.Process;
+import src.service.process.display.MapDisplay;
 import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
 import src.util.TextColor;
 
 public class HeroTurnProcess extends Process<ScreenResult<Void>> {
-  private final GameBoard currGameBoard;
-  private final int gameSize;
+  private final GameBoard gameBoard;
   private final TurnKeeper turnKeeper;
   private final Player player;
   private final MarketFactory marketFactory;
   private final MapDisplay mapDisplay;
+  private final GameContext gameContext;
 
-  public HeroTurnProcess(Scanner scanner, GameBoard gameBoard, TurnKeeper turnKeeper, Player player,
-      MarketFactory marketFactory) {
+  public HeroTurnProcess(Scanner scanner, GameContext gameContext) {
     super(scanner);
-    this.currGameBoard = gameBoard;
-    this.gameSize = gameBoard.getSize();
-    this.turnKeeper = turnKeeper;
-    this.player = player;
-    this.marketFactory = marketFactory;
+    this.gameBoard = gameContext.gameBoard;
+    this.turnKeeper = gameContext.turnKeeper;
+    this.player = gameContext.player;
+    this.marketFactory = gameContext.marketFactory;
     this.mapDisplay = new MapDisplay(gameBoard, turnKeeper);
+    this.gameContext = gameContext;
   }
 
   @Override
@@ -52,8 +51,8 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
       if (input == 'q') {
         return ScreenResult.quit();
       } else if (input == 'm') {
-        Market market = marketFactory.getMarket(currGameBoard.getCurrentHero());
-        MarketProcess marketProcess = new MarketProcess(scanner, currGameBoard.getCurrentHero(), market);
+        Market market = marketFactory.getMarket(gameBoard.getCurrentHero());
+        MarketProcess marketProcess = new MarketProcess(scanner, gameBoard.getCurrentHero(), market);
         ScreenResult<?> marketResult = marketProcess.run();
 
         if (marketResult.isQuit()) {
@@ -64,8 +63,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
           turnKeeper.progressTurn();
         }
       } else if (input == 'i') {
-        InventoryProcess inventoryProcess = new InventoryProcess(scanner, player,
-            currGameBoard.getCurrentHero());
+        InventoryProcess inventoryProcess = new InventoryProcess(scanner, gameContext);
         ScreenResult<?> inventoryResult = inventoryProcess.run();
 
         if (inventoryResult.isQuit()) {
@@ -75,19 +73,22 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
         } else {
           turnKeeper.progressTurn();
         }
+      } else if (input == 'r') {
+        gameBoard.getCurrentHero().recall();
+        turnKeeper.progressTurn();
       } else if (input == 'p') {
         turnKeeper.progressTurn();
       } else if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
-        currGameBoard.makeMove(input);
+        gameBoard.makeMove(input);
       } else { // input is battle index
-        assert currGameBoard.isMoveValid(input);
-        currGameBoard.makeMove(input);
-        assert currGameBoard.getEnteredBattle() : "should have entered battle after attack move";
-        Battle battle = new Battle(player, currGameBoard.getMonsterTeam(), currGameBoard.getMonsterTarget(), turnKeeper,
-            currGameBoard.getAttackOption());
+        assert gameBoard.isMoveValid(input);
+        gameBoard.makeMove(input);
+        assert gameBoard.getEnteredBattle() : "should have entered battle after attack move";
+        Battle battle = new Battle(player, gameBoard.getMonsterTeam(), gameBoard.getMonsterTarget(), turnKeeper,
+            gameBoard.getAttackOption());
         BattleProcess battleProcess = new BattleProcess(scanner, battle, turnKeeper);
         ScreenResult<?> battleResult = battleProcess.run();
-        currGameBoard.resetBattleInitializer();
+        gameBoard.resetBattleInitializer();
         if (battleResult.isQuit()) {
           return ScreenResult.quit();
         }
@@ -107,11 +108,13 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
 
     options.add(new InputProcess.Option<>("i", "Access Inventory", TextColor.CYAN, 'i'));
 
-    if (currGameBoard.characterAtMarket()) {
+    if (gameBoard.characterAtMarket()) {
       options.add(new InputProcess.Option<>("m", "Access Nexus Market", TextColor.CYAN, 'm'));
+    } else {
+      options.add(new InputProcess.Option<>("r", "Recall", TextColor.CYAN, 'r'));
     }
 
-    ArrayList<AttackOption> heroAttackList = this.currGameBoard.currHeroAttackList();
+    ArrayList<AttackOption> heroAttackList = this.gameBoard.currHeroAttackList();
     if (heroAttackList.size() > 0) {
       for (int i = 0; i < heroAttackList.size(); i++) {
         AttackOption currAttackOption = heroAttackList.get(i);
@@ -129,9 +132,6 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
                   }
                   return Optional.empty();
                 }));
-
-        InputInterface.DisplayInputOption("Attack with" + currAttackOption.getSourceItem().getName(), "" + (i + 1),
-            src.util.TextColor.RED);
       }
     }
 
@@ -145,7 +145,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
     mapDisplay.display();
     PrintColor.blue("Active Hero: ");
     System.out
-        .println(currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
+        .println(gameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
   }
 
 }

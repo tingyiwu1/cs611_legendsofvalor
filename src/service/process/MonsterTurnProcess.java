@@ -1,4 +1,4 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.List;
 import java.util.Scanner;
@@ -7,30 +7,30 @@ import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;
 import src.service.entities.monsters.MonsterTeam;
+import src.service.game.GameContext;
 import src.service.game.TurnKeeper;
 import src.service.game.battle.Battle;
 import src.service.game.board.GameBoard;
 import src.service.game.enemyControl.EnemyController;
 import src.service.game.enemyControl.MonsterAction;
-import src.service.screens.ScreenInterfaces.Process;
+import src.service.process.display.MapDisplay;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
 
 public class MonsterTurnProcess extends Process<ScreenResult<Void>> {
 
-  private final GameBoard currGameBoard;
+  private final GameBoard gameBoard;
   private final MonsterTeam monsterTeam;
   private final TurnKeeper turnKeeper;
   private final Player player;
   private final MapDisplay mapDisplay;
 
-  public MonsterTurnProcess(Scanner scanner, GameBoard gameBoard, MonsterTeam monsterTeam, TurnKeeper turnKeeper,
-      Player player) {
+  public MonsterTurnProcess(Scanner scanner, GameContext gameContext) {
     super(scanner);
-    this.currGameBoard = gameBoard;
-    this.monsterTeam = monsterTeam;
-    this.turnKeeper = turnKeeper;
-    this.player = player;
+    this.gameBoard = gameContext.gameBoard;
+    this.monsterTeam = gameContext.monsterTeam;
+    this.turnKeeper = gameContext.turnKeeper;
+    this.player = gameContext.player;
     this.mapDisplay = new MapDisplay(gameBoard, turnKeeper);
   }
 
@@ -46,14 +46,14 @@ public class MonsterTurnProcess extends Process<ScreenResult<Void>> {
       }
       List<Monster> monsterList = monsterTeam.getMonsters();
 
-      MonsterAction monsterAction = EnemyController.makeCurrentEnemyMove(turnKeeper, currGameBoard, monsterList);
+      MonsterAction monsterAction = EnemyController.makeCurrentEnemyMove(turnKeeper, gameBoard, monsterList);
 
       if (monsterAction.getTargetHero().isPresent()) {
         Battle battle = new Battle(player, monsterTeam, monsterAction.getMonster(), turnKeeper,
             monsterAction.getTargetHero().get());
         BattleProcess battleProcess = new BattleProcess(scanner, battle, turnKeeper);
         ScreenResult<Void> battleResult = battleProcess.run();
-        currGameBoard.resetBattleInitializer();
+        gameBoard.resetBattleInitializer();
         for (Hero hero : player.getParty()) {
           if (hero.getCurrentHealth() <= 0) {
             hero.respawn();

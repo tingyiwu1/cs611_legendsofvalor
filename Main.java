@@ -1,13 +1,8 @@
 
-import src.service.game.MainGame;
-import src.service.screens.MainProcess;
+import src.service.process.MainProcess;
 
 public class Main {
 	public static void main(String args[]) {
-
-		// MainGame currentGame = new MainGame();
-		// currentGame.playGame();
-
 		MainProcess mainProcess = new MainProcess();
 		mainProcess.run();
 

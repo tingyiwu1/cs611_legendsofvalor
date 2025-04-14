@@ -1,6 +1,5 @@
 package src.service.game.enemyControl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +7,6 @@ import src.service.entities.Entity;
 import src.service.entities.attributes.Position;
 import src.service.entities.heroes.Hero;
 import src.service.entities.monsters.Monster;
-import src.service.entities.monsters.MonsterTeam;
 import src.service.game.TurnKeeper;
 import src.service.game.board.GameBoard;
 import src.util.PieceType;

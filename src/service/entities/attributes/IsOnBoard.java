@@ -1,7 +1,5 @@
 package src.service.entities.attributes;
 
-import src.service.entities.attributes.Position;
-
 public interface IsOnBoard {
 
 	/**

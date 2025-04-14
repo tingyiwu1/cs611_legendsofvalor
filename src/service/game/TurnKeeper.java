@@ -22,14 +22,12 @@ public class TurnKeeper {
 	private CurrentTurn currentTurn;
 	private int turnCount;
 	private int teamTurnCount;
-	private int turnCycles;
 
 	public TurnKeeper(Player player, MonsterTeam monsterTeam) {
 		this.player = player;
 		this.monsterTeam = monsterTeam;
 		this.turnCount = 0;
 		this.teamTurnCount = 0;
-		this.turnCycles = 0;
 		this.currentTurn = CurrentTurn.PLAYER; // Player starts first
 	}
 
@@ -80,7 +78,6 @@ public class TurnKeeper {
 		} else {
 			teamTurnCount++;
 			if (teamTurnCount >= monsterTeam.getMonsters().size()) {
-				turnCycles++;
 				currentTurn = CurrentTurn.PLAYER;
 				teamTurnCount = 0;
 				// Increment the turn count for the total turns taken

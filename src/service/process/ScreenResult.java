@@ -1,8 +1,6 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.Optional;
-
-import src.service.screens.ScreenInterfaces.Process;
 
 public class ScreenResult<T> implements Process.Result {
   private static final ScreenResult<?> QUIT = new ScreenResult<>(null, Kind.QUIT);

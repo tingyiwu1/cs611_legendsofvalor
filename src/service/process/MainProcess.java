@@ -1,9 +1,8 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.Scanner;
 
-import src.service.screens.GameProcess.GameResult;
-import src.service.screens.ScreenInterfaces.Process;
+import src.service.process.GameProcess.GameResult;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
 
@@ -22,6 +21,9 @@ public class MainProcess extends Process<MainProcess.MainProcessResult> {
     GameProcess gameProcess = new GameProcess(scanner);
     GameResult gameResult = gameProcess.run();
 
+    scanner.close();
+    PrintingUtil.clearScreen();
+
     if (gameResult == GameResult.QUIT) {
       System.out.println("Game quit");
       return MainProcessResult.INSTANCE;
@@ -31,8 +33,6 @@ public class MainProcess extends Process<MainProcess.MainProcessResult> {
       System.out.println("You have lost the game.");
     }
 
-    scanner.close();
-    PrintingUtil.clearScreen();
     System.out.println("...");
     System.out.println("With a gasp, you wake up. ");
     System.out.println("\"What kind of dream was that!\" you think. ");

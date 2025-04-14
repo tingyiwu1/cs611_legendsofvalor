@@ -1,16 +1,13 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Scanner;
 
-import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
-import src.service.entities.items.Item;
 import src.service.entities.items.Potion;
+import src.service.game.GameContext;
 import src.service.game.inventory.Inventory;
-import src.service.screens.ScreenInterfaces.Process;
 import src.util.PrintColor;
 import src.util.PrintItemTable;
 import src.util.PrintingUtil;
@@ -21,10 +18,10 @@ public class InventoryProcess extends Process<ScreenResult<Void>> {
   private final Inventory currentInventory;
   private final Potion[] availablePotions;
 
-  public InventoryProcess(Scanner scanner, Player player, Hero activeHero) {
+  public InventoryProcess(Scanner scanner, GameContext gameContext) {
     super(scanner);
-    this.activeHero = activeHero;
-    this.currentInventory = new Inventory(player, activeHero);
+    this.activeHero = gameContext.gameBoard.getCurrentHero();
+    this.currentInventory = new Inventory(gameContext.player, activeHero);
     this.availablePotions = activeHero.getPotionsList();
   }
 
@@ -103,24 +100,6 @@ public class InventoryProcess extends Process<ScreenResult<Void>> {
     options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, 'q'));
 
     return new InputProcess<>(this.scanner, options, "Select an equipment slot to manage:");
-  }
-
-  private InputProcess<Character> getPotionSelectProcess() {
-    int size = availablePotions.length;
-
-    ArrayList<InputProcess.Option<Character>> options = new ArrayList<>();
-
-    options.add(new InputProcess.Option<>("1-" + size, "Select potion", TextColor.BLUE, (input) -> {
-      if (input.matches("[1-" + size + "]")) {
-        return Optional.of(input.charAt(0));
-      }
-      return Optional.empty();
-    }));
-    options.add(new InputProcess.Option<>("b", "Go Back", TextColor.CYAN, 'b'));
-
-    options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, 'q'));
-
-    return new InputProcess<>(this.scanner, options, "Select a potion to use:");
   }
 
   private InputProcess<Character> getItemSelectProcess() {

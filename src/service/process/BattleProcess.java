@@ -1,13 +1,10 @@
-package src.service.screens;
+package src.service.process;
 
 import java.util.Scanner;
 
-import src.service.entities.heroes.Hero;
-import src.service.entities.monsters.Monster;
-import src.service.entities.monsters.MonsterTeam;
 import src.service.game.TurnKeeper;
 import src.service.game.battle.Battle;
-import src.service.screens.ScreenInterfaces.Process;
+import src.service.process.display.BattleDisplay;
 import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;

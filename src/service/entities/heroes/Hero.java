@@ -225,8 +225,12 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	}
 
 	public void respawn() {
-		this.setPosition(new Position(spawnPos.getX(), spawnPos.getY()));
 		this.currentHealth = this.maxHealth;
+		recall();
+	}
+
+	public void recall() {
+		this.setPosition(new Position(spawnPos.getX(), spawnPos.getY()));
 	}
 
 	public int getBreakpoint() {
