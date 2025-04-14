@@ -1,17 +1,41 @@
-# Design Doc for Legends: Heroes And Monsters for CS611
+# Design Doc for Legends of Valor for CS611
 
 This project is a turn-based role-playing game (RPG) built with object-oriented principles in Java. The system is modular, scalable, and supports dynamic gameplay through polymorphism, inheritance, and composition.
+
+Building off of our previous Legends And Monsters assignment, this design introduces a new controller view system - replacing screens with recursive `processes` that allow for reusable and extensible game-state input and display. 
+
+---
+
+## Notable Design Patterns
+
+Composite `Process`:
+- Process is an abstract class that defines a `run()` method. All processes implement this `run` method based on their required activity
+- `Process.run()` recursively calls other processes based on user input. e.g. `HeroTurnProcess` calls `inventoryProcess` or `battleProcess`
+- The game runs through recursively calling processes until game end or user quit
+
+Facade `Main`
+- Main.java simply starts the main process, which reduces complexity from initialization
+
+Monster/Item Factory
+- The creation of Monsters is based off of the `BattleMonsterFactory` class which exposes static method `generateRandomMonster()`, pulling a monster from a list of options from a text file
+- This hides the complexity of Monster Creation from the client, reducing complexity, while also allowing for random creation of monsters for battle. 
 
 ---
 
 ## High-Level Architecture Overview
 
+The underlying game entity representation is mostly unchanged - the design of Players, Entites, Heros and Monsters at the model level are mostly untouched, as are the game state representations with `Battle`, `Board`, etc.. Compared to the previous Legend: Heroes and Monsters design, the primary focus lies on how each of these modules are displayed and initialized with new processes. It replaces a large amount of hardcoded state logic with dynamic, extensible Composite objects. 
+
+The primary issues with the screens system was how it handled user input. User input was tied to the main object and propogated between each object, which resulted in each screen being dependent on the state of the other. Thus, making them extensible was difficult, as the primary Main Game state logic would need to account for all state possibilities. This way, we have seperation of concerns between every process, reducing bugs and majorily simplifying the state logic. 
+
+Finally, many changes are also clean up on previous bloat of classes from the previous assignment. 
+
 ### Main Files
 
 - `Main.java` : Initializes and begins the Game.
-- `src.service.screens` : All UI screen logic and interfaces.
-- `src.service.ScreenInterfaces` : Interfaces of relevant attributes of game screens.
-- `src.service.ScreenContext.java` : Strategy context for screens, used in Main Game logic.
+- `src.service.process` : All process logic
+- `src.service.process.display` : All UI displays called by processes
+- `src.service.process.display.MainProcess.java` : Primary process which initalizes the game
 - `src.service.entities` : All relevant entity logic.
 - `src.service.entities.items` : Logic for interactable items that the player can manipulate.
 - `src.service.entities.monsters` : Logic for monsters in combat.
@@ -19,41 +43,35 @@ This project is a turn-based role-playing game (RPG) built with object-oriented 
 - `src.service.entities.attribtues` : Logic for attributes of entities, including Attacking, Inventory, etc.
 - `src.service.entities.Player.java` : Logic for player controlled entities, as well as player-chosen game settings such as difficulty.
 - `src.service.game` : All Battle, Map Board, Inventory, Market models, as well as player input logic.
-- `src.service.game.MainGame.java` : Primary logic controller of entities, screens, and models.
 - `src.utils` : Helper functions utilized to track game statistics, print tables, print in color, and more.
 
 ### Object Oriented Design
 
 - Encapsulation: Entities all contain their own logic and data, which is only interacted with through each entities respective interface
 - Inheritance: `Hero` and `Monster` extend `Entity`. Weapons, Armor, Spell, Consumables, all extend `Item`
-- Polymorphism: Screens are initialized and continuously rendered through the polymorphic Screen Strategy interfaces
-- Abstraction: The Screens abstract away the core Game module logic, providing simply the interface to interact with the game
+- Polymorphism: Processes are initialized and continuously called through the polymorphic Process classes
+- Abstraction: The Processes abstract away the core Game module logic, providing simply the interface to interact with the game
 
 ### Seperation of Concerns
-- A primary motivation behind the design of the assignment was seperation of concerns. Namely, that the Main Game state controller was seperate from the game models in the core, which was seperate from the view controllers. Hence, we have: Top level controller(MainGame), communicating with view models(Screens), interacting with logic models(Game controller modules), interacting with lower-level data modules(Items, Heroes, Monsters).
+- A primary motivation behind the design of the assignment was seperation of concerns. Namely, that the Main Game state controller was seperate from the game models in the core, which was seperate from the view controllers. Hence, we have: Top level process(MainGame), communicating with view/state models(Processes), interacting with logic models(Game controller modules), interacting with lower-level data modules(Items, Heroes, Monsters).
   - This makes each component more independent, and easier to test.
-  - Also, further additions of components would be more straightforward, as a new screen would simply require creating a new screen view itself, and then writing the logic for when this screen should be shown.
+  - Also, further additions of components would be more straightforward, as a new feature would simply require creating a new process itself, and then writing the logic for when this process should be called.
   - Factories for Monsters and Items are implemented to read in from a CSV file, making game balance and creation more straightforward. 
 
 
 ### Testing Consideration
-- Playtested all input scenarios for every screen: battle, inventory, market, and map.
+- Playtested all input scenarios for every process: battle, inventory, market, and map.
 - Tested edge cases including out-of-bound inputs, invalid item usage, and attempting unequips from empty slots.
 - Used visual inspection of printed status logs and debugging tools to verify dodge chance calculations, leveling formulas, and equipment effects.
 
 
 
 ### Gameplay Decisions
-- There are 3 strategies to bring to scale to victory. One is maximizing strenght, second is maximizing defense, and 3rd is maximizing dodge.
-- Heroes are set and are in a set order within the party to support these strategies. Because the first Warrior has high defense, he is effective at taking a hit and then swapping. The mage has high strength, and when well equipped can one-shot enemies. The Assassin has high dodge, and can dodge-tank through the enemies attacks.
-  - Through finding stat-boosting potions of the specific stat, one can maximize a heroes stats to always win.
-- I created a Boss. Otherwise, the player simply walks around in circles looking for enemies. With a boss, the player has an intermediary goal.  
+- TODO
 
 
 ### Future Expansions
-- Gameplay-related expansion: the framework to build more additional damage types, more complex battle calculations, and more are there, and if there was more time for this assignment that is what I would do
-- Adding more ASCII Art and prettifying some of the UI pieces that currently simply dump a lot of infomration on the player.
-- Making Map Generation using a better algorithm rather than randomly generated(currently there exists a chance of bad maps)
+- TODO
 
 
 
@@ -76,93 +94,81 @@ To understand the architecture, we can start from a top-down overview, and conti
 
 ### Mid Level Modules
 
-Of the Middle level modules, there are 2 types; there are the many Screens and the corresponding classes for game logic. Screens wrap the game logic controllers, and provide the UI.
+This is where the bulk of the development went to. Aside from brief edits to the game logic controllers for the new game, implementing Processes are the primary change from the previous assignment, reworking and removing the screens. 
 
-#### Screens
+Of the Middle level modules, there are 2 types; there are the many Processes and the corresponding classes for game logic. Processes wrap the game logic controllers, and provide the UI. 
 
-- Screens are built off of `src.services.screens.ScreenInterfaces.Screen.java`. This interface exposes:
+#### Process Modules
 
-  - `displayAndProgress()` for displaying the game logic controllers' status / a UI for the current game state.
-  - `displayStatuses()` for printing out the current statuses that the game logic produces.
-  - `displayPauseAndProgress()` for when an intermediary screen may be needed, such as to confirm a choice or to inform the player of an event.
-  - `getLastInput()` provides the screen's last seen input, allowing both the parent strategy to access it for state-based decisions or to push the latest event down to the game logic to make a change to the game state.
+Each process is responsible for handling a specific aspect of the game's functionality. Below is an overview of how these processes work and a list of key processes.
 
-- Screens that require input can extend `InputInterface.java`, which provides:
+Processes in this project follow a structured approach:
+1. **Initialization**: Each process is initialized with the necessary resources (e.g., input scanners, `gameContext`).
+2. **Execution**: The `run()` method is called to execute the process. This method contains the main logic for the process.
+3. **Result Handling**: Processes return a result that indicates the outcome of their execution. This result can be used by other processes to determine the next steps.
 
-  - An overloaded static method `DisplayInputOption()` to print different colored input options to the screen.
-  - A `DisplayInputs()` method to display all possible inputs and receive the player's input in turn.
+Processes are designed to be modular and reusable, making it easier to manage the game's flow and logic.
 
-- `InnerInput.java` provides additional methods for screens that need nested input handling, such as switching between submenus or managing complex interactions.
+1. **MainProcess**
+- `src.service.process.MainProcess.java`
+- **Purpose**: Serves as the entry point of the game, managing the overall game flow and end-of-game logic.
+- **Structure**: The `MainProcess` initializes the game, runs the main game loop, and handles the game's conclusion. It interacts with other processes like `GameProcess` and utility classes for output and statistics tracking.
+  - `run()`: Executes the main game process and handles the game's conclusion.
+ 
+2. **GameProcess**
 
-#### Key Screens
+- `src.service.process.GameProcess.java`
+- **Purpose**: Manages the core gameplay loop, including player actions, enemy interactions, and game state updates.
+- **Structure**: The `GameProcess` handles the main gameplay logic, interacting with other processes like `BattleProcess` and `ShopProcess` as needed. It tracks the game's state and determines the outcome (win, lose, or quit).
+  - `run()`: Executes the main gameplay logic and returns a `GameResult`.
+ 
+3. **BattleProcess**
 
-Each of these Screens wraps another piece of inner game logic and renders the state of the game based off of that object.
+- `src.service.process.BattleProcess.java`
+- **Purpose**: Handles turn-based combat between the player and enemies.
+- **Structure**: The `BattleProcess` manages the combat loop, processing player and enemy actions, calculating damage, and determining the outcome of battles. It also handles special cases like leveling up or reviving heroes.
+  - `run()`: Executes the battle logic and returns the battle outcome.
 
-1. **IntroScreen**
+4. **MarketProcess**
 
-- `src.service.screens.IntroScreen.java`
-- Purpose: Introduces the game and initializes the player.
-- Allows the player to select difficulty and the number of heroes in their party.
-  - `initializePlayer()`: Prompts the player to select difficulty and party size, returning a `Player` object.
-  - `DisplayIntroToGame()`: Displays the introductory narrative and waits for player input to proceed.
+- `src.service.process.MarketProcess.java`
+- **Purpose**: Manages interactions with the in-game market, allowing players to buy and sell items.
+- **Structure**: The `MarketProcess` tracks available items and the player's inventory. It validates purchases, processes transactions, and updates the player's inventory and gold.
+  - `run()`: Executes the market interaction logic and returns the result of the transaction.
+ 
+5. **ContinueProcess**
 
-2. **MapScreen**
+- `src.service.process.ContinueProcess.java`
+- **Purpose**: Waits for the user to press Enter before proceeding. Optionally allows the user to quit by entering "q". Returns a `ScreenResult` indicating success or quit.
+- **Structure**: If the `checkQuit` flag is enabled, the user can quit by entering "q". Returns a `ScreenResult` indicating success or quit.
+  - `run()`: Displays the prompt, waits for user input, and handles the quit option if enabled.
 
-- `src.service.screens.MapScreen.java`
-- Purpose: Displays the game board and handles player navigation.
-- Renders the 8x8 game board with walls, markets, and the boss location.
-- Handles player movement and validates moves.
-- Detects encounters with markets or enemies and transitions to the appropriate screen.
-  - `displayAndProgress()`: Displays the map and processes player movement.
-  - `displayMap()`: Renders the game board with all its elements.
-  - `DisplayInputs()`: Displays movement options and captures player input.
 
-3. **MarketScreen**
+6. **HeroTurnProcess**
 
-- `src.service.screens.MarketScreen.java`
-- Purpose: Allows the player to purchase items for their heroes.
-- Displays available items for purchase.
-- Validates purchases based on the player's gold and item availability.
-- Updates the player's inventory and gold after a successful purchase.
-  - `displayAndProgress()`: Displays the market and processes player actions.
-  - `displayInnerQuery()`: Displays the list of items and handles purchase input.
-  - `MarketInput()`: Captures and validates player input for item selection.
+- `src.service.process.HeroTurnProcess.java`
+- **Purpose**: Manages the player's turn during the game, allowing the player to perform various actions such as moving, attacking, accessing inventory, or interacting with the market.
+- **Structure**: The `HeroTurnProcess` interacts with the game board, turn keeper, and other processes like `MarketProcess` and `InventoryProcess`. It validates player input and executes the corresponding action. Handles special cases like recalling the hero or passing the turn.
+  - `run()`: Executes the player's turn, processes input, and progresses the game state.
 
-4. **InventoryScreen**
+7. **InputProcess**
 
-- `src.service.screens.InventoryScreen.java`
-- Purpose: Manages the player's inventory and hero equipment.
-- Displays the current inventory and equipped items for each hero.
-- Allows the player to equip, unequip, or consume items.
-- Updates hero stats based on equipped items.
-  - `displayAndProgress()`: Displays the inventory and processes player actions.
-  - `displayInnerQuery()`: Displays hero inventory details and handles item management input.
-  - `InventoryInput()`: Captures and validates player input for inventory actions.
-
-5. **BattleScreen**
-
-- `src.service.screens.BattleScreen.java`
-- Purpose: Handles turn-based combat between heroes and monsters.
-- Displays hero and monster stats, including health bars and attributes.
-- Allows the player to select attacks or use items during their turn.
-- Tracks the battle's progress and determines victory or defeat.
-  - `displayAndProgress()`: Displays the battle state and processes player actions.
-  - `DisplayInputs()`: Displays attack and item options, capturing player input.
-  - `displayBattle()`: Renders the battle details, including hero and monster stats.
-  - `getHealthBar()`: Generates a visual health bar for entities.
+- `src.service.process.InputProcess.java`
+- **Purpose**: Handles user input by presenting a list of options and validating the user's choice.
+- **Structure**: The `InputProcess` is generic and can handle various types of input. It displays a list of options, waits for user input, and validates the input against the provided options. Supports a loop mechanism to repeatedly prompt the user until valid input is received.
+  - `run()`: Displays the options, waits for input, and validates the input.
 
 #### Game controller modules
 
-Each screen wraps a corresponding game controller module that encapsulates the core game logic. These modules are responsible for managing the state of the game and processing player actions.
+Each process wraps a corresponding game controller module that encapsulates the core game logic. These modules are responsible for managing the state of the game and processing player actions.
 
 Each module implements specific interfaces, such as `PlayerControl` for handling player actions and `StatusDisplay` for managing and displaying statuses. They are designed to encapsulate their respective logic, ensuring modularity and separation of concerns. The modules maintain internal state, such as the current hero, inventory, or board layout, and provide methods to validate and process player actions. They also interact with utility classes like `StatsTracker` to record gameplay statistics and `TextColor` for status display formatting.
 
-Each Screen provides the game module the players input. In turn, the modules implement `PlayerControl` to handle the inputs, and provide `StatusDisplay` to pass information about the game state back to the Screen for the Screen to display. 
+Each process provides the game module the players input. In turn, the modules implement `PlayerControl` to handle the inputs, and provide `StatusDisplay` to pass information about the game state back to the Process for the Screen to process. 
 
 1. **Market**
 
 - `src.service.game.market.Market.java`
-- Wrapped by: `MarketScreen`
 - Purpose: Manages the logic for purchasing items in the market.
 - Structure: The `Market` module maintains a list of available items (`marketOfferings`) and the active hero interacting with the market. It uses methods to validate purchases, process transactions, and update the hero's inventory and gold.
   - `getMarketOfferings()`: Returns the list of items available for purchase.
@@ -171,7 +177,6 @@ Each Screen provides the game module the players input. In turn, the modules imp
 2. **Inventory**
 
 - `src.service.game.inventory.Inventory.java`
-- Wrapped by: `InventoryScreen`
 - Purpose: Handles the player's inventory and hero equipment.
 - Structure: The `Inventory` module manages the active hero's inventory and equipped items. It validates player actions, such as equipping or consuming items, and updates the hero's stats accordingly. It also tracks and displays statuses related to inventory actions.
   - `makeMove(int slot, int index)`: Processes the player's action to equip, unequip, or use an item.
@@ -179,7 +184,6 @@ Each Screen provides the game module the players input. In turn, the modules imp
 3. **Battle**
 
 - `src.service.game.battle.Battle.java`
-- Wrapped by: `BattleScreen`
 - Purpose: Manages turn-based combat between heroes and monsters.
 - Structure: The `Battle` module tracks the current hero, monster, and their respective stats. It processes player and monster actions, calculates damage, and determines the outcome of the battle. It also handles special cases like leveling up heroes or reviving them after a battle.
   - `makeMove(Character input)`: Processes the player's selected action during their turn.
@@ -189,21 +193,19 @@ Each Screen provides the game module the players input. In turn, the modules imp
 4. **GameBoard**
 
 - `src.service.game.board.GameBoard.java`
-- Wrapped by: `MapScreen`
 - Purpose: Represents the 8x8 game board and manages player navigation.
-- Structure: The `GameBoard` module maintains a 2D array of `MapPiece` objects representing the board layout. It tracks the player's position and validates moves. It also dynamically updates the board, such as spawning new bosses or clearing defeated ones.
-  - `setNewBoss()`: Spawns a new boss on the board.
+- Structure: The `GameBoard` module maintains a 2D array of `MapPiece` objects representing the board layout. It tracks the hero's position and validates moves. It also dynamically updates the board, such as clearning obstacles and defeated Monsters. 
 
 5. **Player**
 
 - `src.service.entities.Player.java`
-- Wrapped by: Multiple screens (e.g., `IntroScreen`, `InventoryScreen`, `BattleScreen`)
 - Purpose: Represents the player and their party of heroes.
 - Structure: The `Player` module stores the player's party, gold, and progress. It provides methods to access and update the active hero's stats, inventory, and abilities. It also tracks the player's overall progress and decisions throughout the game.
   - `getParty()`: Returns the player's party of heroes.
   - `getMonsterLevel()`: Returns the current level of monsters based on the player's progress.
 
 ---
+
 
 ### Lowest Level Architecture
 
