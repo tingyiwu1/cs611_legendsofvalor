@@ -55,49 +55,55 @@ From the source directory:
 
 Provide a sample execution showcasing expected inputs and outputs.
 
-```
+```                  
+Welcome to the game!!
+
 This is the Map Screen!
 +-------+-------+-------+-------+-------+-------+-------+-------+
-| H     |       |       |       |       |       | XXXXX | XXXXX |
-|       | BOSS! |       |       |       |       | XXXXX | XXXXX |
-|       |       |     M |       |       |       | XXXXX | XXXXX |
+|     M |       | XXXXX |     M |       | XXXXX |     M |       |
+| NEXUS | NEXUS | XXXXX | NEXUS | NEXUS | XXXXX | NEXUS | NEXUS |
+|       |       | XXXXX |       |       | XXXXX |       |       |
 +-------+-------+-------+-------+-------+-------+-------+-------+
-| XXXXX |       |       |       |       |       |       |       |
-| XXXXX |       |       |       |       |       |       |       |
-| XXXXX |       |     M |     M |       |       |     M |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
+|  _K_  |       | XXXXX |  [C]  |       | XXXXX |       |  ~B~  |
+|       |       | XXXXX |       |       | XXXXX |       |       |
 +-------+-------+-------+-------+-------+-------+-------+-------+
-|       |       |       | XXXXX |       | XXXXX |       | XXXXX |
-|       |       |       | XXXXX |       | XXXXX |       | XXXXX |
-|       |     M |       | XXXXX |       | XXXXX |       | XXXXX |
+|       |       | XXXXX |       |       | XXXXX |       |       |
+|       |  [C]  | XXXXX |       |       | XXXXX |       |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
 +-------+-------+-------+-------+-------+-------+-------+-------+
-|       |       |       | XXXXX | XXXXX | XXXXX | XXXXX |       |
-|       |       |       | XXXXX | XXXXX | XXXXX | XXXXX |       |
-|       |       |       | XXXXX | XXXXX | XXXXX | XXXXX |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
+|       |  [C]  | XXXXX |       |       | XXXXX |       |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
 +-------+-------+-------+-------+-------+-------+-------+-------+
-| XXXXX |       |       |       |       | XXXXX |       |       |
-| XXXXX |       |       |       |       | XXXXX |       |       |
-| XXXXX |       |       |     M |     M | XXXXX |       |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
+|  [C]  |       | XXXXX |       |       | XXXXX |       |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
 +-------+-------+-------+-------+-------+-------+-------+-------+
-|       | XXXXX |       |       |       | XXXXX |       |       |
-|       | XXXXX |       |       |       | XXXXX |       |       |
-|       | XXXXX |     M |       |       | XXXXX |     M |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
+|       |       | XXXXX |  [C]  |       | XXXXX |       |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
 +-------+-------+-------+-------+-------+-------+-------+-------+
-|       |       | XXXXX |       |       |       | XXXXX |       |
-|       |       | XXXXX |       |       |       | XXXXX |       |
-|     M |     M | XXXXX |       |       |       | XXXXX |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
+|  ~B~  |  [C]  | XXXXX |       |       | XXXXX |       |       |
+|       |       | XXXXX |       |       | XXXXX |       |       |
 +-------+-------+-------+-------+-------+-------+-------+-------+
-|       | XXXXX | XXXXX |       | XXXXX |       |       |       |
-|       | XXXXX | XXXXX |       | XXXXX |       |       |       |
-|       | XXXXX | XXXXX |       | XXXXX |       |       |       |
+|AH     |       | XXXXX | H     |       | XXXXX | H     |       |
+| NEXUS | NEXUS | XXXXX | NEXUS | NEXUS | XXXXX | NEXUS | NEXUS |
+|       |       | XXXXX |       |       | XXXXX |       |       |
 +-------+-------+-------+-------+-------+-------+-------+-------+
-These are the inputs!
-Move Hero North: W
-Move Hero East: D
-Move Hero West: A
-Move Hero South: S
-Access Inventory: I
-
-Quit: Q
+H = Hero, M = Monster, NEXUS = Nexus, X = Wall
+Current Hero: The Warrior
+Active Hero: The Warrior
+Select an action:
+[w] Move Up
+[a] Move Left
+[s] Move Down
+[d] Move Right
+[i] Access Inventory
+[m] Access Nexus Market
+[p] Pass the Turn
+[q] Quit
 ```
 
 ---
@@ -112,6 +118,9 @@ Quit: Q
 
 - Playtested code with various inputs to all screens
 - Aimed to provide seamless gameplay experience, even with malinformed inputs for a given gamestate
+
+---
+#Known Issues
 
 ---
 
