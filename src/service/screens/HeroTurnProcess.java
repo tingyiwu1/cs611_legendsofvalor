@@ -1,27 +1,20 @@
 package src.service.screens;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Scanner;
 
-import src.service.entities.Entity;
 import src.service.entities.Player;
-import src.service.entities.Entity.EntityType;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
-import src.service.entities.heroes.Hero;
 import src.service.game.TurnKeeper;
 import src.service.game.TurnKeeper.CurrentTurn;
 import src.service.game.battle.Battle;
 import src.service.game.board.GameBoard;
-import src.service.game.market.ItemFactory;
 import src.service.game.market.Market;
 import src.service.game.market.MarketFactory;
-import src.service.game.market.MarketItem;
 import src.service.screens.ScreenInterfaces.InputInterface;
 import src.service.screens.ScreenInterfaces.Process;
-import src.util.PieceType;
 import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
@@ -85,9 +78,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
       } else if (input == 'p') {
         turnKeeper.progressTurn();
       } else if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
-        assert currGameBoard.isMoveValid(input);
         currGameBoard.makeMove(input);
-        return ScreenResult.success(null);
       } else { // input is battle index
         assert currGameBoard.isMoveValid(input);
         currGameBoard.makeMove(input);
@@ -97,11 +88,8 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
         BattleProcess battleProcess = new BattleProcess(scanner, battle, turnKeeper);
         ScreenResult<?> battleResult = battleProcess.run();
         currGameBoard.resetBattleInitializer();
-        // TODO: handle battle result
         if (battleResult.isQuit()) {
           return ScreenResult.quit();
-        } else {
-          // turnKeeper.progressTurn();
         }
       }
     }
@@ -127,19 +115,20 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
     if (heroAttackList.size() > 0) {
       for (int i = 0; i < heroAttackList.size(); i++) {
         AttackOption currAttackOption = heroAttackList.get(i);
+        Position monsterPos = currAttackOption.getMonsterTarget().getPosition();
         options.add(
             new InputProcess.Option<>(
-                "" + (i + 1), "Attack with " + currAttackOption.getSourceItem().getName(),
+                "" + (i + 1),
+                "Attack " + currAttackOption.getMonsterTarget().getName() + " at (" + monsterPos.getX() + ", "
+                    + monsterPos.getY() + ") with "
+                    + currAttackOption.getSourceItem().getName(),
                 TextColor.RED,
                 (input) -> {
                   if (input.matches("[1-" + heroAttackList.size() + "]")) {
                     return Optional.of(input.charAt(0));
                   }
                   return Optional.empty();
-                }
-            // Character.forDigit(i + 1, 10) // TODO: replace move reprensation before
-            // passing to game board
-            ));
+                }));
 
         InputInterface.DisplayInputOption("Attack with" + currAttackOption.getSourceItem().getName(), "" + (i + 1),
             src.util.TextColor.RED);

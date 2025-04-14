@@ -65,12 +65,14 @@ public class MarketProcess extends Process<ScreenResult<Void>> {
     ArrayList<InputProcess.Option<Character>> options = new ArrayList<>();
 
     int max = market.getMarketOfferings().size() - 1;
-    options.add(new InputProcess.Option<>("0-" + max, "Select item", TextColor.BLUE, (input) -> {
-      if (input.matches("[0-" + max + "]")) {
-        return Optional.of(input.charAt(0));
-      }
-      return Optional.empty();
-    }));
+    if (max >= 0) {
+      options.add(new InputProcess.Option<>("0-" + max, "Select item", TextColor.BLUE, (input) -> {
+        if (input.matches("[0-" + max + "]")) {
+          return Optional.of(input.charAt(0));
+        }
+        return Optional.empty();
+      }));
+    }
 
     options.add(new InputProcess.Option<>("b", "Go Back", TextColor.CYAN, 'b'));
 

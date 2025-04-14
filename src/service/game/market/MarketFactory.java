@@ -20,8 +20,7 @@ public class MarketFactory {
 
   public Market getMarket(Hero hero) {
     MarketEntry entry = heroMarketMap.get(hero);
-    if (entry == null || entry.level != hero.getLevel()) {
-      // Hero not found or level has changed, create a new entry
+    if (entry == null || entry.level != hero.getLevel() || entry.marketOfferings.isEmpty()) {
       entry = new MarketEntry(hero);
       heroMarketMap.put(hero, entry);
     }

@@ -20,7 +20,7 @@ public class ScreenResult<T> implements Process.Result {
 
   private ScreenResult(Optional<T> result, Kind kind) {
     // either success with result or not success with null result
-    assert (kind == Kind.SUCCESS) == (result == null);
+    assert (kind == Kind.SUCCESS) == (result != null);
 
     this.result = result;
     this.kind = kind;

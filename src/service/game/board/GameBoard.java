@@ -3,6 +3,7 @@ package src.service.game.board;
 import src.util.PieceType;
 import src.service.entities.Entity;
 import src.service.entities.Player;
+import src.service.entities.Entity.EntityType;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
 import src.service.entities.heroes.Hero;
@@ -245,7 +246,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	}
 
 	@Override
-	public Boolean makeMove(Character inputtedMove) {
+	public boolean makeMove(Character inputtedMove) {
 		this.lastInput = Character.toLowerCase(inputtedMove);
 		System.out.println(inputtedMove);
 		if (!isMoveValid(inputtedMove)) {
@@ -254,15 +255,11 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 		}
 
 		processMove(inputtedMove, this.turnKeeper);
-		return null;
+		return true;
 	}
 
 	@Override
-	public Boolean isMoveValid(Character inputtedMove) {
-		// TODO: remove board handling turn passing
-		if (inputtedMove == 'p') {
-			return true;
-		}
+	public boolean isMoveValid(Character inputtedMove) {
 		// Check if the input is a movement command
 		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd') {
 			Position pos = this.getCurrHeroLocation();
@@ -282,6 +279,12 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 					|| this.currentBoard[newX][newY].getPieceType() == PieceType.WALL
 					|| this.currentBoard[newX][newY].getPieceType() == PieceType.OBSTACLE) {
 				return false;
+			}
+			// Check if we go past a monster
+			for (Entity entity : getEntitiesInLane(pos.getY())) {
+				if (entity.getType() == EntityType.MONSTER && entity.getPosition().getX() > newX) {
+					return false;
+				}
 			}
 			return true;
 		}
@@ -303,13 +306,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	}
 
 	@Override
-	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
-		// TODO: remove board handling quit
-		if (inputtedMove == 'q') {
-			return true;
-		}
-		// do the move
-
+	public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
 		if (inputtedMove == 'w') {
 			this.getCurrHeroLocation().moveX(-1);
 		} else if (inputtedMove == 's') {
@@ -319,14 +316,12 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 		} else if (inputtedMove == 'd') {
 			this.getCurrHeroLocation().moveY(1);
 		}
-		// TODO: remove board handling turn passing
-		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd'
-				|| inputtedMove == 'p') {
+		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd') {
 			this.turnKeeper.progressTurn();
 			// if(this.turnKeeper.progressTurn()){
 			// this.turnKeeper.resetTurn();
 			// }
-			return null;
+			return true;
 		}
 
 		try {
@@ -346,7 +341,7 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 		 * DEBUG: DON'T ROTATE TURN
 		 */
 
-		return null;
+		return true;
 	}
 
 	@Override
@@ -387,10 +382,20 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 	}
 
 	public boolean isHeroWin() {
+		for (Hero hero : player.getParty()) {
+			if (getPieceAt(hero.getPosition()).getPieceType() == PieceType.MONSTER_NEXUS) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 	public boolean isMonsterWin() {
+		for (Monster monster : monsterTeam.getMonsters()) {
+			if (getPieceAt(monster.getPosition()).getPieceType() == PieceType.HERO_NEXUS) {
+				return true;
+			}
+		}
 		return false;
 	}
 

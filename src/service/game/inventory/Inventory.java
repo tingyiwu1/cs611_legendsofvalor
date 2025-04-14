@@ -126,7 +126,7 @@ public class Inventory implements InventoryControl, StatusDisplay {
 		return this.statuses.toArray(new String[0]);
 	}
 
-	@Override
+@Override
 	public TextColor[] getStatusColors() {
 		return this.statusColors.toArray(new TextColor[0]);
 	}

@@ -53,7 +53,7 @@ public class Market implements PlayerControl, StatusDisplay {
 	}
 
 	@Override
-	public Boolean isMoveValid(Character inputtedMove) {
+	public boolean isMoveValid(Character inputtedMove) {
 		int inputInt;
 		try {
 			inputInt = Integer.parseInt(inputtedMove.toString());
@@ -74,7 +74,7 @@ public class Market implements PlayerControl, StatusDisplay {
 	}
 
 	@Override
-	public Boolean makeMove(Character inputtedMove) {
+	public boolean makeMove(Character inputtedMove) {
 		this.lastInput = Character.toLowerCase(inputtedMove);
 		this.clearStatuses();
 		if (!isMoveValid(lastInput)) {
@@ -86,7 +86,7 @@ public class Market implements PlayerControl, StatusDisplay {
 	}
 
 	@Override
-	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
+	public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
 		int inputInt = Integer.parseInt(inputtedMove.toString());
 
 		MarketItem buyingItem = this.marketOfferings.get(inputInt);

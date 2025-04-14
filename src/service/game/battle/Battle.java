@@ -204,16 +204,18 @@ public class Battle implements PlayerControl, StatusDisplay {
 		return this.isBossBattle;
 	}
 
-	private Boolean heroAttack(int idx) {
+	private boolean heroAttack(int idx) {
 		AttackOption chosenAttackOption = this.heroAttacks.get(idx);
 		return this.executeHeroAttack(chosenAttackOption);
 	}
 
-	private Boolean heroAttack(AttackOption chosenAttackOption) {
-		return this.executeHeroAttack(chosenAttackOption);
+	private boolean heroAttack(AttackOption chosenAttackOption) {
+		boolean result = this.executeHeroAttack(chosenAttackOption);
+		hero.updateInventory();
+		return result;
 	}
 
-	private Boolean executeHeroAttack(AttackOption chosenAttackOption) {
+	private boolean executeHeroAttack(AttackOption chosenAttackOption) {
 		this.addStatus("Hero: " + chosenAttackOption.getDescription(), TextColor.CYAN);
 		Item heroItem = chosenAttackOption.getSourceItem();
 		if (heroItem.getItemType() == ItemType.POTION) {
@@ -406,7 +408,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 	}
 
 	@Override
-	public Boolean isMoveValid(Character inputtedMove) {
+	public boolean isMoveValid(Character inputtedMove) {
 		if (inputtedMove.equals('i') || inputtedMove.equals('b') || inputtedMove.equals('s')) {
 			return true;
 		}
@@ -427,7 +429,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 	}
 
 	@Override
-	public Boolean makeMove(Character inputtedMove) {
+	public boolean makeMove(Character inputtedMove) {
 		// at the beginning of the turn, update your move list
 		this.heroAttacks = hero.getAttacksList();
 		this.lastInput = Character.toLowerCase(inputtedMove);
@@ -441,7 +443,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 		}
 
 		processMove(inputtedMove, this.turnKeeper);
-		return null;
+		return true;
 	}
 
 	public void switchHeroes() {
@@ -456,12 +458,12 @@ public class Battle implements PlayerControl, StatusDisplay {
 	}
 
 	@Override
-	public Boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
+	public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
 
 		// TODO: REFACTOR BATTLE SYSTEM
 
 		if (inputtedMove.equals('i') || inputtedMove.equals('b')) {
-			return null;
+			return false;
 		}
 		if (inputtedMove.equals('s')) {
 			if (monsterAttack()) {
@@ -469,7 +471,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 			}
 
 			this.switchHeroes();
-			return null;
+			return true;
 
 		}
 
@@ -479,14 +481,14 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 		if (this.heroAttack(inputInt - 1)) {
 			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
-			return null;
+			return true;
 		}
 		if (monsterAttack()) {
 			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
-			return null;
+			return true;
 		}
 		this.reportHP();
-		return null;
+		return true;
 	}
 
 	public Hero getHero() {

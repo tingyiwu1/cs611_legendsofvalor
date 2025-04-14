@@ -27,7 +27,7 @@ public class BattleProcess extends Process<ScreenResult<Void>> {
 
   @Override
   public ScreenResult<Void> run() {
-    StatsTracker.addToStats("Encountered Enemies", 1);
+    StatsTracker.addToStats("Enemy Encounters", 1);
     PrintingUtil.clearScreen();
     display();
     if (new ContinueProcess(scanner, true).run().isQuit()) {
