@@ -1,19 +1,17 @@
-# CS611 Legends: Monsters and Heroes Assignment
+# CS611 Legends of Valor!
 
 ---
 
-- Charles Li
-- cli50@bu.edu
-- U23128455
+- Charles Li / TingYi Wu
+- cli50@bu.edu / tingyiwu@bu.edu
+- U23128455 / U85278299
 
 ---
 
-## Notable Files
+## Notable Files / Directories
 
 - `Main.java` : Initializes and begins the Game.
-- `src.service.screens` : All UI screen logic and interfaces.
-- `src.service.ScreenInterfaces` : Interfaces of relevant attributes of game screens.
-- `src.service.ScreenContext.java` : Strategy context for screens, used in Main Game logic.
+- `src.service.screens` : All UI screen logic and interfaces, extended to a recursive set of Processes to display and progress the game
 - `src.service.entities` : All relevant entity logic.
 - `src.service.entities.items` : Logic for interactable items that the player can manipulate.
 - `src.service.entities.monsters` : Logic for monsters in combat.
@@ -32,10 +30,12 @@ Implemented a complete skill-based role-playing game with object-oriented princi
 
 The game has been playtested with the goal of providing a nuanced strategy to continue to survive in the world of heroes and monsters.
 
+The design is extended off of the previous Heros and Monsters assignment, with a new set of game control and UI logic in `processes`. 
+
 #### Design highlights, covered more in design.md:
 
 - Modular architecture for future content expansion
-- Screen Management via the a Screen Context strategy pattern.
+- Screen Management via the `processes` modules. 
 - Random initialization and reinitialization of gamestate as players progress
 
 ---
