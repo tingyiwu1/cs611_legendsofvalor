@@ -61,6 +61,8 @@ View the UML Diagram that showcases the entire design:
 
 This will open up an interactive class diagram viewer. This CLSVIS jar is an open source, diagram generator, found here: https://class-visualizer.net/index.html. 
 
+--- 
+
 ## Input/Output Example
 
 Provide a sample execution showcasing expected inputs and outputs.
