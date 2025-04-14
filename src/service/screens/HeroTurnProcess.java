@@ -10,6 +10,7 @@ import src.service.entities.Player;
 import src.service.entities.Entity.EntityType;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
+import src.service.entities.heroes.Hero;
 import src.service.game.TurnKeeper;
 import src.service.game.TurnKeeper.CurrentTurn;
 import src.service.game.battle.Battle;

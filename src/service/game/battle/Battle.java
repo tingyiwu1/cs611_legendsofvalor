@@ -147,7 +147,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 	 * one party
 	 * But, game design wise it should probably be a full exchange on both sides :)
 	 */
-	public Boolean heroBattleCycle() {
+	public void heroBattleCycle() {
 		StatsTracker.addToStats("Battle cycles progressed", 1);
 		this.addStatus("Hero is Attacking!", TextColor.YELLOW);
 
@@ -157,7 +157,8 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 		if (this.heroAttack(this.heroChosenAttack)) {
 			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
-			return null;
+			this.turnKeeper.progressTurn();
+			return;
 		}
 		// if(monsterAttack(this.hero.getPosition())){
 		// this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
@@ -168,7 +169,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 		this.turnKeeper.progressTurn();
 
-		return null;
+		return;
 	}
 
 	public Boolean monsterBattleCycle() {
@@ -181,6 +182,7 @@ public class Battle implements PlayerControl, StatusDisplay {
 
 		if (this.monsterAttack(this.hero.getPosition())) {
 			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
+			this.turnKeeper.progressTurn();
 			return null;
 		}
 		// if(this.heroAttack(this.heroChosenAttack)){
@@ -309,8 +311,6 @@ public class Battle implements PlayerControl, StatusDisplay {
 		this.addStatus(hero.getName() + "'s remaining health: " + hero.getCurrentHealth(), TextColor.WHITE);
 
 		if (hero.getCurrentHealth() <= 0) {
-			hero.respawn();
-			// this.processMonsterWin();
 			return true;
 		}
 		return false;
