@@ -64,7 +64,6 @@ public class MapDisplay implements Display {
               }
             }
             String monsterModifier = "" + (monsterCount == 1 ? " " : monsterCount > 9 ? "+" : monsterCount);
-            // TODO: IS THERE A BETTER WAY TO DISPLAY WHICH HERO IS ACTIVE?
             if (isActiveHero) {
               if (hasHero && monsterCount > 0) {
                 PrintColor.blue("AH  ");
@@ -117,16 +116,6 @@ public class MapDisplay implements Display {
     }
     System.out.println("+");
     System.out.println("H = Hero, M = Monster, NEXUS = Nexus, X = Wall");
-    if (turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER) {
-      System.out
-          .println("Current Hero: " + currGameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
-    } else {
-      /*
-       * Handle enemy turn progression!
-       */
-      System.out.println("TODO: Handle Enemy Turn");
-    }
-
   }
 
 }
