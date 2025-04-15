@@ -44,7 +44,7 @@ The design is extended off of the previous Heros and Monsters assignment, with a
 
 From the source directory:
 
-- Compile the code using: `mkdir -p out && javac -d out $(find . -name "*.java") `
+- Compile the code using: `mkdir out && javac -d out $(find . -name "*.java") `
 - Run the program: `java -cp out Main`
 - See file structure if gradescope messes it up:
   - [https://github.com/charlesli50/cs611_heroesnmonsters/tree/main](https://github.com/tingyiwu1/cs611_legendsofvalor)
