@@ -7,14 +7,17 @@ import java.util.Scanner;
 import src.service.entities.Player;
 import src.service.entities.attributes.AttackOption;
 import src.service.entities.attributes.Position;
+import src.service.entities.heroes.Hero;
 import src.service.game.GameContext;
 import src.service.game.TurnKeeper;
 import src.service.game.TurnKeeper.CurrentTurn;
 import src.service.game.battle.Battle;
 import src.service.game.board.GameBoard;
+import src.service.game.board.MapPiece;
 import src.service.game.market.Market;
 import src.service.game.market.MarketFactory;
 import src.service.process.display.MapDisplay;
+import src.util.PieceType;
 import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
@@ -41,7 +44,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
   @Override
   public ScreenResult<Void> run() {
     assert turnKeeper.getCurrentTurn() == TurnKeeper.CurrentTurn.PLAYER : "Not player's turn";
-    while (turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER) {
+    heroTurn: while (turnKeeper.getCurrentTurn() == CurrentTurn.PLAYER) {
       StatsTracker.addToStats("Screens Visited", 1);
 
       char input = getInputProcess().runLoop(() -> {
@@ -58,7 +61,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
         if (marketResult.isQuit()) {
           return ScreenResult.quit();
         } else if (marketResult.isGoBack()) {
-          continue;
+          continue heroTurn;
         } else {
           turnKeeper.progressTurn();
         }
@@ -69,7 +72,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
         if (inventoryResult.isQuit()) {
           return ScreenResult.quit();
         } else if (inventoryResult.isGoBack()) {
-          continue;
+          continue heroTurn;
         } else {
           turnKeeper.progressTurn();
         }
@@ -79,7 +82,9 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
       } else if (input == 'p') {
         turnKeeper.progressTurn();
       } else if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
-        gameBoard.makeMove(input);
+        if (gameBoard.makeMove(input) && gameBoard.isHeroWin()) {
+          return ScreenResult.success(null);
+        }
       } else { // input is battle index
         assert gameBoard.isMoveValid(input);
         gameBoard.makeMove(input);
@@ -101,17 +106,47 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
   private InputProcess<Character> getInputProcess() {
     ArrayList<InputProcess.Option<Character>> options = new ArrayList<>();
 
-    options.add(new InputProcess.Option<>("w", "Move Up", TextColor.BLUE, 'w'));
-    options.add(new InputProcess.Option<>("a", "Move Left", TextColor.BLUE, 'a'));
-    options.add(new InputProcess.Option<>("s", "Move Down", TextColor.BLUE, 's'));
-    options.add(new InputProcess.Option<>("d", "Move Right", TextColor.BLUE, 'd'));
+    MapPiece[] adjacentTiles = gameBoard.getAdjacentTiles(gameBoard.getCurrHeroLocation());
 
-    options.add(new InputProcess.Option<>("i", "Access Inventory", TextColor.CYAN, 'i'));
+    if (adjacentTiles[0] != null) {
+      PieceType pieceType = adjacentTiles[0].getPieceType();
+      if (pieceType == PieceType.OBSTACLE) {
+        options.add(new InputProcess.Option<>("w", "Break obstacle above", TextColor.ORANGE, 'w'));
+      } else if (pieceType != PieceType.WALL) {
+        options.add(new InputProcess.Option<>("w", "Move Up", TextColor.BLUE, 'w'));
+      }
+    }
+    if (adjacentTiles[1] != null) {
+      PieceType pieceType = adjacentTiles[1].getPieceType();
+      if (pieceType == PieceType.OBSTACLE) {
+        options.add(new InputProcess.Option<>("a", "Break obstacle left", TextColor.ORANGE, 'a'));
+      } else if (pieceType != PieceType.WALL) {
+        options.add(new InputProcess.Option<>("a", "Move Left", TextColor.BLUE, 'a'));
+      }
+    }
+    if (adjacentTiles[2] != null) {
+      PieceType pieceType = adjacentTiles[2].getPieceType();
+      if (pieceType == PieceType.OBSTACLE) {
+        options.add(new InputProcess.Option<>("s", "Break obstacle below", TextColor.ORANGE, 's'));
+      } else if (pieceType != PieceType.WALL) {
+        options.add(new InputProcess.Option<>("s", "Move Down", TextColor.BLUE, 's'));
+      }
+    }
+    if (adjacentTiles[3] != null) {
+      PieceType pieceType = adjacentTiles[3].getPieceType();
+      if (pieceType == PieceType.OBSTACLE) {
+        options.add(new InputProcess.Option<>("d", "Break obstacle right", TextColor.ORANGE, 'd'));
+      } else if (pieceType != PieceType.WALL) {
+        options.add(new InputProcess.Option<>("d", "Move Right", TextColor.BLUE, 'd'));
+      }
+    }
+
+    options.add(new InputProcess.Option<>("i", "Access Inventory", TextColor.ORANGE, 'i'));
 
     if (gameBoard.characterAtMarket()) {
-      options.add(new InputProcess.Option<>("m", "Access Nexus Market", TextColor.CYAN, 'm'));
+      options.add(new InputProcess.Option<>("m", "Access Nexus Market", TextColor.GREEN, 'm'));
     } else {
-      options.add(new InputProcess.Option<>("r", "Recall", TextColor.CYAN, 'r'));
+      options.add(new InputProcess.Option<>("r", "Recall", TextColor.YELLOW, 'r'));
     }
 
     ArrayList<AttackOption> heroAttackList = this.gameBoard.currHeroAttackList();
@@ -143,9 +178,19 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
 
   private void display() {
     mapDisplay.display();
+    Hero activeHero = gameBoard.getCurrentHero();
     PrintColor.blue("Active Hero: ");
     System.out
-        .println(gameBoard.getEntityList().get(turnKeeper.getPlayerTeamTurnCount()).getName());
-  }
+        .println(activeHero.getName());
+    PieceType currPieceType = gameBoard.getPieceAt(activeHero.getPosition()).getPieceType();
+    if (currPieceType == PieceType.KOULOU) {
+      PrintColor.green("Koulou bonus: +" + Hero.KOULOU_STRENGTH_BONUS + " strength\n");
+    } else if (currPieceType == PieceType.CAVE) {
+      PrintColor.green("Cave bonus: +" + Hero.CAVE_AGILITY_BONUS + " magic strength\n");
+    } else if (currPieceType == PieceType.BUSH) {
+      PrintColor.green("Bush bonus: +" + Hero.BUSH_DEXTERITY_BONUS + " dodge\n");
+    }
 
+    System.out.println();
+  }
 }

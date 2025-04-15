@@ -39,6 +39,7 @@
 package src.service.entities.heroes;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
 
 import src.service.entities.Entity;
@@ -52,7 +53,9 @@ import src.service.entities.items.Potion;
 import src.service.entities.items.Spell;
 import src.service.entities.items.Weapon;
 import src.service.entities.monsters.Monster;
+import src.service.game.board.GameBoard;
 import src.util.ItemType;
+import src.util.PieceType;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
 
@@ -65,9 +68,15 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 	private Integer experience = 0;
 	private final int breakpoint = 150;
 	private static int levelBoon = 5;
+
+	public static final int BUSH_DEXTERITY_BONUS = 10;
+	public static final int CAVE_AGILITY_BONUS = 10;
+	public static final int KOULOU_STRENGTH_BONUS = 10;
+
 	private static Random rng = new Random();
 
 	private final Position spawnPos;
+	private Optional<GameBoard> gameBoard = Optional.empty();
 
 	public Hero() {
 		super(100, 1, "DEBUGGING HERO", 40, 40, 30, 10, new Position(7, 0));
@@ -89,7 +98,6 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		this.equipment = new int[] { 0, -1, -1, -1, -1, -1 }; // main hand, offhand, helmet, chest, legs, boots
 		// this.levelBoon = 5; //increase all stats per level
 		this.gold = 1;
-		this.gold = 1000000; // TODO: remove this
 	}
 
 	public Hero(int hp, int lvl, String name, int str, int mstr, int def, int dodge, Position pos) {
@@ -111,7 +119,6 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		this.equipment = new int[] { 0, -1, -1, -1, -1, -1 }; // main hand, offhand, helmet, chest, legs, boots
 		// this.levelBoon = 5; //increase all stats per level
 		this.gold = 1;
-		this.gold = 1000000; // TODO: remove this
 	}
 
 	public static void setLevelBoon(int i) {
@@ -224,6 +231,10 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 		}
 	}
 
+	public void setGameBoard(GameBoard gameBoard) {
+		this.gameBoard = Optional.of(gameBoard);
+	}
+
 	public void respawn() {
 		this.currentHealth = this.maxHealth;
 		recall();
@@ -270,6 +281,9 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 				finalDodge += ((Equippable) items.get(eq)).getBonusDodge();
 			}
 		}
+		if (gameBoard.isPresent() && gameBoard.get().getPieceAt(position).getPieceType() == PieceType.BUSH) {
+			finalDodge += BUSH_DEXTERITY_BONUS;
+		}
 		return finalDodge;
 	}
 
@@ -280,6 +294,9 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 				finalStrength += ((Equippable) items.get(eq)).getBonusStrength();
 			}
 		}
+		if (gameBoard.isPresent() && gameBoard.get().getPieceAt(position).getPieceType() == PieceType.KOULOU) {
+			finalStrength += KOULOU_STRENGTH_BONUS;
+		}
 		return finalStrength;
 	}
 
@@ -289,6 +306,9 @@ public class Hero extends Entity implements Attacks, Inventory, Shopper {
 			if (eq != -1) {
 				finalAgility += ((Equippable) items.get(eq)).getBonusMagicStrength();
 			}
+		}
+		if (gameBoard.isPresent() && gameBoard.get().getPieceAt(position).getPieceType() == PieceType.CAVE) {
+			finalAgility += CAVE_AGILITY_BONUS;
 		}
 		return finalAgility;
 	}
