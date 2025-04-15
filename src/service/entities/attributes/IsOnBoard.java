@@ -2,10 +2,6 @@ package src.service.entities.attributes;
 
 public interface IsOnBoard {
 
-	/**
-	 * TODO:
-	 * Should position be a class? new Position(int x, int y) type of thing?
-	 */
 	public int getCharX();
 
 	public int getCharY();

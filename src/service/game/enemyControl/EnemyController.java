@@ -13,11 +13,6 @@ import src.util.PieceType;
 
 public class EnemyController {
 
-	/*
-	 * TODO:
-	 * Probably should somewhat refactor this
-	 */
-
 	public static MonsterAction makeCurrentEnemyMove(TurnKeeper turnKeeper, GameBoard gameBoard,
 			List<Monster> monsterList) {
 

@@ -5,13 +5,6 @@ import src.service.entities.monsters.MonsterTeam;
 
 public class TurnKeeper {
 
-	/*
-	 * TODO:
-	 * This should totally be the singleton design pattern now that I think abou it
-	 * 
-	 * i might be a genuius
-	 */
-
 	public enum CurrentTurn {
 		PLAYER,
 		MONSTER

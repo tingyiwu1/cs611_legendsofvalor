@@ -51,12 +51,6 @@ import src.util.PrintColor;
 import src.util.StatsTracker;
 import src.util.TextColor;
 
-/*
- * TODO:
- * Change ProcessHeroWin, ProcessMonsterWin
- * ProcessMonsterWin should trigger a rollback from Main to reset the player at spawn
- */
-
 public class Battle implements StatusDisplay {
 
 	private static int critHitBonus = 20;
@@ -67,7 +61,6 @@ public class Battle implements StatusDisplay {
 	public Hero hero;
 	public Character lastInput;
 
-	// private ArrayList<AttackOption> heroAttacks;
 	private AttackOption monsterAttack;
 	private int currHeroIdx;
 
@@ -76,16 +69,12 @@ public class Battle implements StatusDisplay {
 	private ArrayList<String> statuses;
 	private ArrayList<TextColor> statusColors;
 
-	// private Boolean gameOver;
-	// private Boolean didLevelUp;
 	private Boolean isBossBattle;
 
 	private TurnKeeper turnKeeper;
 
 	private AttackOption heroChosenAttack;
 
-	// TODO: refactor these ugly constructors this one is used when monster attacks
-	// hero
 	public Battle(Player player, MonsterTeam monsterTeam, Monster monster, TurnKeeper turnKeeper, Hero monsterTarget) {
 		this.turnKeeper = turnKeeper;
 		this.monster = monster;
@@ -104,8 +93,6 @@ public class Battle implements StatusDisplay {
 		this.isBossBattle = false;
 	}
 
-	// TODO: refactor these ugly constructors this one is used when hero attacks
-	// monster
 	public Battle(Player player, MonsterTeam monsterTeam, Monster monster, TurnKeeper turnKeeper,
 			AttackOption heroChosenAttack) {
 		this.turnKeeper = turnKeeper;
@@ -140,19 +127,9 @@ public class Battle implements StatusDisplay {
 		return this.heroChosenAttack;
 	}
 
-	/*
-	 * TODO:
-	 * Talked with TF: She said that the battle cycle should be a single attack from
-	 * one party
-	 * But, game design wise it should probably be a full exchange on both sides :)
-	 */
 	public void heroBattleCycle() {
 		StatsTracker.addToStats("Battle cycles progressed", 1);
 		this.addStatus("Hero is Attacking!", TextColor.YELLOW);
-
-		/*
-		 * First hero attack, and effects, then monster attack and effects
-		 */
 
 		if (this.heroAttack(this.heroChosenAttack)) {
 			this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
@@ -174,10 +151,6 @@ public class Battle implements StatusDisplay {
 	public Boolean monsterBattleCycle() {
 		StatsTracker.addToStats("Battle cycles progressed", 1);
 		this.addStatus("Monster is Attacking!", TextColor.YELLOW);
-
-		/*
-		 * First MONSTER attack, and effects
-		 */
 
 		if (this.monsterAttack(this.hero.getPosition())) {
 			this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
@@ -202,11 +175,6 @@ public class Battle implements StatusDisplay {
 	public boolean isBossBattle() {
 		return this.isBossBattle;
 	}
-
-	// private boolean heroAttack(int idx) {
-	// AttackOption chosenAttackOption = this.heroAttacks.get(idx);
-	// return this.executeHeroAttack(chosenAttackOption);
-	// }
 
 	private boolean heroAttack(AttackOption chosenAttackOption) {
 		boolean result = this.executeHeroAttack(chosenAttackOption);
@@ -375,54 +343,6 @@ public class Battle implements StatusDisplay {
 
 	}
 
-	// public Boolean isGameOver() {
-	// return this.gameOver;
-	// }
-
-	// public Boolean getDidLevelUp() {
-	// return this.didLevelUp;
-	// }
-
-	// @Override
-	// public boolean isMoveValid(Character inputtedMove) {
-	// if (inputtedMove.equals('i') || inputtedMove.equals('b') ||
-	// inputtedMove.equals('s')) {
-	// return true;
-	// }
-
-	// int inputInt;
-
-	// try {
-	// inputInt = Integer.parseInt(inputtedMove.toString());
-	// } catch (NumberFormatException e) {
-	// this.addStatus("Invalid Move, please try again.", TextColor.RED);
-	// return false;
-	// }
-
-	// if (inputInt >= 1 && inputInt <= this.heroAttacks.size()) {
-	// return true;
-	// }
-	// return false;
-	// }
-
-	// @Override
-	// public boolean makeMove(Character inputtedMove) {
-	// // at the beginning of the turn, update your move list
-	// this.heroAttacks = hero.getAttacksList();
-	// this.lastInput = Character.toLowerCase(inputtedMove);
-	// this.clearStatuses();
-
-	// if (!isMoveValid(lastInput)) {
-	// // System.out.println("INVALID MOVE");
-	// this.addStatus(Character.toString(inputtedMove), TextColor.YELLOW);
-	// this.addStatus("Invalid Move, please try again.", TextColor.RED);
-	// return false;
-	// }
-
-	// processMove(inputtedMove, this.turnKeeper);
-	// return true;
-	// }
-
 	public void switchHeroes() {
 		int startingIdx = currHeroIdx;
 		do {
@@ -434,47 +354,9 @@ public class Battle implements StatusDisplay {
 		this.addStatus("Switched to " + hero.getName() + "!", TextColor.CYAN);
 	}
 
-	// @Override
-	// public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
-
-	// // TODO: REFACTOR BATTLE SYSTEM
-
-	// if (inputtedMove.equals('i') || inputtedMove.equals('b')) {
-	// return false;
-	// }
-	// if (inputtedMove.equals('s')) {
-	// if (monsterAttack()) {
-	// this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
-	// }
-
-	// this.switchHeroes();
-	// return true;
-
-	// }
-
-	// int inputInt = Integer.parseInt(inputtedMove.toString());
-
-	// this.addStatus("Processing attack: " + inputInt, TextColor.CYAN);
-
-	// if (this.heroAttack(inputInt - 1)) {
-	// this.addStatus("The hero has defeated the monster!", TextColor.YELLOW);
-	// return true;
-	// }
-	// if (monsterAttack()) {
-	// this.addStatus("The monster has defeated the hero :(", TextColor.YELLOW);
-	// return true;
-	// }
-	// this.reportHP();
-	// return true;
-	// }
-
 	public Hero getHero() {
 		return this.hero;
 	}
-
-	// public ArrayList<AttackOption> getHeroAttacks() {
-	// return this.heroAttacks;
-	// }
 
 	@Override
 	public void clearStatuses() {

@@ -103,7 +103,6 @@ public class Inventory implements InventoryControl, StatusDisplay {
 
 	@Override
 	public void clearStatuses() {
-		// TODO Auto-generated method stub
 		this.statuses.clear();
 		this.statusColors.clear();
 	}

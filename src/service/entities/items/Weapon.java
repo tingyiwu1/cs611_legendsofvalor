@@ -116,8 +116,7 @@ public class Weapon implements Item, Equippable {
 
 	@Override
 	public void setRemainingUses(Integer remainingUses) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'setRemainingUses'");
+		// do nothing
 	}
 
 	@Override
@@ -127,8 +126,7 @@ public class Weapon implements Item, Equippable {
 
 	@Override
 	public void setMaxUses(Integer maxUses) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'setMaxUses'");
+		// do nothing
 	}
 
 	@Override

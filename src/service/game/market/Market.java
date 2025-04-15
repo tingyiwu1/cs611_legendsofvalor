@@ -78,7 +78,6 @@ public class Market implements MarketControl, StatusDisplay {
 	public boolean processMove(int itemIndex) {
 		MarketItem buyingItem = this.marketOfferings.get(itemIndex);
 
-		// TODO: switch ACTIVE HERO to TURN KEEPER HERO
 		this.activeHero.spendGold(buyingItem.getPrice());
 		StatsTracker.addToStats("Gold Spent", buyingItem.getPrice());
 		this.activeHero.addItem(buyingItem.getItem());

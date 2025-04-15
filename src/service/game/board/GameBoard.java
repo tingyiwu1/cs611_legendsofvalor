@@ -249,9 +249,6 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 
 		List<Monster> monsterList = this.getMonsterTeam().getMonsters();
 
-		// TODO: Modify the ATTACKOPTION to include more information about which hero
-		// attacks which monster
-		// TODO: ATTACKOPTION.getTarget() type thing
 		for (int i = 0; i < monsterList.size(); i++) {
 			Monster currMonster = monsterList.get(i);
 			Hero currHero = this.getPlayer().getParty()[turnKeeper.getPlayerTeamTurnCount()];
@@ -328,41 +325,26 @@ public class GameBoard implements PlayerControl, NewBattleInitializer {
 
 	@Override
 	public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
-		// TODO: clean
-		if (inputtedMove == 'w') {
-			Position newPos = new Position(this.getCurrHeroLocation().getX() - 1,
-					this.getCurrHeroLocation().getY());
-			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
-				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
-			} else {
-				this.getCurrHeroLocation().moveX(-1);
-			}
-		} else if (inputtedMove == 's') {
-			Position newPos = new Position(this.getCurrHeroLocation().getX() + 1,
-					this.getCurrHeroLocation().getY());
-			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
-				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
-			} else {
-				this.getCurrHeroLocation().moveX(1);
-			}
-		} else if (inputtedMove == 'a') {
-			Position newPos = new Position(this.getCurrHeroLocation().getX(),
-					this.getCurrHeroLocation().getY() - 1);
-			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
-				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
-			} else {
-				this.getCurrHeroLocation().moveY(-1);
-			}
-		} else if (inputtedMove == 'd') {
-			Position newPos = new Position(this.getCurrHeroLocation().getX(),
-					this.getCurrHeroLocation().getY() + 1);
-			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
-				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
-			} else {
-				this.getCurrHeroLocation().moveY(1);
-			}
-		}
 		if (inputtedMove == 'w' || inputtedMove == 's' || inputtedMove == 'a' || inputtedMove == 'd') {
+			Position pos = this.getCurrHeroLocation();
+			int newX = pos.getX();
+			int newY = pos.getY();
+			if (inputtedMove == 'w') {
+				newX--;
+			} else if (inputtedMove == 's') {
+				newX++;
+			} else if (inputtedMove == 'a') {
+				newY--;
+			} else if (inputtedMove == 'd') {
+				newY++;
+			}
+			Position newPos = new Position(newX, newY);
+			if (getPieceAt(newPos).getPieceType() == PieceType.OBSTACLE) {
+				setPieceAt(newPos.getX(), newPos.getY(), PieceType.EMPTY);
+			} else {
+				this.getCurrHeroLocation().setX(newX);
+				this.getCurrHeroLocation().setY(newY);
+			}
 			this.turnKeeper.progressTurn();
 			return true;
 		}
