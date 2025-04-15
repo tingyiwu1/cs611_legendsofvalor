@@ -75,16 +75,6 @@ Finally, many changes are also clean up on previous bloat of classes from the pr
 - Used visual inspection of printed status logs and debugging tools to verify dodge chance calculations, leveling formulas, and equipment effects.
 
 
-
-### Gameplay Decisions
-- TODO
-
-
-### Future Expansions
-- TODO
-
-
-
 ---
 
 ## Detailed Architecture Overview
