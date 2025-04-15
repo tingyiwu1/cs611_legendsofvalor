@@ -11,7 +11,7 @@
 ## Notable Files / Directories
 
 - `Main.java` : Initializes and begins the Game.
-- `src.service.screens` : All UI screen logic and interfaces, extended to a recursive set of Processes to display and progress the game
+- `src.service.process` : All UI screen logic and interfaces, extended to a recursive set of Processes to display and progress the game
 - `src.service.entities` : All relevant entity logic.
 - `src.service.entities.items` : Logic for interactable items that the player can manipulate.
 - `src.service.entities.monsters` : Logic for monsters in combat.
@@ -30,12 +30,12 @@ Implemented a complete skill-based role-playing game with object-oriented princi
 
 The game has been playtested with the goal of providing a nuanced strategy to continue to survive in the world of heroes and monsters.
 
-The design is extended off of the previous Heros and Monsters assignment, with a new set of game control and UI logic in `processes`. 
+The design is extended off of the previous Heros and Monsters assignment, with a new set of game control and UI logic in `processes`.
 
 #### Design highlights, covered more in design.md:
 
 - Modular architecture for future content expansion
-- Screen Management via the `processes` modules. 
+- Screen Management via the `processes` modules.
 - Random initialization and reinitialization of gamestate as players progress
 
 ---
@@ -54,16 +54,17 @@ From the source directory:
 ## UML Diagram
 
 Please view the attached UML Diagrams:
+
 - `fullUML.png`: Full UML Diagram for entire repository
 - `miniDiagram.png`: Smaller UML Diagram with less info
 
---- 
+---
 
 ## Input/Output Example
 
 Provide a sample execution showcasing expected inputs and outputs.
 
-```                  
+```
 Welcome to the game!!
 
 This is the Map Screen!
@@ -128,6 +129,7 @@ Select an action:
 - Aimed to provide seamless gameplay experience, even with malinformed inputs for a given gamestate
 
 ---
+
 #Known Issues
 
 ---
