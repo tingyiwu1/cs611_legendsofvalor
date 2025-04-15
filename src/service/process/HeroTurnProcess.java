@@ -166,7 +166,7 @@ public class HeroTurnProcess extends Process<ScreenResult<Void>> {
                 "" + (i + 1),
                 "Attack " + currAttackOption.getMonsterTarget().getName() + " at (" + monsterPos.getX() + ", "
                     + monsterPos.getY() + ") with "
-                    + currAttackOption.getSourceItem().getName(),
+                    + currAttackOption.getSourceItem().getName() + " (range: " + currAttackOption.getRange() + ")",
                 TextColor.RED,
                 (input) -> {
                   if (input.matches("[1-" + heroAttackList.size() + "]")) {
