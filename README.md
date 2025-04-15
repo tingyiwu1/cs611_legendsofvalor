@@ -51,15 +51,11 @@ From the source directory:
 
 ---
 
-## How to view UML Diagram
+## UML Diagram
 
-View the UML Diagram that showcases the entire design: 
-
-- Run: `java -jar clsvis.jar`
-- Select: File > Load Classes > From Directory
-- Choose: '`cs611_legendsofvalor/out/`'
-
-This will open up an interactive class diagram viewer. This CLSVIS jar is an open source, diagram generator, found here: https://class-visualizer.net/index.html. 
+Please view the attached UML Diagrams:
+- `fullUML.png`: Full UML Diagram for entire repository
+- `miniDiagram.png`: Smaller UML Diagram with less info
 
 --- 
 
