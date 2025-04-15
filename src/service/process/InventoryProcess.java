@@ -54,17 +54,17 @@ public class InventoryProcess extends Process<ScreenResult<Void>> {
       } else {
         int slot = Character.getNumericValue(input);
         assert slot >= 0 && slot <= 5 : "Invalid slot number";
-        char itemInput = getItemSelectProcess().runLoop(() -> {
+        String itemInput = getItemSelectProcess().runLoop(() -> {
           PrintingUtil.clearScreen();
           display();
         }, () -> currentInventory.addStatus("Invalid input. Please try again.", TextColor.RED));
 
-        if (itemInput == 'q') {
+        if (itemInput.equals("q")) {
           return ScreenResult.quit();
-        } else if (itemInput == 'b') {
+        } else if (itemInput.equals("b")) {
           continue slotSelect; // don't actually need this label, but helps for clarity
         } else {
-          int itemIndex = Character.getNumericValue(itemInput) - 1;
+          int itemIndex = Integer.parseInt(itemInput) - 1;
           assert currentInventory.isMoveValid(slot, itemIndex) : "Invalid item index";
           if (currentInventory.makeMove(slot, itemIndex)) {
             currentInventory.addStatus("Successfully moved item!", TextColor.YELLOW);
@@ -102,22 +102,27 @@ public class InventoryProcess extends Process<ScreenResult<Void>> {
     return new InputProcess<>(this.scanner, options, "Select an equipment slot to manage:");
   }
 
-  private InputProcess<Character> getItemSelectProcess() {
+  private InputProcess<String> getItemSelectProcess() {
     int size = this.activeHero.getItemsList().size();
 
-    ArrayList<InputProcess.Option<Character>> options = new ArrayList<>();
+    ArrayList<InputProcess.Option<String>> options = new ArrayList<>();
 
-    options.add(new InputProcess.Option<>("0", "Unequip Item", TextColor.BLUE, '0'));
+    options.add(new InputProcess.Option<>("0", "Unequip Item", TextColor.BLUE, "0"));
     options.add(new InputProcess.Option<>("1-" + size, "Select item", TextColor.BLUE, (input) -> {
-      if (input.matches("[1-" + size + "]")) {
-        return Optional.of(input.charAt(0));
+      try {
+        int itemIndex = Integer.parseInt(input);
+        if (itemIndex < 1 || itemIndex > size) {
+          return Optional.empty();
+        }
+        return Optional.of(String.valueOf(itemIndex));
+      } catch (NumberFormatException e) {
+        return Optional.empty();
       }
-      return Optional.empty();
     }));
 
-    options.add(new InputProcess.Option<>("b", "Go Back", TextColor.CYAN, 'b'));
+    options.add(new InputProcess.Option<>("b", "Go Back", TextColor.CYAN, "b"));
 
-    options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, 'q'));
+    options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, "q"));
 
     return new InputProcess<>(this.scanner, options, "Select an item to equip or swap, or 0 to unequip current item:");
   }

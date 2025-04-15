@@ -46,6 +46,11 @@ public class MonsterTurnProcess extends Process<ScreenResult<Void>> {
       }
       List<Monster> monsterList = monsterTeam.getMonsters();
 
+      if (monsterList.size() == 0) {
+        turnKeeper.progressTurn();
+        return ScreenResult.success(null);
+      }
+
       MonsterAction monsterAction = EnemyController.makeCurrentEnemyMove(turnKeeper, gameBoard, monsterList);
 
       if (monsterAction.getTargetHero().isPresent()) {

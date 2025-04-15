@@ -29,8 +29,8 @@ public class MarketProcess extends Process<ScreenResult<Void>> {
     StatsTracker.addToStats("Visited Market", 1);
 
     itemSelect: while (true) {
-      InputProcess<Character> inputProcess = getItemSelectProcess();
-      InputResult<Character> inputResult = InputResult.invalid();
+      InputProcess<String> inputProcess = getItemSelectProcess();
+      InputResult<String> inputResult = InputResult.invalid();
 
       while (inputResult.isInvalid()) {
         PrintingUtil.clearScreen();
@@ -40,13 +40,14 @@ public class MarketProcess extends Process<ScreenResult<Void>> {
           market.addStatus("Invalid input. Please try again.", TextColor.RED);
         }
       }
-      char input = inputResult.getResult();
-      if (input == 'q') {
+      String input = inputResult.getResult();
+      if (input.equals("q")) {
         return ScreenResult.quit();
-      } else if (input == 'b') {
+      } else if (input.equals("b")) {
         return ScreenResult.goBack();
       } else {
-        if (market.makeMove(input)) {
+        int itemIndex = Integer.parseInt(input);
+        if (market.makeMove(itemIndex)) {
           market.addStatus("Purchased item successfully!", TextColor.GREEN);
           market.addStatus("You have " + activeHero.getGold() + " gold left.", TextColor.YELLOW);
           PrintingUtil.clearScreen();
@@ -60,22 +61,27 @@ public class MarketProcess extends Process<ScreenResult<Void>> {
     }
   }
 
-  private InputProcess<Character> getItemSelectProcess() {
-    ArrayList<InputProcess.Option<Character>> options = new ArrayList<>();
+  private InputProcess<String> getItemSelectProcess() {
+    ArrayList<InputProcess.Option<String>> options = new ArrayList<>();
 
     int max = market.getMarketOfferings().size() - 1;
     if (max >= 0) {
       options.add(new InputProcess.Option<>("0-" + max, "Select item", TextColor.BLUE, (input) -> {
-        if (input.matches("[0-" + max + "]")) {
-          return Optional.of(input.charAt(0));
+        try {
+          int itemIndex = Integer.parseInt(input);
+          if (itemIndex < 0 || itemIndex > max) {
+            return Optional.empty();
+          }
+          return Optional.of(String.valueOf(itemIndex));
+        } catch (NumberFormatException e) {
+          return Optional.empty();
         }
-        return Optional.empty();
       }));
     }
 
-    options.add(new InputProcess.Option<>("b", "Go Back", TextColor.CYAN, 'b'));
+    options.add(new InputProcess.Option<>("b", "Go Back", TextColor.CYAN, "b"));
 
-    options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, 'q'));
+    options.add(new InputProcess.Option<>("q", "Quit", TextColor.RED, "q"));
 
     return new InputProcess<>(this.scanner, options, "Select an item to purchase:");
   }

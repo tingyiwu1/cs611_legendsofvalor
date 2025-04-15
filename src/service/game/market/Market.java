@@ -11,28 +11,22 @@ import java.util.ArrayList;
 
 import src.service.entities.Player;
 import src.service.entities.heroes.Hero;
-import src.service.game.PlayerControl;
 import src.service.game.StatusDisplay;
-import src.service.game.TurnKeeper;
 import src.util.StatsTracker;
 import src.util.TextColor;
 
-public class Market implements PlayerControl, StatusDisplay {
+public class Market implements MarketControl, StatusDisplay {
 
 	private Hero activeHero;
 	private ArrayList<String> statuses;
 	private ArrayList<TextColor> statusColors;
-	private Character lastInput;
 
 	private ArrayList<MarketItem> marketOfferings;
-
-	private TurnKeeper turnKeeper;
 
 	public Market(Hero activeHero, ArrayList<MarketItem> marketOfferings) {
 		this.activeHero = activeHero;
 		this.statuses = new ArrayList<String>();
 		this.statusColors = new ArrayList<TextColor>();
-		this.lastInput = ' ';
 		this.marketOfferings = marketOfferings;
 	}
 
@@ -40,7 +34,6 @@ public class Market implements PlayerControl, StatusDisplay {
 		this.activeHero = player.getParty()[activeHero];
 		this.statuses = new ArrayList<String>();
 		this.statusColors = new ArrayList<TextColor>();
-		this.lastInput = ' ';
 		this.marketOfferings = ItemFactory.generateRandomMarketItems(this.activeHero.getLevel() + 2);
 	}
 
@@ -48,16 +41,13 @@ public class Market implements PlayerControl, StatusDisplay {
 		this.activeHero = player.getParty()[activeHero];
 		this.statuses = new ArrayList<String>();
 		this.statusColors = new ArrayList<TextColor>();
-		this.lastInput = ' ';
 		this.marketOfferings = marketOfferings;
 	}
 
 	@Override
-	public boolean isMoveValid(Character inputtedMove) {
-		int inputInt;
+	public boolean isMoveValid(int itemIndex) {
 		try {
-			inputInt = Integer.parseInt(inputtedMove.toString());
-			if (inputInt < 0 || inputInt >= marketOfferings.size()) {
+			if (itemIndex < 0 || itemIndex >= marketOfferings.size()) {
 				this.addStatus("Invalid Index, please try again.", TextColor.RED);
 				return false;
 			}
@@ -65,7 +55,7 @@ public class Market implements PlayerControl, StatusDisplay {
 			this.addStatus("Invalid Move, please try again.", TextColor.RED);
 			return false;
 		}
-		return activeHero.canAfford(marketOfferings.get(inputInt).getPrice());
+		return activeHero.canAfford(marketOfferings.get(itemIndex).getPrice());
 
 	}
 
@@ -74,22 +64,19 @@ public class Market implements PlayerControl, StatusDisplay {
 	}
 
 	@Override
-	public boolean makeMove(Character inputtedMove) {
-		this.lastInput = Character.toLowerCase(inputtedMove);
+	public boolean makeMove(int itemIndex) {
 		this.clearStatuses();
-		if (!isMoveValid(lastInput)) {
+		if (!isMoveValid(itemIndex)) {
 			this.addStatus("Invalid Move(do you have enough gold?), please try again.", TextColor.RED);
 			return false;
 		}
 
-		return processMove(inputtedMove, this.turnKeeper);
+		return processMove(itemIndex);
 	}
 
 	@Override
-	public boolean processMove(Character inputtedMove, TurnKeeper turnKeeper) {
-		int inputInt = Integer.parseInt(inputtedMove.toString());
-
-		MarketItem buyingItem = this.marketOfferings.get(inputInt);
+	public boolean processMove(int itemIndex) {
+		MarketItem buyingItem = this.marketOfferings.get(itemIndex);
 
 		// TODO: switch ACTIVE HERO to TURN KEEPER HERO
 		this.activeHero.spendGold(buyingItem.getPrice());
@@ -97,7 +84,7 @@ public class Market implements PlayerControl, StatusDisplay {
 		this.activeHero.addItem(buyingItem.getItem());
 		StatsTracker.addToStats("Items purchased", 1);
 
-		this.marketOfferings.remove(inputInt);
+		this.marketOfferings.remove(itemIndex);
 		return true;
 	}
 
