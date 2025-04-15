@@ -11,12 +11,19 @@ import src.service.game.TurnKeeper;
 import src.service.game.board.GameBoard;
 import src.service.game.market.MarketFactory;
 
+/**
+ * The main game process that handles running the main game loop. Calls
+ * HeroTurnProcess and MonsterTurnProcess in alternation.
+ * 
+ * This class is responsible for initializing and managing the game state,
+ * including the game board, player, monster team, and turns. These get passed
+ * via GameContext to sub-processes.
+ */
 public class GameProcess extends Process<GameProcess.GameResult> {
   public static enum GameResult implements Process.Result {
     QUIT, WIN, LOSE
   }
 
-  // TODO: combine all these into single context object
   private final Scanner scanner;
   private final GameBoard currentBoard;
   private final Player player;

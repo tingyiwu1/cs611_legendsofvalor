@@ -10,6 +10,10 @@ import src.service.game.board.GameBoard;
 import src.util.PieceType;
 import src.util.PrintColor;
 
+/**
+ * Handles displaying the map of the game board. Used by HeroTurnProcess and
+ * MonsterTurnProcess.
+ */
 public class MapDisplay implements Display {
 
   private final GameBoard currGameBoard;

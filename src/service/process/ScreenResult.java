@@ -2,6 +2,10 @@ package src.service.process;
 
 import java.util.Optional;
 
+/**
+ * Represents the result produced by a game screen Process. Makes the common
+ * GO_BACK and QUIT states explicit and ergonomic to use.
+ */
 public class ScreenResult<T> implements Process.Result {
   private static final ScreenResult<?> QUIT = new ScreenResult<>(null, Kind.QUIT);
   private static final ScreenResult<?> GO_BACK = new ScreenResult<>(null, Kind.GO_BACK);

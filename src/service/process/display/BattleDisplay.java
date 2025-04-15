@@ -7,6 +7,9 @@ import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.TextColor;
 
+/**
+ * Handles the display of the battle screen. Used by BattleProcess.
+ */
 public class BattleDisplay implements Display {
   private final Battle battle;
 

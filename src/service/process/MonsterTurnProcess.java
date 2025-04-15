@@ -17,6 +17,14 @@ import src.service.process.display.MapDisplay;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
 
+/**
+ * Handles the monster's turn in the game. Run from GameProcess when it is the
+ * monsters' turn.
+ * 
+ * Continuously displays the game board with ContinueProcess instances until the
+ * player chooses to quit or the monster's turn ends. Runs BattleProcess if a
+ * monster attacks a hero.
+ */
 public class MonsterTurnProcess extends Process<ScreenResult<Void>> {
 
   private final GameBoard gameBoard;
@@ -64,7 +72,6 @@ public class MonsterTurnProcess extends Process<ScreenResult<Void>> {
             hero.respawn();
           }
         }
-        // TODO: handle battle result
         if (battleResult.isQuit()) {
           return ScreenResult.quit();
         }

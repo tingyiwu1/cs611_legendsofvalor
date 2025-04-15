@@ -13,6 +13,13 @@ import src.util.PrintItemTable;
 import src.util.PrintingUtil;
 import src.util.TextColor;
 
+/**
+ * Handles inventory management for a hero. Run from GameProcess.
+ * 
+ * Displays the hero's stats and inventory, as well as the available potions.
+ * Allows the user to select an item to equip or swap, as well as standard
+ * handling of going back and quitting.
+ */
 public class InventoryProcess extends Process<ScreenResult<Void>> {
   private final Hero activeHero;
   private final Inventory currentInventory;

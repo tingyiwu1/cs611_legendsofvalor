@@ -8,6 +8,13 @@ import java.util.function.Function;
 import src.util.PrintColor;
 import src.util.TextColor;
 
+/**
+ * Customizable process which displays a set of options to the user and gets
+ * their input. The options are displayed with a color code and a description.
+ * 
+ * Handles option checking and input parsing based on the parsing strategy
+ * declared in InputProcess.Option.
+ */
 public class InputProcess<T> extends Process<InputResult<T>> {
   public static class Option<T> {
     private final String actionDescription;

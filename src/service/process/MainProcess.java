@@ -6,6 +6,11 @@ import src.service.process.GameProcess.GameResult;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
 
+/**
+ * Process that encapsulates the entire app. Creates the Scanner object used in
+ * all child processes and runs the GameProcess. Handles the end of the game
+ * and displays the final stats.
+ */
 public class MainProcess extends Process<MainProcess.MainProcessResult> {
   // Singleton instance
   public static enum MainProcessResult implements Process.Result {

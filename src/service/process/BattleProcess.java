@@ -9,6 +9,13 @@ import src.util.PrintColor;
 import src.util.PrintingUtil;
 import src.util.StatsTracker;
 
+/**
+ * Handles the battle process in the game. This process is run when a hero or
+ * monster initiates an attack
+ * 
+ * Displays the battle screen and shows the attack that was cast. Prompts the
+ * user to continue to see the result of the attack.
+ */
 public class BattleProcess extends Process<ScreenResult<Void>> {
 
   private final Battle battle;

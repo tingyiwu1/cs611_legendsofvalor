@@ -2,10 +2,10 @@ package src.service.process;
 
 import java.util.NoSuchElementException;
 
-/* InputSignal is a signal that can be used to indicate the result of a process.
- * It can either be a valid result or a quit signal. 
+/**
+ * Represent the result of InputProcess. It can be either a valid result or a T
  * 
- * @param <T> the type of the result
+ * Implementation is heavily based on the Java Optional class.
  */
 public class InputResult<T> implements Process.Result {
   private static final InputResult<?> INVALID = new InputResult<>(null);

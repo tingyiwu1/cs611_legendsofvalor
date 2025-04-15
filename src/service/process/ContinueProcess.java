@@ -6,6 +6,8 @@ import src.util.PrintColor;
 
 /*
  * Process which simply waits for the user to press Enter.
+ * 
+ * Optionally, it can check for a quit command (q) and return a quit result.
  */
 public class ContinueProcess extends Process<ScreenResult<Void>> {
 

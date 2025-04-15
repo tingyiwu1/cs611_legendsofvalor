@@ -16,9 +16,19 @@ Composite `Process`:
 Facade `Main`
 - Main.java simply starts the main process, which reduces complexity from initialization
 
-Monster/Item Factory
+Singleton `StatsTracker`
+- Allows any part of the code to increment arbitrary statistics that are displayed to the user at the end.
+
+`InputProcess.Option` parsing Strategy
+- Client passes parsing function to each `Option` declared when constructing an `InputProcess`
+- `InputProcess` calls the parsing function on each `Option` to decide which one the user chose
+
+Monster/Item/Market Factory
 - The creation of Monsters is based off of the `BattleMonsterFactory` class which exposes static method `generateRandomMonster()`, pulling a monster from a list of options from a text file
 - This hides the complexity of Monster Creation from the client, reducing complexity, while also allowing for random creation of monsters for battle. 
+- `ItemFactory` takes care of generating a set of random MarketItems whenever a market needs to be refreshed. 
+- `MarketFactory` creating and maintaining `Market` instances that correspond to each `Hero` to allow each hero to access it's own `Market` instance. Also handles creating new `Market`s, allowing items to refresh when a hero buys out all the items or the hero levels up.
+  - Hides complexity of maintaining different instances, reducing the client code to a simple `getMarket()` call.
 
 ---
 

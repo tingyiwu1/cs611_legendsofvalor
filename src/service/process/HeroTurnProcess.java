@@ -23,6 +23,13 @@ import src.util.PrintingUtil;
 import src.util.StatsTracker;
 import src.util.TextColor;
 
+/**
+ * Handles the hero's turn in the game. Run from GameProcess when it is the
+ * hero's turn.
+ * 
+ * Displays the game board and allows the user to select an action based on the
+ * current state of the board and the hero's position.
+ */
 public class HeroTurnProcess extends Process<ScreenResult<Void>> {
   private final GameBoard gameBoard;
   private final TurnKeeper turnKeeper;

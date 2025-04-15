@@ -13,6 +13,12 @@ import src.util.PrintItemTable;
 import src.util.PrintingUtil;
 import src.util.TextColor;;;
 
+/**
+ * Handles potion selection and usage for a hero. Run from InventoryProcess.
+ * 
+ * Displays available potions and allows the user to select one to use, as well
+ * as standard handling of going back and quitting
+ */
 public class PotionProcess extends Process<ScreenResult<Void>> {
   private final Hero activeHero;
   private final Inventory currentInventory;

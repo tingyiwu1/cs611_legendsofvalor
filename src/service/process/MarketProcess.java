@@ -12,6 +12,13 @@ import src.util.PrintingUtil;
 import src.util.StatsTracker;
 import src.util.TextColor;
 
+/**
+ * Handles a hero's interaction with the market. Run from GameProcess.
+ * 
+ * Displays the hero's stats and inventory, as well as the market offerings.
+ * Allows the user to select an item to purchase, as well as standard handling
+ * of going back and quitting.
+ */
 public class MarketProcess extends Process<ScreenResult<Void>> {
 
   // private final GameBoard currentBoard;
